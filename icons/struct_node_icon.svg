@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg868"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="stuct_node_icon2.svg">
+  <defs
+     id="defs862" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="-90"
+     inkscape:cy="560"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1780"
+     inkscape:window-height="1046"
+     inkscape:window-x="-11"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata865">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <switch
+       transform="matrix(2.7703333,0,0,6.9176641,-5.3558128,-191.29118)"
+       id="switch837">
+      <foreignObject
+         requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/"
+         x="0"
+         y="0"
+         width="1"
+         height="1" />
+      <g
+         i:extraneous="self"
+         id="g835">
+        <path
+           inkscape:connector-curvature="0"
+           d="m 83.817,45.603 -0.319,-0.256 -13.904,-7.788 -0.485,-0.153 -18.745,-1.9 -0.027,-0.024 -0.106,0.011 -0.106,-0.011 -0.027,0.024 -18.745,1.9 -0.485,0.153 -13.905,7.788 -0.32,0.256 -10.759,11.996 0.931,2.085 H 50 50.464 93.649 l 0.931,-2.085 z m -53.588,9.207 -9.973,-8.442 9.973,-5.585 z m -10.905,-5.957 9.84,8.331 h -9.84 z M 32.729,41.757 47.531,57.183 H 32.729 Z m 1.428,-2.123 14.592,-1.479 v 16.688 z m 35.241,0.681 11.272,6.314 -11.272,9.176 z M 51.713,38.154 66.345,39.637 51.713,55.269 Z m 15.185,4.55 v 14.48 H 53.345 Z m 14.739,6.362 v 8.117 h -9.973 z m -64.813,0.08 v 8.038 H 9.615 Z m 67.313,8.038 v -7.481 l 6.71,7.481 z"
+           id="path833" />
+      </g>
+    </switch>
+  </g>
+</svg>
