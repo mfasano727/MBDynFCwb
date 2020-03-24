@@ -1,3 +1,5 @@
+
+
 import os
 import sys
 from PySide2 import QtCore, QtGui, QtWidgets
@@ -6,6 +8,7 @@ import FreeCAD as App
 import MBDyn_locator
 MBDwbPath = os.path.dirname(MBDyn_locator.__file__)
 MBDwb_icons_path = os.path.join(MBDwbPath, 'icons')
+from  MBDyn_funcs import *
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
@@ -42,7 +45,7 @@ class Ui_Form(object):
         self.label_5.setObjectName("label_5")
         self.runSim = QtWidgets.QPushButton(Form)
         self.runSim.setGeometry(QtCore.QRect(40, 200, 291, 25))
-        self.runSim.setObjectName("runSim")
+        self.runSim.setObjectName("write input")
         self.stopSim = QtWidgets.QPushButton(Form)
         self.stopSim.setGeometry(QtCore.QRect(40, 230, 291, 25))
         self.stopSim.setObjectName("stopSim")
@@ -85,15 +88,31 @@ class Ui_Form(object):
 
     def setoutputpath(self):
         outlocation = QtWidgets.QFileDialog.getExistingDirectory()
+#        outlocation = QDir.toNativeSeparators(outlocation)
+        if os.sep=='\\':
+            outlocation=outlocation.replace('/', '\\')
         self.out_location.setText(outlocation)
-
+        self.out_filename.setText("input.txt")
+        App.Console.PrintMessage("filename\n")
     def runSimulation(self):
+        App.Console.PrintMessage("filename2 \n")
         import os
         import subprocess
-        mbdyn = os.path.realpath(self.install_path.text())
-        outfile = os.path.realpath(self.out_location.text() + "/" + self.out_filename.text())
-
-##        Change the file path here
+        
+#        mbdyn = os.path.realpath(self.install_path.text())
+#        outfile = os.path.realpath(self.out_location.text() + "/" + self.out_filename.text())
+        outfile = self.out_location.text()
+#        App.Console.PrintMessage("filename" + outfile + "\n")
+        if os.path.isdir(outfile):
+#            App.Console.PrintMessage("filename" + outfile + "\n")
+            outfile = os.path.join(outfile , self.out_filename.text())
+        
+            App.Console.PrintMessage("filename" + outfile + "\n")
+            writeInputFile(outfile)
+        else: 
+            App.Console.PrintMessage("filename" + outfile + " not a dir\n")
+        '''
+#        Change the file path here
         infile = os.path.realpath('/home/adityabhagat/Documents/projects/long')
         self.outlogfile = self.out_location.text() + "/" + "out_msg.log"
         self.ol = open(self.outlogfile, 'w')
@@ -106,7 +125,7 @@ class Ui_Form(object):
         self.runSim.setEnabled(False)
         self.stopSim.setEnabled(True)
         self.pushButton.setEnabled(True)
-        
+        '''
     def stopSimulation(self):
         self.p.terminate()
         self.stopSim.setEnabled(False)
@@ -125,12 +144,12 @@ class mbdyn_launchGui(QtWidgets.QDialog,  Ui_Form):
         super(mbdyn_launchGui, self).__init__()
         self.setupUi(self)
     def GetResources(self):
-        return {'Pixmap': os.path.join(MBDwb_icons_path, 'MBDform_icon.svg'),
-                'MenuText': "MBD launch",
-                'ToolTip': "start MBDyn dialog"}
+        return {'Pixmap': os.path.join(MBDwb_icons_path, 'WrtMBDynIcon.svg'),
+                'MenuText': "MBD write input",
+                'ToolTip': "write MBDyn input dialog"}
     def Activated(self):
         """Do something here"""
-        App.Console.PrintMessage( Gui.activeWorkbench().iv.initial_time)
+#        App.Console.PrintMessage( Gui.activeWorkbench().iv.initial_time)
         self.show()
         
 Gui.addCommand('mbdyn_launchGui', mbdyn_launchGui())	

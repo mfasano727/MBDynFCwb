@@ -1,4 +1,11 @@
-import MBDynModel
+
+import os
+import sys
+import MBDyn_locator
+MBDwbPath = os.path.dirname(MBDyn_locator.__file__)
+MBDwb_icons_path = os.path.join(MBDwbPath, 'icons')
+
+import model_so
 from PySide2 import QtCore, QtGui, QtWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
@@ -414,79 +421,143 @@ class Ui_mbdyngui(object):
         
         
     def setupInitialValues(self):
-
-        it = self.initial_time.text()
-        ft = self.final_time.text()
-        ts = self.time_step.text()
-        mi = self.max_iterations.text()
-        tol = self.tolerance.text()
-        dertol = self.derivatives_tolerance.text()
         
+        App.Console.PrintMessage("hello")
+        if len(App.ActiveDocument.getObjectsByLabel("integration_method")) == 0:
+            integ_method = App.ActiveDocument.addObject("App::FeaturePython","integration_method")
+            model_so.MBDynIntegrationMethod(integ_method)
+            integ_method.ViewObject.Proxy = 0
+        else:
+            integ_method = App.ActiveDocument.integration_method
+        if len(App.ActiveDocument.getObjectsByLabel("initial_values")) == 0 :
+            iv = App.ActiveDocument.addObject("App::FeaturePython","initial_values")
+            model_so.MBDynInitialValue(iv)
+            iv.ViewObject.Proxy = 0
+            referencesGrp  = App.ActiveDocument.addObject("App::DocumentObjectGroup","References")
+            nodesGrp  = App.ActiveDocument.addObject("App::DocumentObjectGroup","Nodes")
+            elementsGrp  = App.ActiveDocument.addObject("App::DocumentObjectGroup","Elements")
+            bodies_elemSubGrp = elementsGrp.newObject('App::DocumentObjectGroup', 'Bodies')
+            joints_elemSubGrp = elementsGrp.newObject('App::DocumentObjectGroup', 'Joints')
+            forces_elemSubGrp = elementsGrp.newObject('App::DocumentObjectGroup', 'Forces')
+
+             # create global refernce
+            global_ref = referencesGrp.newObject("App::FeaturePython","global_reference")
+            model_so.MBDynReference(global_ref)
+            global_ref.ViewObject.Proxy = 0
+            global_ref.ref_label = 1
+            global_ref.ref_name = "global"
+            global_ref.refered_label = 0
+            global_ref.position = App.Vector(0,0,0)
+            global_ref.orientation = [App.Vector(1,0,0), App.Vector(0,1,0), App.Vector(0,0,0)]
+            global_ref.orientation_des = "eye"
+            global_ref.vel = App.Vector(0,0,0)
+            global_ref.ang_vel = App.Vector(0,0,0)
+#            referencesGrp.addObject(global_ref)
+        else:
+            iv = App.ActiveDocument.initial_values
+
+
+        if self.checkBox_4.checkState():
+            App.Console.PrintMessage("meth" + self.method.currentText())
+            if self.method.currentIndex() == 0:
+                integ_method.differential_radius = 0
+                integ_method.algebraic_radius = 0
+                integ_method.order = 0
+                integ_method.Imethod = ""
+            if self.method.currentIndex() == 1:
+                integ_method.differential_radius = 0
+                integ_method.algebraic_radius = 0
+                integ_method.order = 0
+                integ_method.Imethod = self.method.currentText()
+            elif self.method.currentIndex() == 2:
+                integ_method.differential_radius = float(self.ms_differential_radius.text())
+                integ_method.algebraic_radius = float(self.ms_algebraic_radius.text())
+                integ_method.order = 0 
+                integ_method.Imethod = self.method.currentText()
+                App.Console.PrintMessage("testi")
+            elif self.method.currentIndex() == 3:
+                integ_method.differential_radius = float(self.hope_differential_radius.text())
+                integ_method.algebraic_radius = float(self.hope_algebraic_radius.text())
+                integ_method.order = 0
+                integ_method.Imethod = self.method.currentText()
+            elif self.method.currentIndex() == 4:
+                integ_method.differential_radius = float(self.torder_differential_radius.text())
+                integ_method.algebraic_radius = 0
+                integ_method.order = 0  
+                integ_method.Imethod = self.method.currentText()
+            elif self.method.currentIndex() == 5:
+                integ_method.differential_radius = 0
+                integ_method.algebraic_radius = 0
+                integ_method.order = float(self.bdf_order.text())   
+                integration_method.Imethod = self.method.currentText()
+            elif self.method.currentIndex() == 6:
+                integ_method.differential_radius = 0
+                integ_method.algebraic_radius = 0
+                integ_method.order = 0
+                integ_method.Imethod = self.method.currentText()
+                    
+        App.Console.PrintMessage("hello2")
+        iv.initial_time = float(self.initial_time.text())
+        
+        iv.final_time = float(self.final_time.text())
+        iv.time_step = float(self.time_step.text())
+        iv.max_iterations = int(self.max_iterations.text())
+        iv.tolerance = float(self.tolerance.text())
+#        if self.checkBox_2.checkState():
+#            iv.derivatives_tolerance = float(self.derivatives_tolerance.text())
+#        App.Console.PrintMessage("testi")
+        App.Console.PrintMessage(iv.Proxy.writeInitialValue())
         if self.checkBox_2.checkState():
             o = MBDynModel.MBDynOutputData(self.output.text())
-        if self.method.currentIndex() == 1:
-            m = MBDynModel.crankNicolson()
-        elif self.method.currentIndex() == 2:
-            m = MBDynModel.ms(float(self.ms_differential_radius.text()), float(self.ms_algebraic_radius.text()))
-        elif self.method.currentIndex() == 3:
-            m = MBDynModel.hope(float(self.hope_differential_radius.text()), float(self.hope_algebraic_radius.text()))
-        elif self.method.currentIndex() == 4:
-            m = MBDynModel.thirdOrder(float(self.torder_differential_radius.text()))
-        elif self.method.currentIndex() == 5:
-            m = MBDynModel.bdf(float(self.bdf_order.text()))
-        elif self.method.currentIndex() == 6:
-            m = MBDynModel.implicitEuler()
-
-        try:
-            Gui.activeWorkbench().iv.setInitialTime(float(it))
-        except: pass
-        try:
-            Gui.activeWorkbench().iv.setFinalTime(float(ft))
-        except: pass
-        try:
-            FreeCADGui.activeWorkbench().iv.setTimeStep(float(ts))
-        except: pass
-        try:
-            Gui.activeWorkbench().iv.setMaxIterations(float(mi))
-        except: pass
-        try:
-            Gui.activeWorkbench().iv.setTolerance(float(tol))
-        except: pass
-        try:
-            Gui.activeWorkbench().iv.setMethod(m)
-        except: pass
-        try:
-            Gui.activeWorkbench().iv.setOutput(o)
-        except: pass
-        try:
-            FreeCADGui.activeWorkbench().iv.setsetDerivativesTolerance(dertol)
-        except: pass
+ 
         
+ 
 
-        self.setInitialValues.setEnabled(False)
-        App.Console.PrintMessage( Gui.activeWorkbench().iv.initial_time)
+#        iv = App.ActiveDocument.addObject("App::FeaturePython","MBDynInitialValue")
+#        model_so.MBDynInitialValue(iv)
+#        iv.ViewObject.Proxy = 0
+#        App.Console.PrintMessage( self.iv.initial_time)        
+
+#        self.setInitialValues.setEnabled(False)
+#        App.Console.PrintMessage( Gui.activeWorkbench().iv.initial_time)
 #       App.Console.PrintMessage( Gui.activeWorkbench().elements.gravity)
-        App.Console.PrintMessage("testi")
+        
         
     def setupGravity(self):
+        if len(App.ActiveDocument.getObjectsByLabel("gravity")) == 0 :
+            gravity = App.ActiveDocument.addObject("App::FeaturePython","gravity")
+            model_so.MBDynGravity(gravity)
+            gravity.ViewObject.Proxy = 0
+
         if self.add_gravity.checkState():
             if self.gravity_type.currentIndex() == 0:
-                x = float(self.ug_x.text())
-                y = float(self.ug_y.text())
-                z = float(self.ug_z.text())
-                ga = float(self.gravity_acceleration.text())
-                g = MBDynModel.MBDynGravity("uniform", MBDynModel.vec(x, y, z), ga)
+                App.Console.PrintMessage("testg3")
+                gravity.field_type = "uniform"
+                g_vect = App.Vector()
+                App.Console.PrintMessage("testg3" + self.ug_x.text())
+                g_vect.x = float(self.ug_x.text())
+                g_vect.y = float(self.ug_y.text())
+                g_vect.z = float(self.ug_z.text())
+                App.Console.PrintMessage("testg4" + self.ug_x.text())
+                
+                gravity.gravity_vector = g_vect
+                gravity.gravity_value = float(self.gravity_acceleration.text())
+#                g = MBDynModel.MBDynGravity("uniform", MBDynModel.vec(x, y, z), ga)
                         
             else:
-                x = float(self.cg_x.text())
-                y = float(self.cg_y.text())
-                z = float(self.cg_z.text())
-                m = float(self.cg_field_mass.text())
-                gc = float(self.grav_constant.text())
-                g = MBDynModel.MBDynGravity("central", MBDynModel.vec(x, y, z), m, gc)
+                App.Console.PrintMessage("testg4")
+                gravity.field_type = "central"
+                g_origin = App.Vector()
+                g_origin.x = float(self.cg_x.text())
+                g_origin.y = float(self.cg_y.text())
+                g_origin.z = float(self.cg_z.text())
+                gravity.gravity_origin = g_origin
+                gravity.cg_field_mass = float(self.cg_field_mass.text())
+                gravity.gravity_constant = float(self.grav_constant.text())
+#                g = MBDynModel.MBDynGravity("central", MBDynModel.vec(x, y, z), m, gc)
                         
-            Gui.activeWorkbench().elements.addGravity(g)
-            self.setGravity.setEnabled(False)
+#            Gui.activeWorkbench().elements.addGravity(g)
+#            self.setGravity.setEnabled(False)
         App.Console.PrintMessage( Gui.activeWorkbench().elements.gravity)
         App.Console.PrintMessage( Gui.activeWorkbench().iv.initial_time)
         App.Console.PrintMessage("testg")
@@ -505,44 +576,41 @@ class mbdyn_configure(QtWidgets.QDialog, Ui_mbdyngui):
        
 #        sys.exit(mbdyngui.exec_())
     def GetResources(self):
-        return {
-                'MenuText': "MBDyn configuration",
-                'ToolTip' : "Set up the mbdyn simulation",
-                'Accel' : "Shift+M",
-                'Pixmap' : """
-                    /* XPM */
-                    static char *_0841_78c4735f4debc5e036a183aca3ef35cc8bf5d473b34fd4dbadba0006b25406ff[] = {
-                    /* columns rows colors chars-per-pixel */
-                    "16 16 3 1 ",
-                    "  c red",
-                    ". c #C0C0C0",
-                    "X c white",
-                    /* pixels */
-                    "XXXXXXX...XXXXXX",
-                    "XXXXXXX   XXXXXX",
-                    "XXX  XX   XX  XX",
-                    "XX             X",
-                    "XX             X",
-                    "XXX           XX",
-                    "XXX    XXX    XX",
-                    "X     XXXXX     ",
-                    "X     XXXXX     ",
-                    "X     XXXXX     ",
-                    "XXX    XXX    XX",
-                    "XXX           XX",
-                    "XX             X",
-                    "XX             X",
-                    "XXX  XX   XX  XX",
-                    "XXXXXXX   XXXXXX"
-                    };
-                    """
-                }
+        return {'Pixmap': os.path.join(MBDwb_icons_path, 'IVP_icon.svg'),
+                'MenuText': "Set MBDyn initial values",
+                'ToolTip': "input initial values parameters"}
 
     def Activated(self):
 #        mbdyndia = mbdyn_launchGui()
         self.show()
+        if len(App.ActiveDocument.getObjectsByLabel("MBDynInitialValue")) == 0 :
+            self.initial_time.setText("0.0")
+            self.final_time.setText("5.0")
+            self.time_step.setText("0.01")
+            self.max_iterations.setText("4")
+            self.tolerance.setText("0.001")
+        else:
+#            self.initial_time.setText(str{App.ActiveDocument.getObjectsByLabel("MBDynInitialValue").initial_time}}
+#            App.Console.PrintMessage(App.ActiveDocument.getObjectsByLabel("MBDynInitialValue")}
+            App.Console.PrintMessage(App.ActiveDocument.MBDynInitialValue.initial_time)
+            App.ActiveDocument.MBDynInitialValue.initial_time
+            self.initial_time.setText(str(App.ActiveDocument.MBDynInitialValue.initial_time))
+            self.final_time.setText(str(App.ActiveDocument.MBDynInitialValue.final_time))
+            self.time_step.setText(str(App.ActiveDocument.MBDynInitialValue.time_step))
+            self.max_iterations.setText(str(App.ActiveDocument.MBDynInitialValue.max_iterations))
+            self.tolerance.setText(str(App.ActiveDocument.MBDynInitialValue.tolerance))
 
-        
+        if len(App.ActiveDocument.getObjectsByLabel("MBDyngravity")) != 0 :
+            self.gravity_acceleration.setText(str(App.ActiveDocument.MBDyngravity.gravity_value))
+            self.ug_x.setText(str(App.ActiveDocument.MBDyngravity.gravity_vector.x))
+            self.ug_y.setText(str(App.ActiveDocument.MBDyngravity.gravity_vector.y))
+            self.ug_z.setText(str(App.ActiveDocument.MBDyngravity.gravity_vector.z))
+
+            self.cg_x.setText(str(App.ActiveDocument.MBDyngravity.gravity_origin.x))
+            self.cg_y.setText(str(App.ActiveDocument.MBDyngravity.gravity_origin.y))
+            self.cg_z.setText(str(App.ActiveDocument.MBDyngravity.gravity_origin.z))
+            self.cg_field_mass.setText(str(App.ActiveDocument.MBDyngravity.cg_field_mass))
+            self.grav_constant.setText(str(App.ActiveDocument.MBDyngravity.gravity_constant))
     def IsActive(self):
         if App.ActiveDocument == None:
             return False
