@@ -16,7 +16,7 @@
    version="1.1"
    id="svg868"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="stuct_node_icon2.svg">
+   sodipodi:docname="Struct_node_icon.svg">
   <defs
      id="defs862" />
   <sodipodi:namedview
@@ -27,7 +27,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.35"
-     inkscape:cx="-90"
+     inkscape:cx="-48.571429"
      inkscape:cy="560"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -45,7 +45,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -54,7 +54,7 @@
      inkscape:groupmode="layer"
      id="layer1">
     <switch
-       transform="matrix(2.7703333,0,0,6.9176641,-5.3558128,-191.29118)"
+       transform="matrix(2.207818,0,0,5.0123218,-2.0459728,-88.912012)"
        id="switch837">
       <foreignObject
          requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/"
