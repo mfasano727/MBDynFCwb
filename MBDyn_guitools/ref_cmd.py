@@ -8,14 +8,14 @@ import sys
 import MBDyn_locator
 MBDwbPath = os.path.dirname(MBDyn_locator.__file__)
 MBDwb_icons_path = os.path.join(MBDwbPath, 'icons')
-import model_so
+import MBDyn_objects.model_so
 from PySide2 import QtCore, QtGui, QtWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
 
 
 
-from  dia_ref import Ui_ref_dialog
+from   MBDyn_guitools.dia_ref import Ui_ref_dialog
 
 class ref_cmd(QtWidgets.QDialog, Ui_ref_dialog):
     """MBD create reference command"""
@@ -34,12 +34,17 @@ class ref_cmd(QtWidgets.QDialog, Ui_ref_dialog):
         if App.ActiveDocument.getObjectsByLabel('References') != None :
             for refobj in App.ActiveDocument.References.Group:
                 self.parent_ref_box.addItem(refobj.ref_name)
+
         self.pos_x.setText("0") ; self.pos_y.setText("0") ; self.pos_z.setText("0")
         self.vect1_x.setText("1") ; self.vect1_y.setText("0") ; self.vect1_z.setText("0")
         self.vect2_x.setText("0") ; self.vect2_y.setText("1") ; self.vect2_z.setText("0")
         self.vect3_x.setText("0") ; self.vect3_y.setText("0") ; self.vect3_z.setText("1")
         self.vel_x.setText("0") ; self.vel_y.setText("0") ; self.vel_z.setText("0")
         self.ang_vel_x.setText("0") ; self.ang_vel_y.setText("0") ; self.ang_vel_z.setText("0")
+
+        self.OM_type.currentIndexChanged.connect(self.set_OM_type)
+        self.OM_type.setCurrentIndex(1)
+        self.OM_type.setCurrentIndex(0)
 #        self.valid = QtGui.QDoubleValidator()
 #        self.pos_x.setValidator(self.valid)
 #        self.pos_x.textEdited.connect(self.check_valid())
@@ -63,7 +68,7 @@ class ref_cmd(QtWidgets.QDialog, Ui_ref_dialog):
 #        testgroup  = App.ActiveDocument.getObjectsByLabel('references')
 #        new_ref = App.ActiveDocument.addObject("App::FeaturePython","reference2")
         new_ref =App.ActiveDocument.References.newObject("App::FeaturePython","reference" + str(self.parent_ref_box.count()))
-        model_so.MBDynReference(new_ref)
+        MBDyn_objects.model_so.MBDynReference(new_ref)
         new_ref.ViewObject.Proxy = 0
 
         new_ref.ref_label = self.parent_ref_box.count()
@@ -83,34 +88,35 @@ class ref_cmd(QtWidgets.QDialog, Ui_ref_dialog):
         new_ref.vel = App.Vector(float(self.vel_x.text()), float(self.vel_y.text()), float(self.vel_z.text()))
         new_ref.ang_vel = App.Vector(float(self.ang_vel_x.text()), float(self.ang_vel_y.text()), float(self.ang_vel_z.text()))
 
+        self.done(1)
+
+    def reject(self):
+        self.done(0)
+
+
     def set_OM_type(self):
         index = self.OM_type.currentIndex()
         App.Console.PrintMessage(" property: " +self.OM_type.itemText(index) + "\n")
-        if self.OM_type.currentIndex() == 0:  #xy selected  only vectors 1 and 2 are editable
-            self.vect1_x.setReadOnly(False); self.vect1_y.setReadOnly(False); self.vect1_z.setReadOnly(False)
-            self.vect2_x.setReadOnly(False); self.vect2_y.setReadOnly(False); self.vect2_z.setReadOnly(False)
-#            self.vect3_x.cear(); self.vect3_y.cear(); self.vect3_z.cear()
-            self.vect3_x.setReadOnly(True); self.vect3_y.setReadOnly(True); self.vect3_z.setReadOnly(True)
-        elif self.OM_type.currentIndex() == 1:  #xz selected  only vectors 1 and 3 are editable
-            self.vect1_x.setReadOnly(False); self.vect1_y.setReadOnly(False); self.vect1_z.setReadOnly(False)
-#            self.vect2_x.cear(); self.vect2_y.cear(); self.vect2_z.cear()
-            self.vect2_x.setReadOnly(True); self.vect2_y.setReadOnly(True); self.vect2_z.setReadOnly(True)
-            self.vect3_x.setReadOnly(False); self.vect3_y.setReadOnly(False); self.vect3_z.setReadOnly(False)
-        elif self.OM_type.currentIndex() == 2:  #yz selected  only vectors 2 and 3 are editable
-#            self.vect1_x.cear(); self.vect1_y.cear(); self.vect1_z.cear()
-            self.vect1_x.setReadOnly(True); self.vect1_y.setReadOnly(True); self.vect1_z.setReadOnly(True)
-            self.vect2_x.setReadOnly(False); self.vect2_y.setReadOnly(False); self.vect2_z.setReadOnly(False)
-            self.vect3_x.setReadOnly(False); self.vect3_y.setReadOnly(False); self.vect3_z.setReadOnly(False)
-        elif self.OM_type.currentIndex() == 3:  #MATRIX selected  all vectors are editable
-            self.vect1_x.setReadOnly(False); self.vect1_y.setReadOnly(False); self.vect1_z.setReadOnly(False)
-            self.vect2_x.setReadOnly(False); self.vect2_y.setReadOnly(False); self.vect2_z.setReadOnly(False)
-            self.vect3_x.setReadOnly(False); self.vect3_y.setReadOnly(False); self.vect3_z.setReadOnly(False)
-        else:  # for euler only  vector 1 is editable
-            self.vect1_x.setReadOnly(False); self.vect1_y.setReadOnly(False); self.vect1_z.setReadOnly(False)
-#            self.vect2_x.cear(); self.vect2_y.cear(); self.vect2_z.cear()
-            self.vect2_x.setReadOnly(True); self.vect2_y.setReadOnly(True); self.vect2_z.setReadOnly(True)
- #           self.vect3_x.cear(); self.vect3_y.cear(); self.vect3_z.cear()
-            self.vect3_x.setReadOnly(True); self.vect3_y.setReadOnly(True); self.vect3_z.setReadOnly(True)
+        if self.OM_type.currentIndex() == 0:  #xy selected  only vectors 1 and 2 are visible
+            self.vect1_x.setVisible(True);  self.vect1_y.setVisible(True);  self.vect1_z.setVisible(True)
+            self.vect2_x.setVisible(True);  self.vect2_y.setVisible(True);  self.vect2_z.setVisible(True)
+            self.vect3_x.setVisible(False); self.vect3_y.setVisible(False); self.vect3_z.setVisible(False)
+        elif self.OM_type.currentIndex() == 1:  #xz selected  only vectors 1 and 3 are visible
+            self.vect1_x.setVisible(True);  self.vect1_y.setVisible(True);  self.vect1_z.setVisible(True)
+            self.vect2_x.setVisible(False); self.vect2_y.setVisible(False); self.vect2_z.setVisible(False)
+            self.vect3_x.setVisible(True);  self.vect3_y.setVisible(True);  self.vect3_z.setVisible(True)
+        elif self.OM_type.currentIndex() == 2:  #yz selected  only vectors 2 and 3 are visible
+            self.vect1_x.setVisible(False); self.vect1_y.setVisible(False); self.vect1_z.setVisible(False)
+            self.vect2_x.setVisible(True);  self.vect2_y.setVisible(True);  self.vect2_z.setVisible(True)
+            self.vect3_x.setVisible(True);  self.vect3_y.setVisible(True);  self.vect3_z.setVisible(True)
+        elif self.OM_type.currentIndex() == 3:  #matr selected  all vectors are visible
+            self.vect1_x.setVisible(True);  self.vect1_y.setVisible(True);  self.vect1_z.setVisible(True)
+            self.vect2_x.setVisible(True);  self.vect2_y.setVisible(True);  self.vect2_z.setVisible(True)
+            self.vect3_x.setVisible(True);  self.vect3_y.setVisible(True);  self.vect3_z.setVisible(True)
+        else:  # for euler only  vector 1 is visible
+            self.vect1_x.setVisible(True);  self.vect1_y.setVisible(True);  self.vect1_z.setVisible(True)
+            self.vect2_x.setVisible(False); self.vect2_y.setVisible(False); self.vect2_z.setVisible(False)
+            self.vect3_x.setVisible(False); self.vect3_y.setVisible(False); self.vect3_z.setVisible(False)
 
     def check_valid(self):
          pass

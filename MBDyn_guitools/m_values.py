@@ -5,7 +5,7 @@ import MBDyn_locator
 MBDwbPath = os.path.dirname(MBDyn_locator.__file__)
 MBDwb_icons_path = os.path.join(MBDwbPath, 'icons')
 
-import model_so
+import MBDyn_objects.model_so
 from PySide2 import QtCore, QtGui, QtWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
@@ -425,13 +425,13 @@ class Ui_mbdyngui(object):
         App.Console.PrintMessage("hello")
         if len(App.ActiveDocument.getObjectsByLabel("integration_method")) == 0:
             integ_method = App.ActiveDocument.addObject("App::FeaturePython","integration_method")
-            model_so.MBDynIntegrationMethod(integ_method)
+            MBDyn_objects.model_so.MBDynIntegrationMethod(integ_method)
             integ_method.ViewObject.Proxy = 0
         else:
             integ_method = App.ActiveDocument.integration_method
         if len(App.ActiveDocument.getObjectsByLabel("initial_values")) == 0 :
             iv = App.ActiveDocument.addObject("App::FeaturePython","initial_values")
-            model_so.MBDynInitialValue(iv)
+            MBDyn_objects.model_so.MBDynInitialValue(iv)
             iv.ViewObject.Proxy = 0
             referencesGrp  = App.ActiveDocument.addObject("App::DocumentObjectGroup","References")
             nodesGrp  = App.ActiveDocument.addObject("App::DocumentObjectGroup","Nodes")
@@ -442,7 +442,7 @@ class Ui_mbdyngui(object):
 
              # create global refernce
             global_ref = referencesGrp.newObject("App::FeaturePython","global_reference")
-            model_so.MBDynReference(global_ref)
+            MBDyn_objects.model_so.MBDynReference(global_ref)
             global_ref.ViewObject.Proxy = 0
             global_ref.ref_label = 1
             global_ref.ref_name = "global"
@@ -526,7 +526,7 @@ class Ui_mbdyngui(object):
     def setupGravity(self):
         if len(App.ActiveDocument.getObjectsByLabel("gravity")) == 0 :
             gravity = App.ActiveDocument.addObject("App::FeaturePython","gravity")
-            model_so.MBDynGravity(gravity)
+            MBDyn_objects.model_so.MBDynGravity(gravity)
             gravity.ViewObject.Proxy = 0
 
         if self.add_gravity.checkState():

@@ -1,8 +1,8 @@
 import numpy as np
 import math
 import FreeCAD as App
-import MBDynJoints
-from  MBDyn_funcs import *
+import MBDyn_objects.MBDynJoints
+from  MBDyn_utilities.MBDyn_funcs import *
 '''
 def writeVect(vector):
    if vector.x == 0 and vector.y == 0 and vector.z == 0:

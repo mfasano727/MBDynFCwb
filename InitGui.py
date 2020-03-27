@@ -46,13 +46,13 @@ class MbdynGui(Workbench):
         return "Gui::PythonWorkbench"
 
     def Initialize(self):
-        import m_values
-        import MBDynFreeCAD
-        import body_sel_cmd
-        import ref_cmd
-        import struct_node_cmd
-        import revpin_joint_cmd
-        import hinge_joint_cmd
+        import MBDyn_guitools.m_values
+        import MBDyn_guitools.MBDynFreeCAD
+        import MBDyn_guitools.body_sel_cmd
+        import MBDyn_guitools.ref_cmd
+        import MBDyn_guitools.struct_node_cmd
+        import MBDyn_guitools.revpin_joint_cmd
+        import MBDyn_guitools.hinge_joint_cmd
         self.list = ["mbdyn_configure", "mbdyn_launchGui", "body_sel_cmd",
                      "ref_cmd", "struct_node_cmd", "revpin_joint_cmd","hinge_joint_cmd"]
         self.appendToolbar("Mbdyn_comands", self.list)
@@ -61,12 +61,12 @@ class MbdynGui(Workbench):
         Log("Loading MyModule... done\n")
 
     def Activated(self):
-        import model_so
-        self.model = model_so.MBDynModel
+#        import MBDyn_objects.model_so
+#        self.model = model_so.MBDynModel
 #        iv = FreeCAD.ActiveDocument.addObject("Part::FeaturePython","MBDynInitialValue")
 #        model_so.MBDynInitialValue(iv)        
-        self.nodes = model_so.MBDynNodes()
-        self.elements = model_so.MBDynElements()
+#        self.nodes = model_so.MBDynNodes()
+#        self.elements = model_so.MBDynElements()
         
         App.Console.PrintMessage("test")
         

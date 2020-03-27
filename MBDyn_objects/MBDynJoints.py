@@ -1,8 +1,8 @@
 import numpy as np
 import math
 import FreeCAD as App
-import model_so
-from  MBDyn_funcs import writeVect, writeMatrix, writeOrientationMatrix
+import MBDyn_objects.model_so
+from  MBDyn_utilities.MBDyn_funcs import writeVect, writeMatrix, writeOrientationMatrix
 
 class MBDynRevoluteHinge:
     def __init__(self, obj):

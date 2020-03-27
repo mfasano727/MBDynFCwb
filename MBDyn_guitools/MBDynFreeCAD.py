@@ -8,7 +8,7 @@ import FreeCAD as App
 import MBDyn_locator
 MBDwbPath = os.path.dirname(MBDyn_locator.__file__)
 MBDwb_icons_path = os.path.join(MBDwbPath, 'icons')
-from  MBDyn_funcs import *
+from  MBDyn_utilities.MBDyn_funcs import *
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")

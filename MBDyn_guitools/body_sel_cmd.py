@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # coding: utf-8
 #
-# init_val_prob_cmd.py
+# body_sel_cmd.py
 
 import os
 import sys
@@ -15,9 +15,9 @@ import FreeCAD as App
 import Part
 import math, re
 
-import model_so  # MBDyne model with scripted objects
+import MBDyn_objects.model_so  # MBDyne model with scripted objects
 
-from dia_body_sel import Ui_dia_body_sel
+from MBDyn_guitools.dia_body_sel import Ui_dia_body_sel
 
 class body_sel_cmd(QtWidgets.QDialog,  Ui_dia_body_sel):
     """MBD body select command; objects that have solid shape type as rigid bodies."""
@@ -57,13 +57,13 @@ class body_sel_cmd(QtWidgets.QDialog,  Ui_dia_body_sel):
 
         # create body element scripted object
         new_body =App.ActiveDocument.Bodies.newObject("App::FeaturePython", tempstring)
-        model_so.MBDynRigidBody(new_body)
+        MBDyn_objects.model_so.MBDynRigidBody(new_body)
         new_body.ViewObject.Proxy = 0
 
         #   create strctural node for ridgid body
         num_nodes = len(App.ActiveDocument.Nodes.getSubObjects()) + 1
         new_node =App.ActiveDocument.Nodes.newObject("App::FeaturePython", self.body_list.currentText()+ "_node_" + str(num_nodes))
-        model_so.MBDynStructuralNode(new_node)
+        MBDyn_objects.model_so.MBDynStructuralNode(new_node)
         new_node.ViewObject.Proxy = 0
         num_nodes = len(App.ActiveDocument.Nodes.getSubObjects())
         App.Console.PrintMessage(" node1test ")
@@ -110,7 +110,11 @@ class body_sel_cmd(QtWidgets.QDialog,  Ui_dia_body_sel):
         #  set node name to new_body.body_obj_label + num of nodes on body
         new_node.node_name = new_body.body_obj_label + "_" + str(1)
         
-        self.close()
+        self.done(1)
+
+    def reject(self):
+        self.done(0)
+
 
 
 Gui.addCommand('body_sel_cmd', body_sel_cmd())
