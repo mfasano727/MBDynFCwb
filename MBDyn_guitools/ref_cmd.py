@@ -43,6 +43,8 @@ class ref_cmd(QtWidgets.QDialog, Ui_ref_dialog):
         self.ang_vel_x.setText("0") ; self.ang_vel_y.setText("0") ; self.ang_vel_z.setText("0")
 
         self.OM_type.currentIndexChanged.connect(self.set_OM_type)
+        self.OM_type.setCurrentIndex(1)
+        self.OM_type.setCurrentIndex(0)
 #        self.valid = QtGui.QDoubleValidator()
 #        self.pos_x.setValidator(self.valid)
 #        self.pos_x.textEdited.connect(self.check_valid())
@@ -86,26 +88,32 @@ class ref_cmd(QtWidgets.QDialog, Ui_ref_dialog):
         new_ref.vel = App.Vector(float(self.vel_x.text()), float(self.vel_y.text()), float(self.vel_z.text()))
         new_ref.ang_vel = App.Vector(float(self.ang_vel_x.text()), float(self.ang_vel_y.text()), float(self.ang_vel_z.text()))
 
+        self.done(1)
+
+    def reject(self):
+        self.done(0)
+
+
     def set_OM_type(self):
         index = self.OM_type.currentIndex()
         App.Console.PrintMessage(" property: " +self.OM_type.itemText(index) + "\n")
-        if self.OM_type.currentIndex() == 0:  #xy selected  only vectors 1 and 2 are editable
+        if self.OM_type.currentIndex() == 0:  #xy selected  only vectors 1 and 2 are visible
             self.vect1_x.setVisible(True);  self.vect1_y.setVisible(True);  self.vect1_z.setVisible(True)
             self.vect2_x.setVisible(True);  self.vect2_y.setVisible(True);  self.vect2_z.setVisible(True)
             self.vect3_x.setVisible(False); self.vect3_y.setVisible(False); self.vect3_z.setVisible(False)
-        elif self.OM_type.currentIndex() == 1:  #xz selected  only vectors 1 and 3 are editable
+        elif self.OM_type.currentIndex() == 1:  #xz selected  only vectors 1 and 3 are visible
             self.vect1_x.setVisible(True);  self.vect1_y.setVisible(True);  self.vect1_z.setVisible(True)
             self.vect2_x.setVisible(False); self.vect2_y.setVisible(False); self.vect2_z.setVisible(False)
             self.vect3_x.setVisible(True);  self.vect3_y.setVisible(True);  self.vect3_z.setVisible(True)
-        elif self.OM_type.currentIndex() == 2:  #yz selected  only vectors 2 and 3 are editable
+        elif self.OM_type.currentIndex() == 2:  #yz selected  only vectors 2 and 3 are visible
             self.vect1_x.setVisible(False); self.vect1_y.setVisible(False); self.vect1_z.setVisible(False)
             self.vect2_x.setVisible(True);  self.vect2_y.setVisible(True);  self.vect2_z.setVisible(True)
             self.vect3_x.setVisible(True);  self.vect3_y.setVisible(True);  self.vect3_z.setVisible(True)
-        elif self.OM_type.currentIndex() == 3:  #matr selected  all vectors are editable
+        elif self.OM_type.currentIndex() == 3:  #matr selected  all vectors are visible
             self.vect1_x.setVisible(True);  self.vect1_y.setVisible(True);  self.vect1_z.setVisible(True)
             self.vect2_x.setVisible(True);  self.vect2_y.setVisible(True);  self.vect2_z.setVisible(True)
             self.vect3_x.setVisible(True);  self.vect3_y.setVisible(True);  self.vect3_z.setVisible(True)
-        else:  # for euler only  vector 1 is editable
+        else:  # for euler only  vector 1 is visible
             self.vect1_x.setVisible(True);  self.vect1_y.setVisible(True);  self.vect1_z.setVisible(True)
             self.vect2_x.setVisible(False); self.vect2_y.setVisible(False); self.vect2_z.setVisible(False)
             self.vect3_x.setVisible(False); self.vect3_y.setVisible(False); self.vect3_z.setVisible(False)

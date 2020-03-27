@@ -110,7 +110,11 @@ class body_sel_cmd(QtWidgets.QDialog,  Ui_dia_body_sel):
         #  set node name to new_body.body_obj_label + num of nodes on body
         new_node.node_name = new_body.body_obj_label + "_" + str(1)
         
-        self.close()
+        self.done(1)
+
+    def reject(self):
+        self.done(0)
+
 
 
 Gui.addCommand('body_sel_cmd', body_sel_cmd())

@@ -52,7 +52,10 @@ class hinge_joint_cmd(QtWidgets.QDialog, Ui_dia_hinge_joint):
         
         self.node1_OM_type_Box.currentIndexChanged.connect(self.set_node1_OM_type)
         self.node2_OM_type_Box.currentIndexChanged.connect(self.set_node2_OM_type)
-
+        self.node1_OM_type_Box.setCurrentIndex(1)
+        self.node2_OM_type_Box.setCurrentIndex(1)
+        self.node1_OM_type_Box.setCurrentIndex(0)
+        self.node2_OM_type_Box.setCurrentIndex(0)
 #        self.valid = QtGui.QDoubleValidator()
 #        self.pos_x.setValidator(self.valid)
 #        self.pos_x.textEdited.connect(self.check_valid())
@@ -103,27 +106,32 @@ class hinge_joint_cmd(QtWidgets.QDialog, Ui_dia_hinge_joint):
             else:
                 App.Console.PrintMessage(" both nodes can not bee the same ")
 
+        self.done(1)
+
+    def reject(self):
+        self.done(0)
+
 
     def set_node1_OM_type(self):
         index = self.node1_OM_type_Box.currentIndex()
         App.Console.PrintMessage(" property: " +self.node1_OM_type_Box.itemText(index) + "\n")
-        if self.node1_OM_type_Box.currentIndex() == 0:  #xy selected  only vectors 1 and 2 are editable
+        if self.node1_OM_type_Box.currentIndex() == 0:  #xy selected  only vectors 1 and 2 are visible
             self.node1_vect1_x.setVisible(True);  self.node1_vect1_y.setVisible(True);  self.node1_vect1_z.setVisible(True)
             self.node1_vect2_x.setVisible(True);  self.node1_vect2_y.setVisible(True);  self.node1_vect2_z.setVisible(True)
             self.node1_vect3_x.setVisible(False); self.node1_vect3_y.setVisible(False); self.node1_vect3_z.setVisible(False)
-        elif self.node1_OM_type_Box.currentIndex() == 1:  #xz selected  only vectors 1 and 3 are editable
+        elif self.node1_OM_type_Box.currentIndex() == 1:  #xz selected  only vectors 1 and 3 are visible
             self.node1_vect1_x.setVisible(True);  self.node1_vect1_y.setVisible(True);  self.node1_vect1_z.setVisible(True)
             self.node1_vect2_x.setVisible(False); self.node1_vect2_y.setVisible(False); self.node1_vect2_z.setVisible(False)
             self.node1_vect3_x.setVisible(True);  self.node1_vect3_y.setVisible(True);  self.node1_vect3_z.setVisible(True)
-        elif self.node1_OM_type_Box.currentIndex() == 2:  #yz selected  only vectors 2 and 3 are editable
+        elif self.node1_OM_type_Box.currentIndex() == 2:  #yz selected  only vectors 2 and 3 are visible
             self.node1_vect1_x.setVisible(False); self.node1_vect1_y.setVisible(False); self.node1_vect1_z.setVisible(False)
             self.node1_vect2_x.setVisible(True);  self.node1_vect2_y.setVisible(True);  self.node1_vect2_z.setVisible(True)
             self.node1_vect3_x.setVisible(True);  self.node1_vect3_y.setVisible(True);  self.node1_vect3_z.setVisible(True)
-        elif self.node1_OM_type_Box.currentIndex() == 3:  #matr selected  all vectors are editable
+        elif self.node1_OM_type_Box.currentIndex() == 3:  #matr selected  all vectors are visible
             self.node1_vect1_x.setVisible(True);  self.node1_vect1_y.setVisible(True);  self.node1_vect1_z.setVisible(True)
             self.node1_vect2_x.setVisible(True);  self.node1_vect2_y.setVisible(True);  self.node1_vect2_z.setVisible(True)
             self.node1_vect3_x.setVisible(True);  self.node1_vect3_y.setVisible(True);  self.node1_vect3_z.setVisible(True)
-        else:  # for euler only  vector 1 is editable
+        else:  # for euler only  vector 1 is visible
             self.node1_vect1_x.setVisible(True);  self.node1_vect1_y.setVisible(True);  self.node1_vect1_z.setVisible(True)
             self.node1_vect2_x.setVisible(False); self.node1_vect2_y.setVisible(False); self.node1_vect2_z.setVisible(False)
             self.node1_vect3_x.setVisible(False); self.node1_vect3_y.setVisible(False); self.node1_vect3_z.setVisible(False)
@@ -131,23 +139,23 @@ class hinge_joint_cmd(QtWidgets.QDialog, Ui_dia_hinge_joint):
     def set_node2_OM_type(self):
         index = self.node2_OM_type_Box.currentIndex()
         App.Console.PrintMessage(" property: " +self.node2_OM_type_Box.itemText(index) + "\n")
-        if self.node2_OM_type_Box.currentIndex() == 0:  #xy selected  only vectors 1 and 2 are editable
+        if self.node2_OM_type_Box.currentIndex() == 0:  #xy selected  only vectors 1 and 2 are visible
             self.node2_vect1_x.setVisible(True);  self.node2_vect1_y.setVisible(True);  self.node2_vect1_z.setVisible(True)
             self.node2_vect2_x.setVisible(True);  self.node2_vect2_y.setVisible(True);  self.node2_vect2_z.setVisible(True)
             self.node2_vect3_x.setVisible(False); self.node2_vect3_y.setVisible(False); self.node2_vect3_z.setVisible(False)
-        elif self.node2_OM_type_Box.currentIndex() == 1:  #xz selected  only vectors 1 and 3 are editable
+        elif self.node2_OM_type_Box.currentIndex() == 1:  #xz selected  only vectors 1 and 3 are visible
             self.node2_vect1_x.setVisible(True);  self.node2_vect1_y.setVisible(True);  self.node2_vect1_z.setVisible(True)
             self.node2_vect2_x.setVisible(False); self.node2_vect2_y.setVisible(False); self.node2_vect2_z.setVisible(False)
             self.node2_vect3_x.setVisible(True);  self.node2_vect3_y.setVisible(True);  self.node2_vect3_z.setVisible(True)
-        elif self.node2_OM_type_Box.currentIndex() == 2:  #yz selected  only vectors 2 and 3 are editable
+        elif self.node2_OM_type_Box.currentIndex() == 2:  #yz selected  only vectors 2 and 3 are visible
             self.node2_vect1_x.setVisible(False); self.node2_vect1_y.setVisible(False); self.node2_vect1_z.setVisible(False)
             self.node2_vect2_x.setVisible(True);  self.node2_vect2_y.setVisible(True);  self.node2_vect2_z.setVisible(True)
             self.node2_vect3_x.setVisible(True);  self.node2_vect3_y.setVisible(True);  self.node2_vect3_z.setVisible(True)
-        elif self.node2_OM_type_Box.currentIndex() == 3:  #matr selected  all vectors are editable
+        elif self.node2_OM_type_Box.currentIndex() == 3:  #matr selected  all vectors are visible
             self.node2_vect1_x.setVisible(True);  self.node2_vect1_y.setVisible(True);  self.node2_vect1_z.setVisible(True)
             self.node2_vect2_x.setVisible(True);  self.node2_vect2_y.setVisible(True);  self.node2_vect2_z.setVisible(True)
             self.node2_vect3_x.setVisible(True);  self.node2_vect3_y.setVisible(True);  self.node2_vect3_z.setVisible(True)
-        else:  # for euler only  vector 1 is editable
+        else:  # for euler only  vector 1 is visible
             self.node2_vect1_x.setVisible(True);  self.node2_vect1_y.setVisible(True);  self.node2_vect1_z.setVisible(True)
             self.node2_vect2_x.setVisible(False); self.node2_vect2_y.setVisible(False); self.node2_vect2_z.setVisible(False)
             self.node2_vect3_x.setVisible(False); self.node2_vect3_y.setVisible(False); self.node2_vect3_z.setVisible(False)
