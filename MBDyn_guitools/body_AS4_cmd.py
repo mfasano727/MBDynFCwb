@@ -15,6 +15,7 @@ import FreeCAD as App
 import Part
 import math, re
 
+from  MBDyn_utilities.MBDyn_funcs import check_solid
 import MBDyn_objects.model_so  # MBDyne model with scripted objects
 
 from MBDyn_guitools.dia_body_sel import Ui_dia_body_sel
@@ -33,16 +34,31 @@ class body_sel_cmd(QtWidgets.QDialog,  Ui_dia_body_sel):
     def Activated(self):
         """Do something here"""
 #        ivpDia = IVP_dialog()
-#         look for solid objects in document and list in combo box
+#         look for links to solid objects in document and list in combo box
         self.body_list.clear()
         for modlink in App.ActiveDocument.Model.getSubObjects():
             bodlink =  App.ActiveDocument.Model.getObject(modlink[0:-1]) 
             if hasattr(bodlink, 'LinkedObject'):
                 modbod = bodlink.LinkedObject
-
-                if hasattr(modbod, 'Shape'): 
-                    if modbod.Shape.ShapeType == 'Solid' or modbod.Shape.ShapeType == 'Compound': 
+                for modbod_nm in modbod.getSubObjects():
+                    modbod_sub = modbod.getObject(modbod_nm[0:-1])
+                    if check_solid(modbod_sub):
                         self.body_list.addItem(bodlink.Label)
+                '''
+                for modbod_nm in modbod.getSubObjects():
+                    modbod_sub = modbod.getObject(modbod_nm[0:-1])
+                    if check_solid(modbod_sub):
+                        App.Console.PrintMessage(" solid:3 " + modbod_sub.Name + "\n")
+                        in_list_flag = False
+                        for mod_sub_in in modbod_sub.InList:
+                            App.Console.PrintMessage(" solid: " + mod_sub_in.Name + "\n")
+                            if check_solid(mod_sub_in):
+                                App.Console.PrintMessage(" solid2: " + mod_sub_in.Name + "\n")
+                                in_list_flag = True
+                        if in_list_flag == False:
+               
+                            self.body_list.addItem(bodlink.Label)
+                '''
         self.show()
 
         App.Console.PrintMessage(" Activated: " + "\n")
@@ -95,13 +111,13 @@ class body_sel_cmd(QtWidgets.QDialog,  Ui_dia_body_sel):
         new_node.position = choose_body.Placement.multVec(chosenbody.Shape.CenterOfMass)  #  node is at center of mass
         
          #  orientation matrix is placement rotation in euler angles in radians
-        orient = App.Vector(0,2.3,0)
+        orient = App.Vector(0,0,0)
 #        App.Console.PrintMessage(" node2test " +srt(chosenbody[0].Placement.Rotation.toEuler()[0]))
-        orient.z = App.Units.parseQuantity("(pi/180)*" + str(choose_body.Placement.Rotation.toEuler()[0] )) # App.Units.parseQuantity("(pi/180)*" + srt(chosenbody[0].Placement.Rotation.toEuler()[0]))
+        orient.x = App.Units.parseQuantity("(pi/180)*" + str(choose_body.Placement.Rotation.toEuler()[0] )) # App.Units.parseQuantity("(pi/180)*" + srt(chosenbody[0].Placement.Rotation.toEuler()[0]))
         orient.y = App.Units.parseQuantity("(pi/180)*" + str(choose_body.Placement.Rotation.toEuler()[1] ))
-        orient.x = App.Units.parseQuantity("(pi/180)*" + str(choose_body.Placement.Rotation.toEuler()[2] ))
-        App.Console.PrintMessage(" node2test " + str(orient.y))
-        new_node.orientation_des = "euler123"
+        orient.z = App.Units.parseQuantity("(pi/180)*" + str(choose_body.Placement.Rotation.toEuler()[2] ))
+        App.Console.PrintMessage(" node2test " + str(orient))
+        new_node.orientation_des = "euler321"
         new_node.orientation = [orient, App.Vector(0.0,0.0,0.0), App.Vector(0.0,0.0,0.0)]
         new_node.vel = App.Vector(0,0,0)
         new_node.ang_vel = App.Vector(0,0,0)

@@ -74,7 +74,7 @@ class Ui_Form(object):
         self.label_4.setText(_translate("Form", "Name:"))
         self.fp_outfile.setText(_translate("Form", "Browse..."))
         self.label_5.setText(_translate("Form", "Path:"))
-        self.runSim.setText(_translate("Form", "Run Simulation"))
+        self.runSim.setText(_translate("Form", "write input file"))
         self.stopSim.setText(_translate("Form", "Stop Simulation"))
         self.pushButton.setText(_translate("Form", "View status"))
         self.stopSim.setEnabled(False)

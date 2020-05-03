@@ -117,6 +117,7 @@ class revpin_joint_cmd(QtWidgets.QDialog, Ui_dia_revpin_joint):
             linkedobj1 = linkobj1.LinkedObject
         else:
             linkedobj1 = linkobj1
+        linkedLCS1 = linkedobj1.getSubObject(linkLCS1_str + '.')
         linkLCS1_pos = linkobj1.Placement.multVec(linkedobj1.getObject(linkLCS1_str).Placement.Base)
         inv_linkobj1_pl = linkobj1.Placement.inverse()
         new_joint.position1 = linkLCS1_pos - inv_linkobj1_pl.multVec(nodeobj.position)   
@@ -130,12 +131,13 @@ class revpin_joint_cmd(QtWidgets.QDialog, Ui_dia_revpin_joint):
         App.Console.PrintMessage(" property3: ")
         new_joint.positionf = linkobjfix.Placement.multVec(linkedobjfix.getObject(linkLCSfix_str).Placement.Base)
 
+        linkedLCS1_pl = linkedLCS1.Placement
         linkobj1_pl = linkobj1.Placement
         linkLCS1_pl =  linkobj1_pl.multiply(linkedobj1.getObject(linkLCS1_str).Placement)
         linkLCSfix_pl = linkedobjfix.getObject(linkLCSfix_str).Placement
 
         # make FreeCAD placement matrix from node position and orientation matrix
-        if nodeobj.orientation_des == 'euler123':            
+        if nodeobj.orientation_des == 'euler321':            
             rotz = App.Units.parseQuantity("(180/pi)*" + str(nodeobj.orientation[0][0]))
             roty = App.Units.parseQuantity("(180/pi)*" + str(nodeobj.orientation[0][1]))
             rotx = App.Units.parseQuantity("(180/pi)*" + str(nodeobj.orientation[0][2]))
@@ -145,51 +147,35 @@ class revpin_joint_cmd(QtWidgets.QDialog, Ui_dia_revpin_joint):
 
         if self.choose_z_axis_2.isChecked():
             if str(strlist[0] + " x") ==  self.Choose_z_axis_Box.currentText():
-                linkLCS1_Z_rot = App.Rotation(0,90,0).multiply(linkLCS1_pl.Rotation)
-                linkLCS1_rot_rel = linkLCS1_Z_rot.multiply(node1_pl.Rotation.inverted())       
+                linkLCS1_x = linkLCS1_pl.Rotation.multVec(App.Vector(1,0,0))
+                linkLCS1_y = linkLCS1_pl.Rotation.multVec(App.Vector(0,1,0))
+                linkLCSfix_y = linkLCSfix_pl.Rotation.multVec(App.Vector(0,1,0))
+                new_joint.orientation_des1 = "yz"
+                new_joint.orientation1 = [App.Vector(0,0,0),linkLCS1_y, linkLCS1_x]
+                new_joint.orientation_desf = "yz"
+                new_joint.orientationf = [App.Vector(0,0,0),linkLCSfix_y, linkLCS1_x]
             elif str(strlist[0] + " y") ==  self.Choose_z_axis_Box.currentText():
-                linkLCS1_Z_rot = App.Rotation(0,0,90).multiply(linkLCS1_pl.Rotation)
-                linkLCS1_rot_rel = linkLCS1_Z_rot.multiply(node1_pl.Rotation.inverted())
+                linkLCS1_x = linkLCS1_pl.Rotation.multVec(App.Vector(1,0,0))
+                linkLCS1_y = linkLCS1_pl.Rotation.multVec(App.Vector(0,1,0))
+                linkLCSfix_x = linkLCSfix_pl.Rotation.multVec(App.Vector(1,0,0))
+                new_joint.orientation_des1 = "xz"
+                new_joint.orientation1 = [linkLCS1_x, App.Vector(0,0,0), linkLCS1_y]
+                new_joint.orientation_desf = "xz"
+                new_joint.orientationf = [linkLCSfix_x, App.Vector(0,0,0), linkLCS1_y]
             elif str(strlist[0] + " z") ==  self.Choose_z_axis_Box.currentText(): 
-                linkLCS1_Z_rot = linkLCS1_pl.Rotation
-                linkLCS1_rot_rel = linkLCS1_Z_rot.multiply(node1_pl.Rotation.inverted())
-
-            orient = App.Vector(0,0,0)
-            App.Console.PrintMessage(" orient2: " + str(linkLCS1_rot_rel.toEuler()))
-            new_joint.orientation_des1 = "euler123"
-            orient.z = App.Units.parseQuantity("(pi/180)*" + str(linkLCS1_rot_rel.toEuler()[0] )) # convert angle to radians
-            orient.y = App.Units.parseQuantity("(pi/180)*" + str(linkLCS1_rot_rel.toEuler()[1] ))
-            orient.x = App.Units.parseQuantity("(pi/180)*" + str(linkLCS1_rot_rel.toEuler()[2] ))
-            new_joint.orientation1 = [orient, App.Vector(0,0,0), App.Vector(0,0,0)]
-
-            new_joint.orientation_desf = "euler123"
-            orient.z = App.Units.parseQuantity("(pi/180)*" + str(linkLCS1_Z_rot.toEuler()[0] )) # convert angle to radians
-            orient.y = App.Units.parseQuantity("(pi/180)*" + str(linkLCS1_Z_rot.toEuler()[1] ))
-            orient.x = App.Units.parseQuantity("(pi/180)*" + str(linkLCS1_Z_rot.toEuler()[2] ))
-            new_joint.orientationf = [orient, App.Vector(0,0,0), App.Vector(0,0,0)]
-
+                linkLCS1_z = linkLCS1_pl.Rotation.multVec(App.Vector(0,0,1))
+                linkLCS1_x = linkLCS1_pl.Rotation.multVec(App.Vector(1,0,0))
+                linkLCSfix_x = linkLCSfix_pl.Rotation.multVec(App.Vector(1,0,0))
+                new_joint.orientation_des1 = "xz"
+                new_joint.orientation1 = [linkLCS1_x, App.Vector(0,0,0), linkLCS1_z]
+                new_joint.orientation_desf = "xz"
+                new_joint.orientationf = [linkLCSfix_x, App.Vector(0,0,0), linkLCS1_z]
         else:
-        
             joint_z_axis = App.Vector(float(self.z_axis_set_x.text()), float(self.z_axis_set_y.text()), float(self.z_axis_set_z.text()))
-        
-             
             new_joint.orientation1 = [App.Vector(float(self.node1_vect1_x.text()), float(self.node1_vect1_y.text()), float(self.node1_vect1_z.text())), 
                                App.Vector(float(self.node1_vect2_x.text()), float(self.node1_vect2_y.text()), float(self.node1_vect2_z.text())), 
                                joint_z_axis]
         
-
-        '''
-        new_joint.position1 = App.Vector(float(self.node1_pos_x.text()), float(self.node1_pos_y.text()), float(self.node1_pos_z.text()))
-        new_joint.orientation1 = [App.Vector(float(self.node1_vect1_x.text()), float(self.node1_vect1_y.text()), float(self.node1_vect1_z.text())), 
-                               App.Vector(float(self.node1_vect2_x.text()), float(self.node1_vect2_y.text()), float(self.node1_vect2_z.text())), 
-                               App.Vector(float(self.node1_vect3_x.text()), float(self.node1_vect3_y.text()), float(self.node1_vect3_z.text()))]
-        new_joint.orientation_des1 = self.node1_OM_type_Box.currentText()
-        new_joint.positionf = App.Vector(float(self.fixed_pos_x.text()), float(self.fixed_pos_y.text()), float(self.fixed_pos_z.text()))
-        new_joint.orientationf = [App.Vector(float(self.fixed_vect1_x.text()), float(self.fixed_vect1_y.text()), float(self.fixed_vect1_z.text())), 
-                               App.Vector(float(self.fixed_vect2_x.text()), float(self.fixed_vect2_y.text()), float(self.fixed_vect2_z.text())), 
-                               App.Vector(float(self.fixed_vect3_x.text()), float(self.fixed_vect3_y.text()), float(self.fixed_vect3_z.text()))]
-        new_joint.orientation_desf = self.fixed_OM_type_Box.currentText()
-        '''
         self.done(1)
 
     def reject(self):
