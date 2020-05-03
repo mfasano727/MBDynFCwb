@@ -131,3 +131,33 @@ def writeInputFile(name_of_file):
             f.write("end: elements;\n\n")
         else:
             App.Console.PrintMessage("MBDyn model does not exist")  
+
+def check_solid(sol_obj):
+    if hasattr(sol_obj, 'Shape'): 
+        App.Console.PrintMessage(" checksolid: " + sol_obj.Name + "\n")
+        if sol_obj.Shape.ShapeType == 'Solid' or sol_obj.Shape.ShapeType == 'Compound': 
+            return True
+        else: 
+            return False
+    else:
+        return False 
+
+def calc_placement(pos, orient):
+    tu = App.Units.parseQuantity
+    Rot = App.Matrix()
+
+    Rot.A11 = tu('cos('+str(orient.x)+')*cos('+str(orient.y)+')') 
+    Rot.A12 = tu('cos('+str(orient.x)+')*sin('+str(orient.y)+')*sin('+str(orient.z)+')-sin('+str(orient.x)+')*cos('+str(orient.z)+')') 
+    Rot.A13 = tu('cos('+str(orient.x)+')*sin('+str(orient.y)+')*cos('+str(orient.z)+')+sin('+str(orient.x)+')*sin('+str(orient.z)+')')
+    Rot.A14 = pos.x
+    Rot.A21 = tu('sin('+str(orient.x)+')*cos('+str(orient.y)+')') 
+    Rot.A22 = tu('sin('+str(orient.x)+')*sin('+str(orient.y)+')*sin('+str(orient.z)+')+cos('+str(orient.x)+')*cos('+str(orient.z)+')') 
+    Rot.A23 = tu('sin('+str(orient.x)+')*sin('+str(orient.y)+')*cos('+str(orient.z)+')-cos('+str(orient.x)+')*sin('+str(orient.z)+')')
+    Rot.A24 = pos.y
+    Rot.A31 = tu('-sin('+str(orient.y)+')')
+    Rot.A32 = tu('cos('+str(orient.y)+')*sin('+str(orient.z)+')')
+    Rot.A33 = tu('cos('+str(orient.y)+')*sin('+str(orient.z)+')')
+    Rot.A34 = pos.z
+    Rot.A41 = 0.0; Rot.A42 = 0.0; Rot.A43 = 0.0; Rot.A44 = 1.0;
+    pl = App.Placement(Rot)
+    return pl
