@@ -53,8 +53,9 @@ class MbdynGui(Workbench):
         import MBDyn_guitools.struct_node_cmd
         import MBDyn_guitools.revpin_joint_AS4_2_cmd
         import MBDyn_guitools.hinge_joint_AS4_cmd
+        import MBDyn_guitools.postproc_AS4_cmd
         self.list = ["mbdyn_configure", "mbdyn_launchGui", "body_sel_cmd",
-                     "ref_cmd", "struct_node_cmd", "revpin_joint_cmd","hinge_joint_cmd"]
+                     "ref_cmd", "struct_node_cmd", "revpin_joint_cmd","hinge_joint_cmd", "postproc_cmd"]
         self.appendToolbar("Mbdyn_comands", self.list)
         self.appendMenu("Mbdyn_menu", self.list)
 
