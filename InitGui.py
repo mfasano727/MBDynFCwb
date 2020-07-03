@@ -7,7 +7,7 @@ import MBDyn_locator
 MBDwbPath = os.path.dirname(MBDyn_locator.__file__)
 MBDwb_icons_path = os.path.join(MBDwbPath, 'icons')
 class MbdynGui(Workbench):
-    
+
     def __init__(self):
         self.__class__.Icon = """
             /* XPM */
@@ -54,23 +54,21 @@ class MbdynGui(Workbench):
         import MBDyn_guitools.revpin_joint_AS4_2_cmd
         import MBDyn_guitools.hinge_joint_AS4_cmd
         import MBDyn_guitools.postproc_AS4_cmd
+        import MBDyn_guitools.total_joint_cmd
+        import MBDyn_guitools.total_pinjoint_cmd
+        import MBDyn_guitools.ramp_drive_cmd
+        import MBDyn_guitools.axial_rot_joint_AS4_cmd
         self.list = ["mbdyn_configure", "mbdyn_launchGui", "body_sel_cmd",
-                     "ref_cmd", "struct_node_cmd", "revpin_joint_cmd","hinge_joint_cmd", "postproc_cmd"]
+                    "ref_cmd", "struct_node_cmd", "revpin_joint_cmd",
+                    "hinge_joint_cmd", "total_joint_cmd", "total_pinjoint_cmd",
+                    "axial_rot_joint_cmd", "ramp_drive_cmd", "postproc_cmd"]
         self.appendToolbar("Mbdyn_comands", self.list)
         self.appendMenu("Mbdyn_menu", self.list)
-
         Log("Loading MyModule... done\n")
 
     def Activated(self):
-#        import MBDyn_objects.model_so
-#        self.model = model_so.MBDynModel
-#        iv = FreeCAD.ActiveDocument.addObject("Part::FeaturePython","MBDynInitialValue")
-#        model_so.MBDynInitialValue(iv)        
-#        self.nodes = model_so.MBDynNodes()
-#        self.elements = model_so.MBDynElements()
-        
         App.Console.PrintMessage("test")
-        
+
 
     def Deactivated(self):
         Msg("MyWorkbench.Deactivated()\n")
