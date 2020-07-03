@@ -52,7 +52,7 @@ class ref_cmd(QtWidgets.QDialog, Ui_ref_dialog):
         self.show()
 
         App.Console.PrintMessage(" Activated: " + "\n")
-        
+
         return
 
     def IsActive(self):
@@ -62,7 +62,7 @@ class ref_cmd(QtWidgets.QDialog, Ui_ref_dialog):
             return True
 
 
-    def accept(self): 
+    def accept(self):
         index = self.OM_type.currentIndex()
         App.Console.PrintMessage(" property1: " +self.OM_type.itemText(index) + "\n")
 #        testgroup  = App.ActiveDocument.getObjectsByLabel('references')
@@ -81,8 +81,8 @@ class ref_cmd(QtWidgets.QDialog, Ui_ref_dialog):
                 if refobj.ref_name  == self.parent_ref_box.currentText():
                     new_ref.refered_label = refobj.ref_label
         new_ref.position = App.Vector(float(self.pos_x.text()), float(self.pos_y.text()), float(self.pos_z.text()))
-        new_ref.orientation = [App.Vector(float(self.vect1_x.text()), float(self.vect1_y.text()), float(self.vect1_z.text())), 
-                               App.Vector(float(self.vect2_x.text()), float(self.vect2_y.text()), float(self.vect2_z.text())), 
+        new_ref.orientation = [App.Vector(float(self.vect1_x.text()), float(self.vect1_y.text()), float(self.vect1_z.text())),
+                               App.Vector(float(self.vect2_x.text()), float(self.vect2_y.text()), float(self.vect2_z.text())),
                                App.Vector(float(self.vect3_x.text()), float(self.vect3_y.text()), float(self.vect3_z.text()))]
         new_ref.orientation_des = self.OM_type.currentText()
         new_ref.vel = App.Vector(float(self.vel_x.text()), float(self.vel_y.text()), float(self.vel_z.text()))

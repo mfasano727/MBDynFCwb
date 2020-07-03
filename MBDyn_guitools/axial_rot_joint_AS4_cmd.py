@@ -16,20 +16,21 @@ import FreeCADGui as Gui
 
 
 
-from   MBDyn_guitools.dia_hinge_joint_AS4 import Ui_dia_hinge_joint
+from   MBDyn_guitools.dia_axial_rot_joint_AS4 import Ui_dia_axial_rot_joint
 
-class hinge_joint_cmd(QtWidgets.QDialog, Ui_dia_hinge_joint):
-    """MBD create reference command"""
+class axial_rot_joint_cmd(QtWidgets.QDialog, Ui_dia_axial_rot_joint):
+    """MBD create axial rotation joint command"""
     def __init__(self):
-        super(hinge_joint_cmd, self).__init__()
+        super(axial_rot_joint_cmd, self).__init__()
         self.setupUi(self)
 
     def GetResources(self):
-        return {'Pixmap': os.path.join(MBDwb_icons_path, 'RevoluteHingeIcon.svg'),
-                'MenuText': "create revolute hinge joint",
-                'ToolTip': "input revolute hinge joint parameters"}
+        return {'Pixmap': os.path.join(MBDwb_icons_path, 'axialrotIcon.svg'),
+                'MenuText': "create axial rotation joint",
+                'ToolTip': "input axial rotation joint parameters"}
     def Activated(self):
-        """Do something here"""
+        """fill dialog widgets with appropriate data
+           setup connections for widgets"""
         self.node_1_Box.clear()
         if App.ActiveDocument.getObjectsByLabel('Nodes') != None :
             App.Console.PrintMessage(" property3: ")
@@ -41,6 +42,11 @@ class hinge_joint_cmd(QtWidgets.QDialog, Ui_dia_hinge_joint):
         if App.ActiveDocument.getObjectsByLabel('Nodes') != None :
             for nodeobj in App.ActiveDocument.Nodes.Group:
                 self.node_2_Box.addItem(nodeobj.node_name)
+
+        self.drive_Box.clear()
+        if App.ActiveDocument.getObjectsByLabel('Drive_callers') != None :
+            for driveobj in App.ActiveDocument.Drive_callers.Group:
+                self.drive_Box.addItem(driveobj.drive_name)
 
         # define conections for dialog widgets
         self.link_const_Box.currentIndexChanged.connect(self.set_choose_z)
@@ -65,7 +71,6 @@ class hinge_joint_cmd(QtWidgets.QDialog, Ui_dia_hinge_joint):
 
 
     def accept(self):
-
 
         # parse the string from the link contraint combobox
         # the form is node1 object # LCS Attaced to node 1 object at pivot ' to ' fixed object maybe 'parent Assembly' # LCS of fixwd oject at pivot
@@ -99,7 +104,7 @@ class hinge_joint_cmd(QtWidgets.QDialog, Ui_dia_hinge_joint):
                 elif nodeobjs.node_name == linkobj2_str:
                     nodeobj2 = nodeobjs
 
-        # check if both nodes are the same
+        # check if both nodes are not the same
         if nodeobj1.node_name == nodeobj2.node_name:
             mb = QtGui.QMessageBox()
             mb.setText("both nodes can not be the same")
@@ -257,4 +262,4 @@ class hinge_joint_cmd(QtWidgets.QDialog, Ui_dia_hinge_joint):
 #        if self.valid.validate(teststr.text(),0) != QtGui.QValidator.Acceptable:
 #           self.sender.setText("0.0")
 
-Gui.addCommand('hinge_joint_cmd', hinge_joint_cmd())
+Gui.addCommand('axial_rot_joint_cmd', axial_rot_joint_cmd())

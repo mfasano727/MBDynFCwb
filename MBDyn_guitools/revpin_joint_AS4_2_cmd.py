@@ -31,14 +31,14 @@ class revpin_joint_cmd(QtWidgets.QDialog, Ui_dia_revpin_joint):
     def Activated(self):
         """Do something here"""
         self.node_1_Box.clear()
-        
+
         if App.ActiveDocument.getObjectsByLabel('Nodes') != None :
             App.Console.PrintMessage(" property3: ")
             for nodeobj in App.ActiveDocument.Nodes.Group:
                 App.Console.PrintMessage(" property4: "+ nodeobj.node_name)
                 self.node_1_Box.addItem(nodeobj.node_name)
 
-        
+
         self.link_const_Box.clear()
         for linksobj in App.ActiveDocument.getLinksTo():
             constname = linksobj.Name + linksobj.AttachedBy+ " to " + linksobj.AttachedTo
@@ -54,8 +54,8 @@ class revpin_joint_cmd(QtWidgets.QDialog, Ui_dia_revpin_joint):
             strlcsx = strlcs + " z"
             self.Choose_z_axis_Box.addItem(strlcsx)
 
-        self.link_const_Box.currentIndexChanged.connect(self.set_choose_z) 
-        self.choose_z_axis_1.toggled.connect(self.set_z_method) 
+        self.link_const_Box.currentIndexChanged.connect(self.set_choose_z)
+        self.choose_z_axis_1.toggled.connect(self.set_z_method)
 
         self.choose_z_axis_1.setChecked(True)
         self.choose_z_axis_2.setChecked(True)
@@ -63,7 +63,7 @@ class revpin_joint_cmd(QtWidgets.QDialog, Ui_dia_revpin_joint):
         self.show()
 
         App.Console.PrintMessage(" Activated: " + "\n")
-        
+
         return
 
     def IsActive(self):
@@ -73,7 +73,7 @@ class revpin_joint_cmd(QtWidgets.QDialog, Ui_dia_revpin_joint):
             return True
 
 
-    def accept(self): 
+    def accept(self):
 #        index = self.node1_OM_type_Box.currentIndex()
 #        App.Console.PrintMessage(" property1: " +self.node1_OM_type_Box.itemText(index) + "\n")
 
@@ -97,12 +97,12 @@ class revpin_joint_cmd(QtWidgets.QDialog, Ui_dia_revpin_joint):
         strlist =  str(self.link_const_Box.currentText()).split(' to ')
         strlist1 = strlist[0].split('#')
         strlist2 = strlist[1].split('#')
-        App.Console.PrintMessage(" links "+strlist[0])
+
         # parse first half of string node1 prart  (first part is link and second is LCS)
         if strlist1[0] == "Parent Assembly":  #Parrent Assembly is the App::Part object named model.
             linkobj1_str = "Model"
         else:
-            linkobj1_str = strlist1[0]  
+            linkobj1_str = strlist1[0]
         linkLCS1_str = strlist1[1]
         # parse second half of string fixed prart  (first part is link and second is LCS)
         if strlist2[0] == "Parent Assembly":   #Parrent Assembly is the App::Part object named model.
@@ -118,9 +118,11 @@ class revpin_joint_cmd(QtWidgets.QDialog, Ui_dia_revpin_joint):
         else:
             linkedobj1 = linkobj1
         linkedLCS1 = linkedobj1.getSubObject(linkLCS1_str + '.')
-        linkLCS1_pos = linkobj1.Placement.multVec(linkedobj1.getObject(linkLCS1_str).Placement.Base)
+        linkedLCS1_pos = linkedobj1.getObject(linkLCS1_str).Placement.Base
         inv_linkobj1_pl = linkobj1.Placement.inverse()
-        new_joint.position1 = linkLCS1_pos - inv_linkobj1_pl.multVec(nodeobj.position)   
+        App.Console.PrintMessage(" pos1 "+str(linkedLCS1_pos)+" pos2 "+str(inv_linkobj1_pl.multVec(nodeobj.position)))
+        new_joint.position1 = linkedLCS1_pos - inv_linkobj1_pl.multVec(nodeobj.position)
+
 
         # if object is App::Link use linkednoject otherwise use objcect itself
         linkobjfix = App.ActiveDocument.getObject(linkobjfix_str)
@@ -137,7 +139,7 @@ class revpin_joint_cmd(QtWidgets.QDialog, Ui_dia_revpin_joint):
         linkLCSfix_pl = linkedobjfix.getObject(linkLCSfix_str).Placement
 
         # make FreeCAD placement matrix from node position and orientation matrix
-        if nodeobj.orientation_des == 'euler321':            
+        if nodeobj.orientation_des == 'euler321':
             rotz = App.Units.parseQuantity("(180/pi)*" + str(nodeobj.orientation[0][0]))
             roty = App.Units.parseQuantity("(180/pi)*" + str(nodeobj.orientation[0][1]))
             rotx = App.Units.parseQuantity("(180/pi)*" + str(nodeobj.orientation[0][2]))
@@ -162,7 +164,7 @@ class revpin_joint_cmd(QtWidgets.QDialog, Ui_dia_revpin_joint):
                 new_joint.orientation1 = [linkLCS1_x, App.Vector(0,0,0), linkLCS1_y]
                 new_joint.orientation_desf = "xz"
                 new_joint.orientationf = [linkLCSfix_x, App.Vector(0,0,0), linkLCS1_y]
-            elif str(strlist[0] + " z") ==  self.Choose_z_axis_Box.currentText(): 
+            elif str(strlist[0] + " z") ==  self.Choose_z_axis_Box.currentText():
                 linkLCS1_z = linkLCS1_pl.Rotation.multVec(App.Vector(0,0,1))
                 linkLCS1_x = linkLCS1_pl.Rotation.multVec(App.Vector(1,0,0))
                 linkLCSfix_x = linkLCSfix_pl.Rotation.multVec(App.Vector(1,0,0))
@@ -172,15 +174,15 @@ class revpin_joint_cmd(QtWidgets.QDialog, Ui_dia_revpin_joint):
                 new_joint.orientationf = [linkLCSfix_x, App.Vector(0,0,0), linkLCS1_z]
         else:
             joint_z_axis = App.Vector(float(self.z_axis_set_x.text()), float(self.z_axis_set_y.text()), float(self.z_axis_set_z.text()))
-            new_joint.orientation1 = [App.Vector(float(self.node1_vect1_x.text()), float(self.node1_vect1_y.text()), float(self.node1_vect1_z.text())), 
-                               App.Vector(float(self.node1_vect2_x.text()), float(self.node1_vect2_y.text()), float(self.node1_vect2_z.text())), 
+            new_joint.orientation1 = [App.Vector(float(self.node1_vect1_x.text()), float(self.node1_vect1_y.text()), float(self.node1_vect1_z.text())),
+                               App.Vector(float(self.node1_vect2_x.text()), float(self.node1_vect2_y.text()), float(self.node1_vect2_z.text())),
                                joint_z_axis]
-        
+
         self.done(1)
 
     def reject(self):
         self.done(0)
-    
+
     def set_choose_z(self):
         self.Choose_z_axis_Box.clear()
         strlist = str(self.link_const_Box.currentText()).split(' to ')
@@ -200,7 +202,7 @@ class revpin_joint_cmd(QtWidgets.QDialog, Ui_dia_revpin_joint):
             self.z_axis_set_x.setVisible(False); self.z_axis_set_y.setVisible(False); self.z_axis_set_z.setVisible(False)
             self.Choose_z_axis_Box.setVisible(True)
             self.choose_z_axis_lab.setVisible(True)
-        else: 
+        else:
             self.z_axis_set_x_lab.setVisible(True); self.z_axis_set_y_lab.setVisible(True); self.z_axis_set_z_lab.setVisible(True)
             self.z_axis_set_x.setVisible(True); self.z_axis_set_y.setVisible(True); self.z_axis_set_z.setVisible(True)
             self.Choose_z_axis_Box.setVisible(False)

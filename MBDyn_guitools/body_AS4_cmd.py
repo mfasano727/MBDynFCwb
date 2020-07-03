@@ -17,14 +17,14 @@ import math, re
 
 from  MBDyn_utilities.MBDyn_funcs import check_solid
 import MBDyn_objects.model_so  # MBDyne model with scripted objects
-
 from MBDyn_guitools.dia_body_sel import Ui_dia_body_sel
+
 
 class body_sel_cmd(QtWidgets.QDialog,  Ui_dia_body_sel):
     """MBD body select command; objects that have solid shape type as rigid bodies."""
+
     def __init__(self):
         super(body_sel_cmd, self).__init__()
-        
         self.setupUi(self)
 
     def GetResources(self):
@@ -37,7 +37,7 @@ class body_sel_cmd(QtWidgets.QDialog,  Ui_dia_body_sel):
 #         look for links to solid objects in document and list in combo box
         self.body_list.clear()
         for modlink in App.ActiveDocument.Model.getSubObjects():
-            bodlink =  App.ActiveDocument.Model.getObject(modlink[0:-1]) 
+            bodlink = App.ActiveDocument.Model.getObject(modlink[0:-1])
             if hasattr(bodlink, 'LinkedObject'):
                 modbod = bodlink.LinkedObject
                 for modbod_nm in modbod.getSubObjects():
@@ -56,18 +56,17 @@ class body_sel_cmd(QtWidgets.QDialog,  Ui_dia_body_sel):
                                 App.Console.PrintMessage(" solid2: " + mod_sub_in.Name + "\n")
                                 in_list_flag = True
                         if in_list_flag == False:
-               
                             self.body_list.addItem(bodlink.Label)
                 '''
         self.show()
-
         App.Console.PrintMessage(" Activated: " + "\n")
-        
+
         return
 
     def IsActive(self):
         """Here you can define if the command must be active or not (greyed) if certain conditions
-        are met or not. This function is optional."""
+        are met or not. This function is optional.
+        """
         return True
     def accept(self):
         App.Console.PrintMessage(" Accept: " + "\n")
@@ -76,24 +75,24 @@ class body_sel_cmd(QtWidgets.QDialog,  Ui_dia_body_sel):
             partlink =  App.ActiveDocument.Model.getObject(linkedparts[0:-1])
             App.Console.PrintMessage(" Accept: " + partlink.Label +"\n")
             if partlink.Label == self.body_list.currentText():
-                choose_body = partlink # part object chosen from combobox
+                choose_body = partlink  # part object chosen from combobox
 
         tempstring = "body_" + self.body_list.currentText()
         App.Console.PrintMessage(" Accept: " + tempstring + "\n")
 
         # create body element scripted object
-        new_body =App.ActiveDocument.Bodies.newObject("App::FeaturePython", tempstring)
+        new_body = App.ActiveDocument.Bodies.newObject("App::FeaturePython", tempstring)
         MBDyn_objects.model_so.MBDynRigidBody(new_body)
         new_body.ViewObject.Proxy = 0
 
         #   create strctural node for ridgid body
         num_nodes = len(App.ActiveDocument.Nodes.getSubObjects()) + 1
-        new_node =App.ActiveDocument.Nodes.newObject("App::FeaturePython", self.body_list.currentText()+ "_node_" + str(num_nodes))
+        new_node = App.ActiveDocument.Nodes.newObject("App::FeaturePython", self.body_list.currentText()+ "_node_" + str(num_nodes))
         MBDyn_objects.model_so.MBDynStructuralNode(new_node)
         new_node.ViewObject.Proxy = 0
         num_nodes = len(App.ActiveDocument.Nodes.getSubObjects())
         App.Console.PrintMessage(" node1test ")
-        
+
          # set new node properties
         new_node.node_label = num_nodes
         new_node.struct_type = "dynamic"
@@ -103,24 +102,24 @@ class body_sel_cmd(QtWidgets.QDialog,  Ui_dia_body_sel):
             partsub = object_chosenbod.getObject(subobjs[0:-1])
             App.Console.PrintMessage(" node2test ")
             if hasattr(partsub, 'Shape'):
-               App.Console.PrintMessage(" node3test ")
-               if partsub.Shape.ShapeType == 'Solid' or  partsub.Shape.ShapeType == 'Compound':
-                  chosenbody = partsub
+                App.Console.PrintMessage(" node3test ")
+                if partsub.Shape.ShapeType == 'Solid' or  partsub.Shape.ShapeType == 'Compound':
+                    chosenbody = partsub
         App.Console.PrintMessage(" node2test "+ str(chosenbody.Shape.CenterOfMass.z))
 
         new_node.position = choose_body.Placement.multVec(chosenbody.Shape.CenterOfMass)  #  node is at center of mass
-        
+
          #  orientation matrix is placement rotation in euler angles in radians
         orient = App.Vector(0,0,0)
 #        App.Console.PrintMessage(" node2test " +srt(chosenbody[0].Placement.Rotation.toEuler()[0]))
-        orient.x = App.Units.parseQuantity("(pi/180)*" + str(choose_body.Placement.Rotation.toEuler()[0] )) # App.Units.parseQuantity("(pi/180)*" + srt(chosenbody[0].Placement.Rotation.toEuler()[0]))
-        orient.y = App.Units.parseQuantity("(pi/180)*" + str(choose_body.Placement.Rotation.toEuler()[1] ))
-        orient.z = App.Units.parseQuantity("(pi/180)*" + str(choose_body.Placement.Rotation.toEuler()[2] ))
+        orient.x = App.Units.parseQuantity("(pi/180)*" + str(choose_body.Placement.Rotation.toEuler()[0])) # App.Units.parseQuantity("(pi/180)*" + srt(chosenbody[0].Placement.Rotation.toEuler()[0]))
+        orient.y = App.Units.parseQuantity("(pi/180)*" + str(choose_body.Placement.Rotation.toEuler()[1]))
+        orient.z = App.Units.parseQuantity("(pi/180)*" + str(choose_body.Placement.Rotation.toEuler()[2]))
         App.Console.PrintMessage(" node2test " + str(orient))
         new_node.orientation_des = "euler321"
-        new_node.orientation = [orient, App.Vector(0.0,0.0,0.0), App.Vector(0.0,0.0,0.0)]
-        new_node.vel = App.Vector(0,0,0)
-        new_node.ang_vel = App.Vector(0,0,0)
+        new_node.orientation = [orient, App.Vector(0.0, 0.0, 0.0), App.Vector(0.0, 0.0, 0.0)]
+        new_node.vel = App.Vector(0, 0, 0)
+        new_node.ang_vel = App.Vector(0, 0, 0)
 
         #  set new body properties
         new_body.body_obj_label = self.body_list.currentText()
@@ -145,13 +144,12 @@ class body_sel_cmd(QtWidgets.QDialog,  Ui_dia_body_sel):
         else:
             new_body.matrix_type = "sym"
         #  set node name to new_body.body_obj_label + num of nodes on body
-        new_node.node_name = new_body.body_obj_label + "_" + str(1)
-        
+        new_node.node_name = new_body.body_obj_label
+
         self.done(1)
 
     def reject(self):
         self.done(0)
-
 
 
 Gui.addCommand('body_sel_cmd', body_sel_cmd())
