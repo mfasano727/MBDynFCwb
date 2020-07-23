@@ -14,7 +14,7 @@ from MBDyn_utilities.Settings_funcs import string_to_list, list_to_string
 from PySide2 import QtCore, QtGui, QtWidgets
 import FreeCAD as App
 
-from MBDyn_guitools.wb_settings_widgets.ui_solver_settings import Ui_solver_settings
+from MBDyn_settings.ui_solver_settings import Ui_solver_settings
 from MBDyn_utilities.constants import *
 
 
