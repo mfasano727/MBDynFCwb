@@ -4,7 +4,6 @@ def makeOrientationFromLocalAxes(ZAx, XAx = None):
     alignment with given local Z and X axes. Z axis is followed strictly; X axis
     is a guide and can be not strictly perpendicular to Z axis; it will be
     corrected and modified
-
     '''
     if XAx is None:
         XAx = App.Vector(0,0,1) #Why Z? Because I prefer local X axis to be aligned so that local XZ plane is parallel to global Z axis.
@@ -29,7 +28,8 @@ def makeOrientationFromLocalAxes(ZAx, XAx = None):
     # make matrix,
     m = App.Matrix()
     m.A = list(XAx)+[0.0]+list(YAx)+[0.0]+list(ZAx)+[0.0]+[0.0]*3+[1.0]
-    m.transpose() # local axes vectors are columns of matrix, but we put them in as rwos, because it is convenient, and then transpose it.
+    m.transpose() # local axes vectors are columns of matrix, but we put them in as rwos, because it is convenient,
+                  # and then transpose it.
     # make placement out of matrix,
     tmpplm = App.Placement(m)
     # and extract rotation from placement.
