@@ -506,8 +506,8 @@ class Ui_mbdyngui(object):
         iv.time_step = float(self.time_step.text())
         iv.max_iterations = int(self.max_iterations.text())
         iv.tolerance = float(self.tolerance.text())
-#        if self.checkBox_2.checkState():
-#            iv.derivatives_tolerance = float(self.derivatives_tolerance.text())
+        if self.checkBox_2.checkState():
+            iv.derivatives_tolerance = float(self.derivatives_tolerance.text())
 #        App.Console.PrintMessage("testi")
         App.Console.PrintMessage(iv.Proxy.writeInitialValue())
         if self.checkBox_2.checkState():
@@ -528,7 +528,7 @@ class Ui_mbdyngui(object):
 
     def setupGravity(self):
         if len(App.ActiveDocument.getObjectsByLabel("gravity")) == 0 :
-            gravity = App.ActiveDocument.MBDynGrp.newObject("App::FeaturePython","gravity")
+            gravity = App.ActiveDocument.MBDyn.newObject("App::FeaturePython","gravity")
             MBDyn_objects.model_so.MBDynGravity(gravity)
             gravity.ViewObject.Proxy = 0
 

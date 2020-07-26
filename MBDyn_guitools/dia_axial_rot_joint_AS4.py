@@ -109,7 +109,7 @@ class Ui_dia_axial_rot_joint(object):
     # setupUi
 
     def retranslateUi(self, dia_axial_rot_joint):
-        dia_axial_rot_joint.setWindowTitle(QCoreApplication.translate("dia_axial_rot_joint", u"revolute hinge joint", None))
+        dia_axial_rot_joint.setWindowTitle(QCoreApplication.translate("dia_axial_rot_joint", u"axial rotation joint", None))
         self.node_1_label.setText(QCoreApplication.translate("dia_axial_rot_joint", u"node 1", None))
         self.node_2_label.setText(QCoreApplication.translate("dia_axial_rot_joint", u"node 2", None))
         self.z_axis_set_x_lab.setText(QCoreApplication.translate("dia_axial_rot_joint", u"z_axis set x", None))
@@ -121,4 +121,3 @@ class Ui_dia_axial_rot_joint(object):
         self.link_const_lab.setText(QCoreApplication.translate("dia_axial_rot_joint", u"Link constraint", None))
         self.drive_label.setText(QCoreApplication.translate("dia_axial_rot_joint", u"choose drive caller", None))
     # retranslateUi
-

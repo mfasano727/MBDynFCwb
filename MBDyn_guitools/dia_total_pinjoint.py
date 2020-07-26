@@ -138,11 +138,11 @@ class Ui_dia_Totalpinjoint(object):
         self.posx_checkBox.setText(QCoreApplication.translate("dia_Totalpinjoint", u"pos. x", None))
         self.posy_checkBox.setText(QCoreApplication.translate("dia_Totalpinjoint", u"pos. y", None))
         self.posz_checkBox.setText(QCoreApplication.translate("dia_Totalpinjoint", u"pos. z", None))
-        self.rot_constr_lab.setText(QCoreApplication.translate("dia_Totalpinjoint", u"position constraint", None))
+        self.rot_constr_lab.setText(QCoreApplication.translate("dia_Totalpinjoint", u"rotation constraint", None))
         self.roty_checkBox.setText(QCoreApplication.translate("dia_Totalpinjoint", u"rot. y", None))
         self.rotz_checkBox.setText(QCoreApplication.translate("dia_Totalpinjoint", u"rot. z", None))
         self.rotx_checkBox.setText(QCoreApplication.translate("dia_Totalpinjoint", u"rot. x", None))
-        self.vel_constr_lab.setText(QCoreApplication.translate("dia_Totalpinjoint", u"velosity constraint", None))
+        self.vel_constr_lab.setText(QCoreApplication.translate("dia_Totalpinjoint", u"velocity constraint", None))
         self.vely_checkBox.setText(QCoreApplication.translate("dia_Totalpinjoint", u"vel. y", None))
         self.velz_checkBox.setText(QCoreApplication.translate("dia_Totalpinjoint", u"vel. z", None))
         self.velx_checkBox.setText(QCoreApplication.translate("dia_Totalpinjoint", u"vel. x", None))
@@ -151,4 +151,3 @@ class Ui_dia_Totalpinjoint(object):
         self.angvelz_checkBox.setText(QCoreApplication.translate("dia_Totalpinjoint", u"ang. vel. z", None))
         self.angvely_checkBox.setText(QCoreApplication.translate("dia_Totalpinjoint", u"ang. vel. y", None))
     # retranslateUi
-
