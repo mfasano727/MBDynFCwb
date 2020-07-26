@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>dia_Totalpinjoint</class>
+ <widget class="QDialog" name="dia_Totalpinjoint">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>461</width>
+    <height>352</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>10</pointsize>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog total pin joint</string>
+  </property>
+  <widget class="QDialogButtonBox" name="buttonBox">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>320</y>
+     <width>136</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="node1_box">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>40</y>
+     <width>141</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="node1_box_lab">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>15</y>
+     <width>46</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>node 1</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="node1_LCS_pos_box">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>80</y>
+     <width>141</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="fixed_LCS_pos_box">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>80</y>
+     <width>141</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="node1_LCS_pos_lab">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>60</y>
+     <width>156</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>node 1 LCS pos. offset and orient</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="fixed_LCS_pos_lab">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>60</y>
+     <width>151</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>fixed LCS pos. ofset and orient</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="node1_LCS_rot_box">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>125</y>
+     <width>141</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="node1_LCS_rot_lab">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>105</y>
+     <width>156</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>node 1 LCS rotation orientation</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="fixed_LCS_rot_box">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>125</y>
+     <width>141</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="fixed_LCS_rot_lab">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>105</y>
+     <width>156</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>fixed LCS rotation orientation</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="constr_lab">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>160</y>
+     <width>291</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>constraints directions relative to node 1 pos./rot. orientations</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="pos_constr_lab">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>185</y>
+     <width>86</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>position constraint</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="posx_checkBox">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>185</y>
+     <width>53</width>
+     <height>14</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>pos. x</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="posy_checkBox">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>185</y>
+     <width>53</width>
+     <height>14</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>pos. y</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="posz_checkBox">
+   <property name="geometry">
+    <rect>
+     <x>335</x>
+     <y>185</y>
+     <width>53</width>
+     <height>14</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>pos. z</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="rot_constr_lab">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>230</y>
+     <width>86</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>rotation constraint</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="roty_checkBox">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>230</y>
+     <width>53</width>
+     <height>14</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>rot. y</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="rotz_checkBox">
+   <property name="geometry">
+    <rect>
+     <x>335</x>
+     <y>230</y>
+     <width>53</width>
+     <height>14</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>rot. z</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="rotx_checkBox">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>230</y>
+     <width>53</width>
+     <height>14</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>rot. x</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="vel_constr_lab">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>200</y>
+     <width>86</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>velosity constraint</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="vely_checkBox">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>200</y>
+     <width>53</width>
+     <height>14</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>vel. y</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="velz_checkBox">
+   <property name="geometry">
+    <rect>
+     <x>335</x>
+     <y>200</y>
+     <width>53</width>
+     <height>14</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>vel. z</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="velx_checkBox">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>200</y>
+     <width>53</width>
+     <height>14</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>vel. x</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="angvelx_checkBox">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>245</y>
+     <width>53</width>
+     <height>14</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>ang. vel. x</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="ang_vel_constr_lab">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>245</y>
+     <width>86</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>ang. vel. constraint</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="angvelz_checkBox">
+   <property name="geometry">
+    <rect>
+     <x>335</x>
+     <y>245</y>
+     <width>53</width>
+     <height>14</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>ang. vel. z</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="angvely_checkBox">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>245</y>
+     <width>53</width>
+     <height>14</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>ang. vel. y</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="drivecall_Box">
+   <property name="geometry">
+    <rect>
+     <x>175</x>
+     <y>290</y>
+     <width>126</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="drivecall_lab">
+   <property name="geometry">
+    <rect>
+     <x>179</x>
+     <y>270</y>
+     <width>116</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>drive_caller</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>dia_Totalpinjoint</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>dia_Totalpinjoint</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <designerdata>
+  <property name="gridDeltaX">
+   <number>5</number>
+  </property>
+  <property name="gridDeltaY">
+   <number>5</number>
+  </property>
+  <property name="gridSnapX">
+   <bool>true</bool>
+  </property>
+  <property name="gridSnapY">
+   <bool>true</bool>
+  </property>
+  <property name="gridVisible">
+   <bool>true</bool>
+  </property>
+ </designerdata>
+</ui>
