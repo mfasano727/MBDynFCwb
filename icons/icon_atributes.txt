@@ -1,0 +1,7 @@
+Atribbutions for icon art
+
+rigidbody_icon.svg   Icon made by smashicons  from https://smashicons.com/ downloaded from https://www.flaticon.com/
+
+reference.svg        Icon made by  Sakurambo~commonswiki  downloaded from https://commons.wikimedia.org/wiki/File:3D_coordinate_system.svg
+
+struct_node_icon.svg Icon Created by Seona Kim from the Noun Project
