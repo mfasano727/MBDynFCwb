@@ -125,12 +125,11 @@ class mbdyn_launchGui(QtWidgets.QDialog,  Ui_dia_launcher):
                 writeInputFile(full_file_name)
 
         args= [solver_path, full_file_name]
-        cwd = "D:\\Garnier\\Documents\\01_programmation\\01_Python\\mbdyn_FreeCAD\\_SOLVERS_\\mbdyn-1.7.2-win32\\"
         m_log_file = os.path.join(working_directory, "_console.log")
         self.log_file = open(m_log_file, 'w')
 
         #subprocess.PIPE
-        self.p = subprocess.Popen(args, shell=True, cwd=cwd, stdout=self.log_file, stderr=subprocess.STDOUT) #
+        self.p = subprocess.Popen(args, shell=True, cwd=working_directory, stdout=self.log_file, stderr=subprocess.STDOUT) #
         App.Console.PrintMessage("Start Now")
 
         self.runSim.setEnabled(False)
