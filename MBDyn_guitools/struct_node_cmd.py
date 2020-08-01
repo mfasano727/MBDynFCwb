@@ -25,7 +25,7 @@ class struct_node_cmd(QtWidgets.QDialog, Ui_struct_node_dialog):
         self.setupUi(self)
 
     def GetResources(self):
-        return {'Pixmap': os.path.join(MBDwb_icons_path, 'Struct_node_icon.svg'),
+        return {'Pixmap': os.path.join(MBDwb_icons_path, 'struct_node_icon.svg'),
                 'MenuText': "create structural nodes command",
                 'ToolTip': "create structural nodess"}
     def Activated(self):
