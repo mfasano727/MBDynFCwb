@@ -8,4 +8,6 @@ The asm4 branch requires FreeCAD v0.19  because you need assembly4 workbench. (s
 windows users can get a windows build of MBDyn here
 http://www.aero.polimi.it/masarati/Download/mbdyn/mbdyn-1.7.2-win32.zip
 
+There is a discussion of the project in the FreeCAD forum here.
+https://forum.freecadweb.org/viewtopic.php?f=18&t=39165&start=100
 
