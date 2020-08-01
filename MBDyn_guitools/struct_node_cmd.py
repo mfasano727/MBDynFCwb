@@ -88,7 +88,7 @@ class struct_node_cmd(QtWidgets.QDialog, Ui_struct_node_dialog):
         new_node.ViewObject.Proxy = 0
 
         new_node.node_label = num_nodes
-         # set the reference to be refered to
+         # set the reference to be referred to
 
         new_node.struct_type = self.struct_node_type.currentText()
 
