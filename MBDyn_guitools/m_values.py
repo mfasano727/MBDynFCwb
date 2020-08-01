@@ -443,7 +443,7 @@ class Ui_mbdyngui(object):
             joints_elemSubGrp = elementsGrp.newObject('App::DocumentObjectGroup', 'Joints')
             forces_elemSubGrp = elementsGrp.newObject('App::DocumentObjectGroup', 'Forces')
 
-             # create global refernce
+             # create global reference
             global_ref = referencesGrp.newObject("App::FeaturePython","global_reference")
             MBDyn_objects.model_so.MBDynReference(global_ref)
             global_ref.ViewObject.Proxy = 0
