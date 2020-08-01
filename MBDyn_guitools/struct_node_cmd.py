@@ -27,7 +27,7 @@ class struct_node_cmd(QtWidgets.QDialog, Ui_struct_node_dialog):
     def GetResources(self):
         return {'Pixmap': os.path.join(MBDwb_icons_path, 'struct_node_icon.svg'),
                 'MenuText': "create structural nodes command",
-                'ToolTip': "create structural nodess"}
+                'ToolTip': "create structural nodes"}
     def Activated(self):
         """Do something here"""
         # set input field for manual input with default values
