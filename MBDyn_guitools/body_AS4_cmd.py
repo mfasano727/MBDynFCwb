@@ -136,7 +136,7 @@ class body_sel_cmd(QtWidgets.QDialog,  Ui_dia_body_sel):
 #        placement_mat = chosenbody[0].Placement
 #        chosenbody.Placement.Matrix.unity()
         App.Console.PrintMessage(" matrix test ")
-        matr_of_inertia = chosenbody.Shape.MatrixOfInertia  # units of IM in FreeCad is L**5  L usally in mm
+        matr_of_inertia = chosenbody.Shape.MatrixOfInertia  # units of IM in FreeCad is L**5  L usually in mm
 #        chosenbody.Placement = placement_mat
         # matrix is a list of three FreeCad vector
         new_body.inertia_matrix = [App.Vector(matr_of_inertia.A11, matr_of_inertia.A12, matr_of_inertia.A13)*body_density,
