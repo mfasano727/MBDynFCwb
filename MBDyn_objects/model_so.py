@@ -8,14 +8,14 @@ from  MBDyn_utilities.MBDyn_funcs import *
 class MBDynReference:
     def __init__(self, obj):
         obj.addProperty("App::PropertyInteger","ref_label","MBDynReference","label for reference ").ref_label
-        obj.addProperty("App::PropertyString","ref_name","MBDynReference","nane of reference").ref_name
-         # refered_label is the label of a reference current reference is refered to.
-        obj.addProperty("App::PropertyInteger","refered_label","MBDynReference","reference label of parrent reference").refered_label
-         # position and orientation must be in grobal reference
+        obj.addProperty("App::PropertyString","ref_name","MBDynReference","name of reference").ref_name
+         # refered_label is the label of a reference current reference is referred to.
+        obj.addProperty("App::PropertyInteger","refered_label","MBDynReference","reference label of parent reference").refered_label
+         # position and orientation must be in global reference
         obj.addProperty("App::PropertyVector","position","MBDynReference","position of reference ").position
         obj.addProperty("App::PropertyVectorList","orientation","MBDynReference","orientation of reference").orientation
         obj.addProperty("App::PropertyString","orientation_des","MBDynReference","orientation type of reference ").orientation_des
-        obj.addProperty("App::PropertyVector","vel","MBDynReference","vlocity of reference").vel
+        obj.addProperty("App::PropertyVector","vel","MBDynReference","velocity of reference").vel
         obj.addProperty("App::PropertyVector","ang_vel","MBDynReference","angular velocity of reference ").ang_vel
         obj.Proxy = self
         self.Object = obj
