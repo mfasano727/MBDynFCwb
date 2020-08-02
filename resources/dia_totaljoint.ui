@@ -451,6 +451,19 @@
     </rect>
    </property>
   </widget>
+  <widget class="QPushButton" name="create_drive_Button">
+   <property name="geometry">
+    <rect>
+     <x>44</x>
+     <y>290</y>
+     <width>101</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>create template drive</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections>
