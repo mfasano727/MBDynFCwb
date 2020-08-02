@@ -2,6 +2,7 @@ import numpy as np
 import math
 import FreeCAD as App
 import MBDyn_objects.model_so
+from  MBDyn_utilities.MBDyn_funcs import write_drv
 from  MBDyn_utilities.MBDyn_funcs import writeVect, writeMatrix, writeOrientationMatrix
 
 class MBDynRevoluteHinge:

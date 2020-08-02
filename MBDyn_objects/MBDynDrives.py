@@ -4,7 +4,8 @@ import FreeCAD as App
 import MBDyn_objects.MBDynJoints
 from  MBDyn_utilities.MBDyn_funcs import *
 
-
+''' Drive callers object will be referenced by other MBDyn objects with a unique integer label
+    given the property name drive_label '''
 class MBDynconstantDrive:
     '''MBDyn constant drive caller feature pyhton object class'''
     def __init__(self, obj):
@@ -70,7 +71,7 @@ class MBDynRampDrive:
 
     def execute(self, fp):
         '''Do something when doing a recomputation, this method is mandatory'''
-        App.Console.PrintMessage("Recompute Python MBDynInitialValue feature\n")
+        App.Console.PrintMessage("Recompute Python MBDynRampDrive feature\n")
 
     def onDocumentRestored(self, fp):
         '''restores feature python object when document is read'''
@@ -82,81 +83,62 @@ class MBDynRampDrive:
 
 
 class MBDynTemplateDrive:
+    '''MBDyn template drive caller feature pyhton object class'''
+    def __init__(self):
+        ''' The template drive caller calls as many other drive callers as the type(tpl_type property) calls for.
+            the drive callers are referenced by list ofa unique integer labels for each drive caller (drv_calls property)
+            if the drive_label is 0 there is no drive caller. References frames are also refered to by the integer label for the
+            MBDyn reference object.  This object can handle 3 entity types 'Vec3', 'Vec6' and 'Mat3x3' '''
+        obj.addProperty("App::PropertyInteger","drive_label","_MBDynTemplateDrive","type of template drive caller").drive_label
+        obj.addProperty("App::PropertyString","drive_name","_MBDynTemplateDrive","name of template drive caller").drive_name
+        obj.addProperty("App::PropertyString","tpl_typ","_MBDynTemplateDrive","type of template drive caller").tpl_type
+        obj.addProperty("App::PropertyInteger","reference","_MBDynTemplateDrive","reference for drive caller").reference
+        obj.addProperty("App::PropertyString","entity_typ","_MBDynTemplateDrive","type of entity for template drive caller").entity_type
+        obj.addProperty("App::PropertyVectorList","entity","_MBDynTemplateDrive","entity for template drive caller").entity
+        obj.addProperty("App::PropertyIntegerList","drv_calls","_MBDynTemplateDrive","drive callers for template drive caller").drv_calls
 
-    def __init__(self, tpl_type, *args):
-        self.tpl_type = tpl_type
-        self.reference = None
-        self.args = list(args)
+        obj.Proxy = self
+        self.Object = obj
 
-        if tpl_type == "single":
-            self.single_entity = args[0]
-            self.single_drive_caller = args[1]
+    def __getstate__(self):
+        '''When saving the document this object gets stored using Python's json module.\
+                Since we have some un-serializable parts here -- the Coin stuff -- we must define this method\
+                to return a tuple of all serializable objects or None.'''
+        return None
 
-        elif tpl_type == "component":
-            self.component_drive_caller = list(args)
-            self.component_type = None
+    def __setstate__(self,state):
+        '''When restoring the serialized object from document we have the chance to set some internals here.\
+                Since no data were serialized nothing needs to be done here.'''
+        return None
 
-        elif tpl_type == "array":
-            self.num_template_drive_callers = args[0]
-            self.array_drive_caller = list(args[1:])
+    def onChanged(self, fp, prop):
+        '''Do something when a property has changed'''
+        App.Console.PrintMessage("Change property: " + str(prop) + "\n")
 
-    def setReference(self, reference):
-        self.reference = reference
+    def execute(self, fp):
+        '''Do something when doing a recomputation, this method is mandatory'''
+        App.Console.PrintMessage("Recompute Python MBDynTemplateDrive feature\n")
 
-    def getReference(self):
-        return self.reference
+    def onDocumentRestored(self, fp):
+        '''restores feature python object when document is read'''
+        self.Object = fp
 
-    def setSingleEntity(self, single_entity):
-        self.single_entity  = single_entity
-
-    def getSingleEntity(self):
-        return self.single_entity
-
-    def setSingleDriveCaller(self, single_drive_caller):
-        self.single_drive_caller = single_drive_caller
-
-    def getSingleDriveCaller(self):
-        return self.single_drive_caller
-
-    def setComponentDriveCaller(self, component_drive_caller):
-        self.component_drive_caller = component_drive_caller
-
-    def getComponentDriveCaller(self):
-        return self.component_drive_caller
-
-    def setComponentType(self, component_type):
-        self.component_type = component_type
-
-    def getComponentType(self):
-        return self.component_type
-
-    def setNumTemplateDriveCallers(self, num_template_drive_callers):
-        self.num_template_drive_callers = num_template_drive_callers
-
-    def getNumTemplateDriveCallers(self):
-        return self.num_template_drive_callers
-
-    def setArrayDriveCaller(self, array_drive_caller):
-        self.array_drive_caller = array_drive_caller
-
-    def getArrayDriveCaller(self):
-        return self.array_drive_caller
 
     def writeDrive(self):
         if self.tpl_type == "null":
             drive_line = "null"
 
         elif self.tpl_type == "single":
-            drive_line = "single, {}, {}".format(self.single_entity.writeVector(), self.single_drive_caller.writeDrive())
+            drive_line = "single, {}, {}".format(self.single_entity.writeVector(), write_drv(self.Object.drv_calls[0]))
 
         elif self.tpl_type == "component":
             if self.component_type == None:
                 drive_line = "component"
-                for k in self.component_drive_caller:
-                    if k == "inactive":
+                for k in self.Obbject.drv_calls:
+                    if k == 0:
                         drive_line = drive_line + ", " + "inactive"
                     else:
-                        drive_line = drive_line + ",\n                  " + k.writeDrive()
+                        drive_line = drive_line + ",\n                  " + write_drv(k)
 
             else:
                 drive_line = "component, {}".format(self.component_type)
