@@ -88,6 +88,15 @@ def writeOrientationMatrix(description, Orientationmatrix):
         matrix_line = "{}, {}, {}, {}".format(description, Orientationmatrix[0][0], Orientationmatrix[0][1], Orientationmatrix[0][2] )
     return matrix_line
 
+def write_drv(drv_lab):
+    ''' finds the drive caller refered to by drv_lab and executes the write_drive of that drive
+        caller.  it will return the string returned by the write_drive function. '''
+    for drvs in App.ActiveDocument.Drives_callers.Group:
+        if drvs.drive_label == drv_lab:
+            return drvs.Proxy.write_drive()
+    return ""
+
+
 def writeInputFile(name_of_file):
     ''' writes MBDyn input file'''
     with open(name_of_file, "w") as f:
