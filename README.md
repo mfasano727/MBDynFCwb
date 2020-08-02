@@ -22,7 +22,7 @@ TODO list
 There are many ways other than add more MBDyn elements to improve the workbench.
 Here is a list, not in order of importance.
 
-* make the workbench compatible with the new namespace workbench.
+* make the workbench compatible with the new style workbench.
 * add exception handling, like making line editors in pyside only accept numbers where applicable.
 * include more in the post processing, like force and torque indicators. code for graphing velocity, acceleration etc.
 * add names to the MBDyn scripted objects and use them as variables in the input file to make it more readable
