@@ -18,3 +18,13 @@ A tutorial is found in the "Pendulum Tutorial" page of the wiki
 There is a discussion of the project in the FreeCAD forum here.  
 https://forum.freecadweb.org/viewtopic.php?f=18&t=39165&start=100
 
+TODO list
+There are many ways other than add more MBDyn elements to improve the workbench.
+Here is a list, not in order of importance.
+
+* make the workbench compatible with the new namespace workbench.
+* add exception handling, like making line editors in pyside only accept numbers where applicable.
+* include more in the post processing, like force and torque indicators. code for graphing velocity, acceleration etc.
+* add names to the MBDyn scripted objects and use them as variables in the input file to make it more readable
+* use Propertylink in the MBDyn objects so they can change with the FreeCAD model.
+* test more
