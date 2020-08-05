@@ -8,8 +8,8 @@ The asm4 branch requires FreeCAD v0.19  because you need assembly4 workbench. (s
 Windows users can get a windows build of MBDyn here  
 http://www.aero.polimi.it/masarati/Download/mbdyn/mbdyn-1.7.2-win32.zip  
 
-Instructions can be found in the "FreeCAD MBDyn workbench with Assembly 4 instructions" page of the wiki  
-[instructions](https://github.com/mfasano727/MBDynFCwb/wiki/FreeCAD-MBDyn-workbench-with-Assembly-4-instructions) 
+Commands can be found in the "FreeCAD MBDyn workbench with Assembly 4 instructions" page of the wiki  
+[commands](https://github.com/mfasano727/MBDynFCwb/wiki/FreeCAD-MBDyn-workbench-with-Assembly-4-instructions) 
 
 A tutorial is found in the "Pendulum Tutorial" page of the wiki    
 [tutorial](https://github.com/mfasano727/MBDynFCwb/wiki/Pendulum-Tutorial)
@@ -18,13 +18,21 @@ A tutorial is found in the "Pendulum Tutorial" page of the wiki
 There is a discussion of the project in the FreeCAD forum here.  
 https://forum.freecadweb.org/viewtopic.php?f=18&t=39165&start=100
 
-TODO list
-There are many ways other than add more MBDyn elements to improve the workbench.
+## TODO list
+There are many ways other than add more MBDyn entities to improve the workbench.
 Here is a list, not in order of importance.
-
-* make the workbench compatible with the new style workbench.
-* add exception handling, like making line editors in pyside only accept numbers where applicable.
-* include more in the post processing, like force and torque indicators. code for graphing velocity, acceleration etc.
+* Workbench structure
+    * make the workbench compatible with the new style workbench.
+* Robustness
+    * add exception handling, like making line editors in pyside only accept numbers where applicable.
+* Tree view layout
+    * Updrage the tree view layout to separate the model, the simulations and the results.(**In Progress**)
+    * Add "freecad style" icons to each tree entities
+* Post Processing
+    * include force and torque indicators. (pivy.coin)
+    * code for graphing velocity, acceleration etc. (pivy.coin)
+    * plot data (matplotlib)
+    * create curves to visualyse node path
 * add names to the MBDyn scripted objects and use them as variables in the input file to make it more readable
 * use Propertylink in the MBDyn objects so they can change with the FreeCAD model.
 * test more
