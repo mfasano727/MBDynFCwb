@@ -23,7 +23,6 @@ class mbdyn_launchGui(QtWidgets.QDialog,  Ui_dia_launcher):
         self.default_solver = ""
         self.binaries_list = []
         self.use_WSL = False
-        self.is_edited = False
         self.editor_binary = ""
         self.is_editor_defined = False  # indicatse if the file existe
         self.is_edited = False  # Tell the run button to use existing file or write a new one
@@ -37,7 +36,6 @@ class mbdyn_launchGui(QtWidgets.QDialog,  Ui_dia_launcher):
         self.stopSim.clicked.connect(self.stopSimulation)
         self.viewStatus.clicked.connect(self.outputMessage)
         self.writeIF.clicked.connect(self.writeInputFile) # function from MBDyn_utilities.MBDyn_funcs
-        self.writeIF.clicked.connect(lambda x=True: self.editIF.setEnabled(x))
         self.editIF.clicked.connect(self.editInputFile)
         
 
@@ -54,6 +52,10 @@ class mbdyn_launchGui(QtWidgets.QDialog,  Ui_dia_launcher):
         self.use_WSL = App.ParamGet(SOLVERS_USER_SETTINGS).GetBool("USE_WSL", False)
 
     def updateView(self):
+        self.runSim.setEnabled(True)
+        self.stopSim.setEnabled(False)
+        self.viewStatus.setEnabled(False)
+
         if self.editor_binary:
             self.is_editor_defined = True
         self.editIF.setEnabled(False)
@@ -84,7 +86,7 @@ class mbdyn_launchGui(QtWidgets.QDialog,  Ui_dia_launcher):
         full_file_name = self.fullFileName()
         if full_file_name:
             writeInputFile(full_file_name)
-            
+        self.editIF.setEnabled(True)
     def editInputFile(self):
         import subprocess
         full_file_name = self.fullFileName()
