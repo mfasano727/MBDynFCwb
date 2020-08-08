@@ -560,7 +560,7 @@ class Ui_mbdyngui(object):
                 App.Console.PrintMessage("testg4" + self.ug_x.text())
 
                 gravity.gravity_vector = g_vect
-                gravity.gravity_value = float(self.gravity_acceleration.text())
+                gravity.gravity_value = float(self.gravity_acceleration.text()) * 1000.0  # times 1000 to convert to mm
 #                g = MBDynModel.MBDynGravity("uniform", MBDynModel.vec(x, y, z), ga)
 
             else:
