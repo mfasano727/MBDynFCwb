@@ -88,15 +88,6 @@ def writeOrientationMatrix(description, Orientationmatrix):
         matrix_line = "{}, {}, {}, {}".format(description, Orientationmatrix[0][0], Orientationmatrix[0][1], Orientationmatrix[0][2] )
     return matrix_line
 
-def write_drv(drv_lab):
-    ''' finds the drive caller refered to by drv_lab and executes the write_drive of that drive
-        caller.  it will return the string returned by the write_drive function. '''
-    for drvs in App.ActiveDocument.Drives_callers.Group:
-        if drvs.drive_label == drv_lab:
-            return drvs.Proxy.write_drive()
-    return ""
-
-
 def writeInputFile(name_of_file):
     ''' writes MBDyn input file'''
     with open(name_of_file, "w") as f:
@@ -212,35 +203,6 @@ def calc_placement(pos, orient, orient_des):
     Rot = pla.Rotation
     return App.Placement(pos, Rot)
 
-def find_joint_label():
-    maxjointnum = 0
-    for jnt in App.ActiveDocument.Joints.Group:
-        if maxjointnum < jnt.joint_label:
-            maxjointnum = jnt.joint_label
-    return maxjointnum + 1
-
-def find_node_label():
-    maxnodenum = 0
-    App.Console.PrintMessage(" find node: ") # + str(maxnodeum) + "\n")
-    for nod in App.ActiveDocument.Nodes.Group:
-        if maxnodenum < nod.node_label:
-            maxnodenum = nod.node_label
-    return maxnodenum + 1
-
-def find_body_label():
-    maxbodynum = 0
-    for bod in App.ActiveDocument.Bodies.Group:
-        if maxbodynum < bod.label:
-            maxbodynum = bod.label
-    return maxbodynum + 1
-
-def find_drive_label():
-    maxdrivenum = 0
-    App.Console.PrintMessage(" find drive: ")
-    for drive in App.ActiveDocument.Drive_callers.Group:
-        if maxdrivenum < drive.label:
-            maxdrivenum = drive.label
-    return maxdrivenum + 1
 
 '''
     Rot.A11 = tu('cos('+str(orient.x)+')*cos('+str(orient.y)+')')

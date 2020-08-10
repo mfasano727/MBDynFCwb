@@ -19,7 +19,7 @@ import FreeCADGui as Gui
 from   MBDyn_guitools.dia_revpin_joint_AS4_2 import Ui_dia_revpin_joint
 
 class revpin_joint_cmd(QtWidgets.QDialog, Ui_dia_revpin_joint):
-    """MBD create revolute pin joint command"""
+    """MBD create reference command"""
     def __init__(self):
         super(revpin_joint_cmd, self).__init__()
         self.setupUi(self)
@@ -38,6 +38,12 @@ class revpin_joint_cmd(QtWidgets.QDialog, Ui_dia_revpin_joint):
                 App.Console.PrintMessage(" property4: "+ nodeobj.node_name)
                 self.node_1_Box.addItem(nodeobj.node_name)
 
+
+        self.link_const_Box.clear()
+        for linksobj in App.ActiveDocument.getLinksTo():
+            constname = linksobj.Name + linksobj.AttachedBy+ " to " + linksobj.AttachedTo
+            self.link_const_Box.addItem(constname)
+
         self.Choose_z_axis_Box.clear()
         strlist = str(self.link_const_Box.currentText()).split(' to ')
         for strlcs in strlist:
@@ -48,13 +54,12 @@ class revpin_joint_cmd(QtWidgets.QDialog, Ui_dia_revpin_joint):
             strlcsx = strlcs + " z"
             self.Choose_z_axis_Box.addItem(strlcsx)
 
-        self.node_1_Box.currentIndexChanged.connect(self.set_constr)
         self.link_const_Box.currentIndexChanged.connect(self.set_choose_z)
         self.choose_z_axis_1.toggled.connect(self.set_z_method)
 
         self.choose_z_axis_1.setChecked(True)
         self.choose_z_axis_2.setChecked(True)
-        self.set_constr()
+
         self.show()
 
         App.Console.PrintMessage(" Activated: " + "\n")
@@ -112,15 +117,12 @@ class revpin_joint_cmd(QtWidgets.QDialog, Ui_dia_revpin_joint):
             linkedobj1 = linkobj1.LinkedObject
         else:
             linkedobj1 = linkobj1
-
-        # find the position relative to node 1
-        for lnkLCSs in linkedobj1.getSubObjects():
-            lnkdLCS = linkedobj1.getObject(lnkLCSs[0:-1])
-            if lnkdLCS.Label == linkLCS1_str or lnkdLCS.Name == linkLCS1_str:
-                 linkedLCS1 = lnkdLCS
-        linkedLCS1_pos = linkedLCS1.Placement.Base
+        linkedLCS1 = linkedobj1.getSubObject(linkLCS1_str + '.')
+        linkedLCS1_pos = linkedobj1.getObject(linkLCS1_str).Placement.Base
         inv_linkobj1_pl = linkobj1.Placement.inverse()
+        App.Console.PrintMessage(" pos1 "+str(linkedLCS1_pos)+" pos2 "+str(inv_linkobj1_pl.multVec(nodeobj.position)))
         new_joint.position1 = linkedLCS1_pos - inv_linkobj1_pl.multVec(nodeobj.position)
+
 
         # if object is App::Link use linkednoject otherwise use objcect itself
         linkobjfix = App.ActiveDocument.getObject(linkobjfix_str)
@@ -131,7 +133,6 @@ class revpin_joint_cmd(QtWidgets.QDialog, Ui_dia_revpin_joint):
         App.Console.PrintMessage(" property3: ")
         new_joint.positionf = linkobjfix.Placement.multVec(linkedobjfix.getObject(linkLCSfix_str).Placement.Base)
 
-        # get FreeCAD placements of objects to calculate orientation matracies
         linkedLCS1_pl = linkedLCS1.Placement
         linkobj1_pl = linkobj1.Placement
         linkLCS1_pl =  linkobj1_pl.multiply(linkedobj1.getObject(linkLCS1_str).Placement)
@@ -171,7 +172,7 @@ class revpin_joint_cmd(QtWidgets.QDialog, Ui_dia_revpin_joint):
                 new_joint.orientation1 = [linkLCS1_x, App.Vector(0,0,0), linkLCS1_z]
                 new_joint.orientation_desf = "xz"
                 new_joint.orientationf = [linkLCSfix_x, App.Vector(0,0,0), linkLCS1_z]
-        else:   # z axis is set manually
+        else:
             joint_z_axis = App.Vector(float(self.z_axis_set_x.text()), float(self.z_axis_set_y.text()), float(self.z_axis_set_z.text()))
             new_joint.orientation1 = [App.Vector(float(self.node1_vect1_x.text()), float(self.node1_vect1_y.text()), float(self.node1_vect1_z.text())),
                                App.Vector(float(self.node1_vect2_x.text()), float(self.node1_vect2_y.text()), float(self.node1_vect2_z.text())),
@@ -183,7 +184,6 @@ class revpin_joint_cmd(QtWidgets.QDialog, Ui_dia_revpin_joint):
         self.done(0)
 
     def set_choose_z(self):
-        ''' fill the choose z axis combo box given link cnstraint options'''
         self.Choose_z_axis_Box.clear()
         strlist = str(self.link_const_Box.currentText()).split(' to ')
         for strlcs in strlist:
@@ -195,7 +195,6 @@ class revpin_joint_cmd(QtWidgets.QDialog, Ui_dia_revpin_joint):
             self.Choose_z_axis_Box.addItem(strlcsx)
 
     def set_z_method(self):
-        '''Displays dialog widgets depening on how Z axis is to be input'''
         App.Console.PrintMessage(" method ")
         if self.choose_z_axis_2.isChecked():
             App.Console.PrintMessage(" method 2")
@@ -208,15 +207,6 @@ class revpin_joint_cmd(QtWidgets.QDialog, Ui_dia_revpin_joint):
             self.z_axis_set_x.setVisible(True); self.z_axis_set_y.setVisible(True); self.z_axis_set_z.setVisible(True)
             self.Choose_z_axis_Box.setVisible(False)
             self.choose_z_axis_lab.setVisible(False)
-
-    def set_constr(self):
-        '''fills costraint combobox given node chosen in node_1_box'''
-        self.link_const_Box.clear()
-        node1_str = self.node_1_Box.currentText().split("|")[0]
-        for linksobj in App.ActiveDocument.getLinksTo():
-            constname = linksobj.Name + linksobj.AttachedBy+ " to " + linksobj.AttachedTo
-            if linksobj.Label == node1_str:
-                self.link_const_Box.addItem(constname)
 
 
     def check_valid(self):

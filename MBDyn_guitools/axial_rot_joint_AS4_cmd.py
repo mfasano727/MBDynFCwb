@@ -10,8 +10,6 @@ MBDwbPath = os.path.dirname(MBDyn_locator.__file__)
 MBDwb_icons_path = os.path.join(MBDwbPath, 'icons')
 import MBDyn_objects.model_so
 import MBDyn_objects.MBDynJoints
-import MBDyn_objects.MBDynDrives
-from  MBDyn_utilities.MBDyn_funcs import find_joint_label
 from PySide2 import QtCore, QtGui, QtWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
@@ -46,7 +44,7 @@ class axial_rot_joint_cmd(QtWidgets.QDialog, Ui_dia_axial_rot_joint):
                 self.node_2_Box.addItem(nodeobj.node_name)
 
         self.drive_Box.clear()
-        if App.ActiveDocument.getObjectsByLabel('Drive_callers') != None:
+        if App.ActiveDocument.getObjectsByLabel('Drive_callers') != None :
             for driveobj in App.ActiveDocument.Drive_callers.Group:
                 self.drive_Box.addItem(driveobj.drive_name)
 
@@ -92,37 +90,29 @@ class axial_rot_joint_cmd(QtWidgets.QDialog, Ui_dia_axial_rot_joint):
         else:
             linkobj2_str = strlist2[0]
         linkLCS2_str = strlist2[1]
-        App.Console.PrintMessage(" links "+strlist2[0])
 
         #  match node with the link constraint chosen.
         for nodeobjs in App.ActiveDocument.Nodes.Group:
             if nodeobjs.node_name  == self.node_1_Box.currentText():
-                App.Console.PrintMessage(" links2 "+nodeobjs.node_name+" "+self.node_1_Box.currentText())
                 if nodeobjs.node_name == linkobj1_str:
                     nodeobj1 = nodeobjs
                 elif nodeobjs.node_name == linkobj2_str:
                     nodeobj2 = nodeobjs
             if nodeobjs.node_name  == self.node_2_Box.currentText():
-                App.Console.PrintMessage(" links2 "+nodeobjs.node_name+" "+self.node_2_Box.currentText())
                 if nodeobjs.node_name == linkobj1_str:
                     nodeobj1 = nodeobjs
                 elif nodeobjs.node_name == linkobj2_str:
                     nodeobj2 = nodeobjs
-        App.Console.PrintMessage(" links "+nodeobj2.node_name + " "+nodeobj2.node_name)
 
         # check if both nodes are not the same
-        '''
-        if nodeobj1.node_label == nodeobj2.node_label:
+        if nodeobj1.node_name == nodeobj2.node_name:
             mb = QtGui.QMessageBox()
             mb.setText("both nodes can not be the same")
             mb.exec()
             return
-        '''
-        App.Console.PrintMessage(" links "+linkobj2_str)
-        # create joint object
-        num_joints = find_joint_label()
-        App.Console.PrintMessage(" links "+num_joints)
 
+        # create joint object
+        num_joints = len(App.ActiveDocument.Joints.getSubObjects()) + 1
         new_joint = App.ActiveDocument.Joints.newObject("App::FeaturePython","Joint" + str(num_joints))
         MBDyn_objects.MBDynJoints.MBDynRevoluteHinge(new_joint)
         new_joint.ViewObject.Proxy = 0
@@ -245,17 +235,13 @@ class axial_rot_joint_cmd(QtWidgets.QDialog, Ui_dia_axial_rot_joint):
             self.choose_z_axis_lab.setVisible(False)
 
     def set_nodes(self):
-        '''fills costraint combobox given node chosen in node_1_box and node_2_box'''
         self.link_const_Box.clear()
-        node1_str = self.node_1_Box.currentText().split("|")[0]
-        node2_str = self.node_2_Box.currentText().split("|")[0]
+        node1_str = self.node_1_Box.currentText()
+        node2_str = self.node_2_Box.currentText()
         for linksobj in App.ActiveDocument.getLinksTo():
+            constname = linksobj.Name + linksobj.AttachedBy+ " to " + linksobj.AttachedTo
             linkobj_atch = linksobj.AttachedTo.split("#")[0]
-            if linkobj_atch == "Parent Assembly":  #Parrent Assembly is the App::Part object named model.
-                linkobj_atch = "Model"
-            linkLCS_atch = linksobj.AttachedTo.split("#")[1]
-            constname = linksobj.Name + linksobj.AttachedBy + " to " + linksobj.AttachedTo
-            if linksobj.Label == node1_str or linksobj.Label == node2_str:
+            if linksobj.Name == node1_str or linksobj.Name == node2_str:
                 if linkobj_atch == node1_str or linkobj_atch == node2_str:
                     self.link_const_Box.addItem(constname)
 

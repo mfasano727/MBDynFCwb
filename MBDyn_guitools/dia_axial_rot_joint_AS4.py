@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'dia_axial_rot_joint_AS4.ui'
+## Form generated from reading UI file 'dia_axial_rot_joint_As4.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.14.1
 ##
@@ -24,14 +24,13 @@ class Ui_dia_axial_rot_joint(object):
         self.buttonBox = QDialogButtonBox(dia_axial_rot_joint)
         self.buttonBox.setObjectName(u"buttonBox")
         self.buttonBox.setGeometry(QRect(40, 370, 341, 32))
-        font = QFont()
-        font.setPointSize(10)
-        self.buttonBox.setFont(font)
         self.buttonBox.setOrientation(Qt.Horizontal)
         self.buttonBox.setStandardButtons(QDialogButtonBox.Cancel|QDialogButtonBox.Ok)
         self.node_1_Box = QComboBox(dia_axial_rot_joint)
         self.node_1_Box.setObjectName(u"node_1_Box")
         self.node_1_Box.setGeometry(QRect(90, 20, 101, 22))
+        font = QFont()
+        font.setPointSize(10)
         self.node_1_Box.setFont(font)
         self.node_1_label = QLabel(dia_axial_rot_joint)
         self.node_1_label.setObjectName(u"node_1_label")
@@ -101,9 +100,6 @@ class Ui_dia_axial_rot_joint(object):
         self.drive_label.setObjectName(u"drive_label")
         self.drive_label.setGeometry(QRect(260, 310, 101, 16))
         self.drive_label.setFont(font)
-        self.create_drive_Button = QPushButton(dia_axial_rot_joint)
-        self.create_drive_Button.setObjectName(u"create_drive_Button")
-        self.create_drive_Button.setGeometry(QRect(100, 330, 91, 21))
 
         self.retranslateUi(dia_axial_rot_joint)
         self.buttonBox.accepted.connect(dia_axial_rot_joint.accept)
@@ -124,6 +120,5 @@ class Ui_dia_axial_rot_joint(object):
         self.choose_z_axis_lab.setText(QCoreApplication.translate("dia_axial_rot_joint", u"Choose Z axis from LCS", None))
         self.link_const_lab.setText(QCoreApplication.translate("dia_axial_rot_joint", u"Link constraint", None))
         self.drive_label.setText(QCoreApplication.translate("dia_axial_rot_joint", u"choose drive caller", None))
-        self.create_drive_Button.setText(QCoreApplication.translate("dia_axial_rot_joint", u"create a drive caller", None))
     # retranslateUi
 

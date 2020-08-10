@@ -2,7 +2,6 @@ import numpy as np
 import math
 import FreeCAD as App
 import MBDyn_objects.model_so
-from  MBDyn_utilities.MBDyn_funcs import write_drv
 from  MBDyn_utilities.MBDyn_funcs import writeVect, writeMatrix, writeOrientationMatrix
 
 class MBDynRevoluteHinge:
@@ -435,7 +434,7 @@ class MBDynInline():
         obj.addProperty("App::PropertyVectorList", "orientation1", "MBDynInline", "relative orientation from structural node 1").orientation1
         obj.addProperty("App::PropertyString", "orientation_des1", "MBDynInline", "orientation matrix 1 type ").orientation_des1
         obj.addProperty("App::PropertyInteger", "node2_label", "MBDynInline", "label for structural node 2").node2_label
-        obj.addProperty("App::PropertyVector", "offset2", "MBDynInline", "relative offset node 2").offset2
+        obj.addProperty("App::PropertyVector", "position2", "MBDynInline", "relative offset node 2").offset2
 
         obj.Proxy = self
         self.Object = obj

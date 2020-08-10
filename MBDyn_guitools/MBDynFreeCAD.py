@@ -23,6 +23,7 @@ class mbdyn_launchGui(QtWidgets.QDialog,  Ui_dia_launcher):
         self.default_solver = ""
         self.binaries_list = []
         self.use_WSL = False
+        self.is_edited = False
         self.editor_binary = ""
         self.is_editor_defined = False  # indicatse if the file existe
         self.is_edited = False  # Tell the run button to use existing file or write a new one
@@ -36,6 +37,7 @@ class mbdyn_launchGui(QtWidgets.QDialog,  Ui_dia_launcher):
         self.stopSim.clicked.connect(self.stopSimulation)
         self.viewStatus.clicked.connect(self.outputMessage)
         self.writeIF.clicked.connect(self.writeInputFile) # function from MBDyn_utilities.MBDyn_funcs
+        self.writeIF.clicked.connect(lambda x=True: self.editIF.setEnabled(x))
         self.editIF.clicked.connect(self.editInputFile)
         
 
@@ -52,10 +54,6 @@ class mbdyn_launchGui(QtWidgets.QDialog,  Ui_dia_launcher):
         self.use_WSL = App.ParamGet(SOLVERS_USER_SETTINGS).GetBool("USE_WSL", False)
 
     def updateView(self):
-        self.runSim.setEnabled(True)
-        self.stopSim.setEnabled(False)
-        self.viewStatus.setEnabled(False)
-
         if self.editor_binary:
             self.is_editor_defined = True
         self.editIF.setEnabled(False)
@@ -86,7 +84,7 @@ class mbdyn_launchGui(QtWidgets.QDialog,  Ui_dia_launcher):
         full_file_name = self.fullFileName()
         if full_file_name:
             writeInputFile(full_file_name)
-        self.editIF.setEnabled(True)
+            
     def editInputFile(self):
         import subprocess
         full_file_name = self.fullFileName()
@@ -127,11 +125,12 @@ class mbdyn_launchGui(QtWidgets.QDialog,  Ui_dia_launcher):
                 writeInputFile(full_file_name)
 
         args= [solver_path, full_file_name]
+        cwd = "D:\\Garnier\\Documents\\01_programmation\\01_Python\\mbdyn_FreeCAD\\_SOLVERS_\\mbdyn-1.7.2-win32\\"
         m_log_file = os.path.join(working_directory, "_console.log")
         self.log_file = open(m_log_file, 'w')
 
         #subprocess.PIPE
-        self.p = subprocess.Popen(args, shell=True, cwd=working_directory, stdout=self.log_file, stderr=subprocess.STDOUT) #
+        self.p = subprocess.Popen(args, shell=True, cwd=cwd, stdout=self.log_file, stderr=subprocess.STDOUT) #
         App.Console.PrintMessage("Start Now")
 
         self.runSim.setEnabled(False)

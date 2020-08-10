@@ -364,7 +364,6 @@ class Ui_mbdyngui(object):
 
         self.setInitialValues.clicked.connect(self.setupInitialValues)
         self.setGravity.clicked.connect(self.setupGravity)
-        self.setValidator()
 
         QtCore.QMetaObject.connectSlotsByName(mbdyngui)
 
@@ -420,18 +419,6 @@ class Ui_mbdyngui(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("mbdyngui", "Gravity"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), _translate("mbdyngui", "Force"))
 
-    def setValidator(self):
-        #self.ug_x.setValidator(QtGui.QDoubleValidator(999999, -999999, 16))
-        #self.ug_y.setValidator(QtGui.QDoubleValidator(999999, -999999, 16))
-        #self.ug_z.setValidator(QtGui.QDoubleValidator(999999, -999999, 16))
-        #self.gravity_acceleration.setValidator(QtGui.QDoubleValidator(999999, -999999, 16))
-        #
-        #self.cg_x.setValidator(QtGui.QDoubleValidator(999999, -999999, 16))
-        #self.cg_y.setValidator(QtGui.QDoubleValidator(999999, -999999, 16))
-        #self.cg_z.setValidator(QtGui.QDoubleValidator(999999, -999999, 16))
-        #self.cg_field_mass.setValidator(QtGui.QDoubleValidator(999999, -999999, 16))
-        #self.grav_constant.setValidator(QtGui.QDoubleValidator(999999, -999999, 16))
-        pass
 
     def setupInitialValues(self):
 
@@ -456,7 +443,7 @@ class Ui_mbdyngui(object):
             joints_elemSubGrp = elementsGrp.newObject('App::DocumentObjectGroup', 'Joints')
             forces_elemSubGrp = elementsGrp.newObject('App::DocumentObjectGroup', 'Forces')
 
-             # create global reference
+             # create global refernce
             global_ref = referencesGrp.newObject("App::FeaturePython","global_reference")
             MBDyn_objects.model_so.MBDynReference(global_ref)
             global_ref.ViewObject.Proxy = 0
@@ -519,13 +506,12 @@ class Ui_mbdyngui(object):
         iv.time_step = float(self.time_step.text())
         iv.max_iterations = int(self.max_iterations.text())
         iv.tolerance = float(self.tolerance.text())
-        if self.checkBox_2.checkState():
-            iv.derivatives_tolerance = float(self.derivatives_tolerance.text())
+#        if self.checkBox_2.checkState():
+#            iv.derivatives_tolerance = float(self.derivatives_tolerance.text())
 #        App.Console.PrintMessage("testi")
         App.Console.PrintMessage(iv.Proxy.writeInitialValue())
-#       Not Used Actually
-#        if self.checkBox_2.checkState():
-#            o = MBDynModel.MBDynOutputData(self.output.text())
+        if self.checkBox_2.checkState():
+            o = MBDynModel.MBDynOutputData(self.output.text())
 
 
 
@@ -541,12 +527,10 @@ class Ui_mbdyngui(object):
 
 
     def setupGravity(self):
-        if not hasattr(App.ActiveDocument,"gravity"):
-            gravity = App.ActiveDocument.MBDyn.newObject("App::FeaturePython","gravity")
+        if len(App.ActiveDocument.getObjectsByLabel("gravity")) == 0 :
+            gravity = App.ActiveDocument.MBDynGrp.newObject("App::FeaturePython","gravity")
             MBDyn_objects.model_so.MBDynGravity(gravity)
             gravity.ViewObject.Proxy = 0
-        else:
-            gravity = App.ActiveDocument.gravity
 
         if self.add_gravity.checkState():
             if self.gravity_type.currentIndex() == 0:
@@ -560,7 +544,7 @@ class Ui_mbdyngui(object):
                 App.Console.PrintMessage("testg4" + self.ug_x.text())
 
                 gravity.gravity_vector = g_vect
-                gravity.gravity_value = float(self.gravity_acceleration.text()) * 1000.0  # times 1000 to convert to mm
+                gravity.gravity_value = float(self.gravity_acceleration.text())
 #                g = MBDynModel.MBDynGravity("uniform", MBDynModel.vec(x, y, z), ga)
 
             else:
@@ -577,9 +561,8 @@ class Ui_mbdyngui(object):
 
 #            Gui.activeWorkbench().elements.addGravity(g)
 #            self.setGravity.setEnabled(False)
-#        Note Used
-#        App.Console.PrintMessage( Gui.activeWorkbench().elements.gravity)
-#        App.Console.PrintMessage( Gui.activeWorkbench().iv.initial_time)
+        App.Console.PrintMessage( Gui.activeWorkbench().elements.gravity)
+        App.Console.PrintMessage( Gui.activeWorkbench().iv.initial_time)
         App.Console.PrintMessage("testg")
 
 class mbdyn_configure(QtWidgets.QDialog, Ui_mbdyngui):
