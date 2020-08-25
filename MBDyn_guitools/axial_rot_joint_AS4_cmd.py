@@ -46,6 +46,7 @@ class axial_rot_joint_cmd(QtWidgets.QDialog, Ui_dia_axial_rot_joint):
                 self.node_2_Box.addItem(nodeobj.node_name)
 
         self.drive_Box.clear()
+        self.drive_Box.addItem("none")
         if App.ActiveDocument.getObjectsByLabel('Drive_callers') != None:
             for driveobj in App.ActiveDocument.Drive_callers.Group:
                 self.drive_Box.addItem(driveobj.drive_name)
@@ -92,23 +93,19 @@ class axial_rot_joint_cmd(QtWidgets.QDialog, Ui_dia_axial_rot_joint):
         else:
             linkobj2_str = strlist2[0]
         linkLCS2_str = strlist2[1]
-        App.Console.PrintMessage(" links "+strlist2[0])
 
         #  match node with the link constraint chosen.
         for nodeobjs in App.ActiveDocument.Nodes.Group:
             if nodeobjs.node_name  == self.node_1_Box.currentText():
-                App.Console.PrintMessage(" links2 "+nodeobjs.node_name+" "+self.node_1_Box.currentText())
-                if nodeobjs.node_name == linkobj1_str:
+                if nodeobjs.node_name.split("|")[0] == linkobj1_str:
                     nodeobj1 = nodeobjs
-                elif nodeobjs.node_name == linkobj2_str:
+                elif nodeobjs.node_name.split("|")[0] == linkobj2_str:
                     nodeobj2 = nodeobjs
             if nodeobjs.node_name  == self.node_2_Box.currentText():
-                App.Console.PrintMessage(" links2 "+nodeobjs.node_name+" "+self.node_2_Box.currentText())
-                if nodeobjs.node_name == linkobj1_str:
+                if nodeobjs.node_name.split("|")[0] == linkobj1_str:
                     nodeobj1 = nodeobjs
-                elif nodeobjs.node_name == linkobj2_str:
+                elif nodeobjs.node_name.split("|")[0] == linkobj2_str:
                     nodeobj2 = nodeobjs
-        App.Console.PrintMessage(" links "+nodeobj2.node_name + " "+nodeobj2.node_name)
 
         # check if both nodes are not the same
         '''
@@ -118,13 +115,10 @@ class axial_rot_joint_cmd(QtWidgets.QDialog, Ui_dia_axial_rot_joint):
             mb.exec()
             return
         '''
-        App.Console.PrintMessage(" links "+linkobj2_str)
         # create joint object
         num_joints = find_joint_label()
-        App.Console.PrintMessage(" links "+num_joints)
-
         new_joint = App.ActiveDocument.Joints.newObject("App::FeaturePython","Joint" + str(num_joints))
-        MBDyn_objects.MBDynJoints.MBDynRevoluteHinge(new_joint)
+        MBDyn_objects.MBDynJoints.MBDynAxialrotion(new_joint)
         new_joint.ViewObject.Proxy = 0
         new_joint.joint_label = num_joints
 
@@ -212,7 +206,14 @@ class axial_rot_joint_cmd(QtWidgets.QDialog, Ui_dia_axial_rot_joint):
             new_joint.orientation1 = [App.Vector(float(self.node1_vect1_x.text()), float(self.node1_vect1_y.text()), float(self.node1_vect1_z.text())),
                                App.Vector(float(self.node1_vect2_x.text()), float(self.node1_vect2_y.text()), float(self.node1_vect2_z.text())),
                                joint_z_axis]
-
+        # find drive caller selected and set the drive_lab property to the drive callers drive_lael
+        if self.drive_Box.currentText() == "none":
+            new_joint.drive_lab = 0
+        else:
+            for driveobj in App.ActiveDocument.Drive_callers.Group:
+                App.Console.PrintMessage(" drive: "+driveobj.drive_name)
+                if self.drive_Box.currentText() == driveobj.drive_name:
+                    new_joint.drive_lab = driveobj.drive_label
 
         self.done(1)
 

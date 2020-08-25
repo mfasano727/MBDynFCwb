@@ -14,6 +14,7 @@ import MBDyn_objects.MBDynJoints
 from PySide2 import QtCore, QtGui, QtWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
+from  MBDyn_utilities.MBDyn_funcs import find_joint_label
 
 from   MBDyn_guitools.dia_total_joint import Ui_dia_Totaljoint
 
@@ -130,7 +131,7 @@ class total_joint_cmd(QtWidgets.QDialog, Ui_dia_Totaljoint):
         App.Console.PrintMessage(" orient3: "+str(node2_lnk.Placement.multiply(posLCS2_pl)))
 
         # create joint object
-        num_joints = len(App.ActiveDocument.Joints.getSubObjects()) + 1
+        num_joints = find_joint_label()
         new_joint = App.ActiveDocument.Joints.newObject("App::FeaturePython","Joint" + str(num_joints))
         MBDyn_objects.MBDynJoints.FC_totaljoint(new_joint)
         new_joint.ViewObject.Proxy = 0
