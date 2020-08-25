@@ -78,6 +78,7 @@ class MBDynRampDrive:
         self.Object = fp
 
     def writeDrive(self):
+        App.Console.PrintMessage("write drive")
         drive_line = "ramp, {}, {}, {}, {}".format(self.Object.slope, self.Object.initial_time, self.Object.final_time, self.Object.initial_value)
         return drive_line
 
