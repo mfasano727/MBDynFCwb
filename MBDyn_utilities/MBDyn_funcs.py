@@ -91,9 +91,10 @@ def writeOrientationMatrix(description, Orientationmatrix):
 def write_drv(drv_lab):
     ''' finds the drive caller refered to by drv_lab and executes the write_drive of that drive
         caller.  it will return the string returned by the write_drive function. '''
-    for drvs in App.ActiveDocument.Drives_callers.Group:
+    for drvs in App.ActiveDocument.Drive_callers.Group:
+        App.Console.PrintMessage("MBDyn drive"+str(drvs.drive_label)+" "+str(drv_lab))
         if drvs.drive_label == drv_lab:
-            return drvs.Proxy.write_drive()
+            return drvs.Proxy.writeDrive()
     return ""
 
 
@@ -134,6 +135,7 @@ def writeInputFile(name_of_file):
                 f.write(App.ActiveDocument.getObject(bodyobj[0:-1]).Proxy.writeBody())
             f.write("\n")
             for jointobj in App.ActiveDocument.Joints.getSubObjects():
+                App.Console.PrintMessage("MBDyn joints")
                 f.write(App.ActiveDocument.getObject(jointobj[0:-1]).Proxy.writeJoint())
             f.write("\n")
             for forceobj in App.ActiveDocument.Forces.getSubObjects():
@@ -241,21 +243,3 @@ def find_drive_label():
         if maxdrivenum < drive.label:
             maxdrivenum = drive.label
     return maxdrivenum + 1
-
-'''
-    Rot.A11 = tu('cos('+str(orient.x)+')*cos('+str(orient.y)+')')
-    Rot.A12 = tu('cos('+str(orient.x)+')*sin('+str(orient.y)+')*sin('+str(orient.z)+')-sin('+str(orient.x)+')*cos('+str(orient.z)+')')
-    Rot.A13 = tu('cos('+str(orient.x)+')*sin('+str(orient.y)+')*cos('+str(orient.z)+')+sin('+str(orient.x)+')*sin('+str(orient.z)+')')
-    Rot.A14 = pos.x
-    Rot.A21 = tu('sin('+str(orient.x)+')*cos('+str(orient.y)+')')
-    Rot.A22 = tu('sin('+str(orient.x)+')*sin('+str(orient.y)+')*sin('+str(orient.z)+')+cos('+str(orient.x)+')*cos('+str(orient.z)+')')
-    Rot.A23 = tu('sin('+str(orient.x)+')*sin('+str(orient.y)+')*cos('+str(orient.z)+')-cos('+str(orient.x)+')*sin('+str(orient.z)+')')
-    Rot.A24 = pos.y
-    Rot.A31 = tu('-sin('+str(orient.y)+')')
-    Rot.A32 = tu('cos('+str(orient.y)+')*sin('+str(orient.z)+')')
-    Rot.A33 = tu('cos('+str(orient.y)+')*sin('+str(orient.z)+')')
-    Rot.A34 = pos.z
-    Rot.A41 = 0.0; Rot.A42 = 0.0; Rot.A43 = 0.0; Rot.A44 = 1.0;
-    pl = App.Placement(Rot)
-    return pl
-'''
