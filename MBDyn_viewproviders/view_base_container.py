@@ -13,9 +13,8 @@ class ViewProviderBaseContainer:
 
     def __init__(self, vobj):
         vobj.Proxy = self
+        self.Object = vobj.Object
 
-    # needs to be overwritten, if no standard icon name is used
-    # see constraint body heat source as an example
     def getIcon(self):
         # https://forum.freecadweb.org/viewtopic.php?f=18&t=44009
         if not hasattr(self.Object, "Proxy"):
@@ -32,6 +31,7 @@ class ViewProviderBaseContainer:
             and self.Object.Proxy.Type.startswith("MBDyn::")
         ):
             icon_path = "{}/{}.svg".format(MBDwb_icons_path, self.Object.Proxy.Type.replace("MBDyn::", "MBDyn_"))
+            #icon_path = "{}/{}.svg".format(MBDwb_icons_path, "MBDyn_JointsContainer")
             App.Console.PrintLog("{} --> {}\n".format(self.Object.Name, icon_path))
             return icon_path
         else:
@@ -61,14 +61,36 @@ class ViewProviderBaseContainer:
     def __setstate__(self, state):
         return None
 
-    def canDragObjects(self):
-        return False
+    #def canDragObjects(self):
+    #    self.callFrom(0)
+    #    return False
 
-    def canDragObject(self):
-        return False
+    #def canDragObject(self, obj):
+    #    self.callFrom(1)
+    #    return False
 
-    def canDopObjects(self):
-        return False
+    #def canDropObjects(self):
+    #    self.callFrom(2)
+    #    return False
 
-    def canDopObject(self):
-        return False
+    #def canDropObject(self, obj):
+    #    self.callFrom(3)
+    #    return False
+
+    def callFrom(self, i):
+        mlist = ["canDragObjects", "canDragObject", "canDropObjects", "canDropObject"]
+        mtype = self.Object.Proxy.Type
+        print("Calling %s from %s"%(mlist[i], mtype))
+    #def claimChildren(self):
+    #    return self.Object.Group
+ #       objs = []
+ #       if hasattr(self.Object, "Group"):
+ #           objs.extend(self.Object.Group)
+ #       print(self.Object.Proxy.Type, objs)
+ #       if self.Object.Proxy.Type == "MBDyn::WorkbenchContainer":
+ #           return [self.Object.Document.Model.ViewObject, self.Object.Document.Simulations.ViewObject]
+ #       return objs
+    # def dragObject(self, obj,otherobj):
+    #     pass
+    # def dropObject(self, obj,otherobj):
+    #     pass

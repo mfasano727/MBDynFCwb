@@ -11,6 +11,8 @@ MBDwb_icons_path = os.path.join(MBDwbPath, 'icons')
 
 from MBDyn_viewproviders.view_base_container import ViewProviderBaseContainer
 
+from MBDyn_guitools.sim_config import SimConfig
+from MBDyn_guitools.MBDynFreeCAD import mbdyn_launchGui
 
 class ViewProviderSimulation(ViewProviderBaseContainer):
     def __init__(self, vobj):
@@ -47,30 +49,70 @@ class ViewProviderSimulation(ViewProviderBaseContainer):
 
     def doubleClicked(self, vobj):
         self.setActive()
-        # Do nothing to avoid renaming of the container
+        # Return true to tell freecad we handled the doubleClicked function
         return True
 
     def setActive(self):
-        App.ActiveDocument.MBDyn_Workbench.Proxy.setActiveSimulation(self.Object)
+        doc = self.ViewObject.Object.Document
+        print(doc)
+        print(App.ActiveDocument)
+        doc.MBDyn_Workbench.Proxy.setActiveSimulation(self.Object)
         self.ViewObject.signalChangeIcon()
+        doc.recompute()
+
+    def edit(self):
+        self.ui = SimConfig(self.Object)
+        self.ui.show()
+        self.ViewObject.Object.Document.recompute()
+
+    def analyze(self):
+        self.setActive()
+        active_document = App.activeDocument()
+        self.ui = mbdyn_launchGui()  # put the ui in a self.xx variable allow to keep track of it after the end of
+        # the function
+
+        # Check if the document is saved
+        if not active_document.FileName:
+            mb = QtWidgets.QMessageBox()
+            mb.setIcon(mb.Icon.Warning)
+            mb.setText("Please save the model before continue")
+            mb.setWindowTitle("Warning")
+            mb.exec_()
+            return
+
+        self.ui.getWorkbenchSettings()
+        if not self.ui.default_solver:
+            mb = QtWidgets.QMessageBox()
+            mb.setIcon(mb.Icon.Warning)
+            mb.setText("""
+        No default solver selected!
+        Please update preferences:
+            Edit
+                - Preferences...
+                    - MBDyn""")
+            mb.setWindowTitle("Warning")
+            mb.exec_()
+        else:
+            self.ui.updateView()
+            self.ui.show()
 
     def setupContextMenu(self,vobj,menu):
         # Activate Action
-        action1 = QtWidgets.QAction("Activate", menu)
-        QtCore.QObject.connect(action1,
+        actionActivate = QtWidgets.QAction("Activate", menu)
+        QtCore.QObject.connect(actionActivate,
                                QtCore.SIGNAL("triggered()"),
                                self.setActive)
         # Edit action
-        action2 = QtWidgets.QAction("Edit..", menu)
-        QtCore.QObject.connect(action2,
+        actionEdit = QtWidgets.QAction("Edit..", menu)
+        QtCore.QObject.connect(actionEdit,
                                QtCore.SIGNAL("triggered()"),
-                               self.setActive)
+                               self.edit)
         #Analyze Action
-        action3 = QtWidgets.QAction("Analyze", menu)
-        QtCore.QObject.connect(action3,
+        actionAnalyze = QtWidgets.QAction("Analyze", menu)
+        QtCore.QObject.connect(actionAnalyze,
                                QtCore.SIGNAL("triggered()"),
-                               self.setActive)
-        menu.addAction(action1)
-        menu.addAction(action2)
-        menu.addAction(action3)
+                               self.analyze)
+        menu.addAction(actionActivate)
+        menu.addAction(actionEdit)
+        menu.addAction(actionAnalyze)
 
