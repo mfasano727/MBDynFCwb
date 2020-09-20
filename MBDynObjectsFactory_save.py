@@ -7,6 +7,7 @@ import FreeCADGui as Gui
 #----------------WorkbenchCreationLayout
 def createTree():
     """ Creation of the main tree layout
+    TODO: Add the Drive caller container
     """
     from MBDyn_objects.MBDynBaseContainer import BaseContainer
     from MBDyn_objects.MBDynWorkbench import WorkbenchContainer
@@ -18,55 +19,47 @@ def createTree():
     WorkbenchContainer(root)
     
     # Model Container
-    model = doc.addObject('App::DocumentObjectGroupPython', "MBDyn Model")
+    model = doc.addObject('App::DocumentObjectGroupPython', "Model")
     BaseContainer(model, "MBDyn::ModelContainer")
-    root.addObject(model)
 
-    #References Container
-    references = doc.addObject('App::DocumentObjectGroupPython', "References")
-    BaseContainer(references, "MBDyn::ReferencesContainer")
-    model.addObject(references)
-
+    
     #Nodes Container
     nodes = doc.addObject('App::DocumentObjectGroupPython', "Nodes")
     BaseContainer(nodes, "MBDyn::NodesContainer")
-    model.addObject(nodes)
+
     
     #elements Container
     elements = doc.addObject('App::DocumentObjectGroupPython', "Elements")
     BaseContainer(elements, "MBDyn::ElementsContainer")
-    model.addObject(elements)
-    
+
+
     # bodies Container
     bodies = doc.addObject('App::DocumentObjectGroupPython', "Bodies")
     BaseContainer(bodies, "MBDyn::BodiesContainer")
-    elements.addObject(bodies)
-    
+
+
     #Joint Container
     joints = doc.addObject('App::DocumentObjectGroupPython', "Joints")
     BaseContainer(joints, "MBDyn::JointsContainer")
-    elements.addObject(joints)
-    
+
     #Loads Container
     loads = doc.addObject('App::DocumentObjectGroupPython', "Loads")
     BaseContainer(loads, "MBDyn::LoadsContainer")
-    elements.addObject(loads)
-    
+
+
     #Drive Caller Container
     driveCaller = doc.addObject('App::DocumentObjectGroupPython', "Drive Caller")
     BaseContainer(driveCaller, "MBDyn::DriveCallerContainer")
-    elements.addObject(driveCaller)  
-    
+
+
     #Simulation Container
     simulations = doc.addObject('App::DocumentObjectGroupPython', "Simulations")
     BaseContainer(simulations, "MBDyn::SimulationsContainer")
-    root.addObject(simulations)
-    
+
     if App.GuiUp:
         from MBDyn_viewproviders.view_base_container import ViewProviderBaseContainer
         ViewProviderBaseContainer(root.ViewObject)
         ViewProviderBaseContainer(model.ViewObject)
-        ViewProviderBaseContainer(references.ViewObject)
         ViewProviderBaseContainer(nodes.ViewObject)
         ViewProviderBaseContainer(elements.ViewObject)
         ViewProviderBaseContainer(bodies.ViewObject)
@@ -77,8 +70,17 @@ def createTree():
     
     doc.recompute()
 
+    root.addObject(model)
+    model.addObject(nodes)
+    model.addObject(elements)
+    elements.addObject(bodies)
+    elements.addObject(joints)
+    elements.addObject(loads)
+    elements.addObject(driveCaller)
+    root.addObject(simulations)
+    doc.recompute()
 #----------------Simulation creation
-def createSimulation(doc, sim_parameter):
+def createSimulation(doc):
     """
     Creation of a simulation container
     a creation container is composed of
@@ -90,16 +92,14 @@ def createSimulation(doc, sim_parameter):
     from MBDyn_objects.MBDynSimulation import Simulation
     
     simulations_container = doc.Simulations
-    i = len(simulations_container.Group)
 
-    sim = doc.addObject('App::DocumentObjectGroupPython', "MySim" + str(i))
-    print(sim.Name)
-    Simulation(sim, sim_parameter)
-    simulations_container.addObjects([sim]) # add the sim to the simulations group
+    sim = doc.addObject('App::DocumentObjectGroupPython', "MySim")
+    Simulation(sim)
+    simulations_container.addObject(sim) # add the sim to the simulations group
 
     # Deactivate the duplicate label to name all loads container: Loads and all Results container: Results
     SavedParameter = App.ParamGet("User parameter:BaseApp/Preferences/Document").GetBool("DuplicateLabels",False)
-    App.ParamGet("User parameter:BaseApp/Preferences/Document").SetBool("DuplicateLabels",True)
+    App.ParamGet("User parameter:BaseApp/Preferences/Document").SetBool("DuplicateLabels",True) 
 
     name = "Loads"
     loads = doc.addObject('App::DocumentObjectGroupPython', name)
@@ -127,10 +127,3 @@ def createSimulation(doc, sim_parameter):
         ViewProviderBaseContainer(results.ViewObject)
 
     doc.recompute()
-
-#----------------Gravity creation
-def createGravity(grav_parameter):
-    from MBDyn_objects.model_so import MBDynGravity
-    gravity = App.ActiveDocument.Loads.newObject("App::FeaturePython", "GravityField")
-    MBDynGravity(gravity, grav_parameter)
-    gravity.ViewObject.Proxy = 0

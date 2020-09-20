@@ -58,7 +58,6 @@ class MbdynGui(Workbench):
         MBDwbPath = os.path.dirname(MBDyn_locator.__file__)
         MBDwb_icons_path = os.path.join(MBDwbPath, 'icons')
         MBDwb_setting_ui_path = os.path.join(MBDwbPath, 'resources','wb_settings_widgets')
-        import MBDyn_guitools.m_values
         import MBDyn_guitools.MBDynFreeCAD
         import MBDyn_guitools.body_AS4_cmd
         import MBDyn_guitools.ref_cmd
@@ -72,12 +71,13 @@ class MbdynGui(Workbench):
         import MBDyn_guitools.axial_rot_joint_AS4_cmd
         import MBDyn_commands.sim_cmd
         import MBDyn_commands.layout_cmd
+        import MBDyn_commands.analyze_cmd
+        import MBDyn_commands.gravity_cmd
         
   
         from MBDyn_settings.wdgt_solver_settings import wdgt_solver_settings
   
-        self.list = ["CommandTreeLayout","CommandAddSimulation", "mbdyn_configure", "mbdyn_launchGui", "body_sel_cmd",
-                    "ref_cmd", "struct_node_cmd", "revpin_joint_cmd",
+        self.list = ["CommandTreeLayout","CommandAddSimulation", "mbdyn_launchGui", "CommandAddGravity","body_sel_cmd", "ref_cmd", "struct_node_cmd", "revpin_joint_cmd",
                     "hinge_joint_cmd", "total_joint_cmd", "total_pinjoint_cmd",
                     "axial_rot_joint_cmd", "ramp_drive_cmd", "postproc_cmd"]
 
