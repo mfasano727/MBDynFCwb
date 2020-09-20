@@ -11,7 +11,10 @@ MBDwbPath = os.path.dirname(MBDyn_locator.__file__)
 MBDwb_icons_path = os.path.join(MBDwbPath, 'icons')
 from MBDyn_utilities.MBDyn_funcs import *
 from MBDyn_utilities.constants import *
-from MBDyn_utilities.Settings_funcs import string_to_list, list_to_string
+from MBDyn_utilities.Settings_funcs import string_to_list
+from MBDyn_utilities.MBDyn_utils import get_active_simulation
+from MBDyn_utilities.MBDyn_utils import select_directory
+
 
 from MBDyn_guitools.dia_launcher import Ui_dia_launcher
 
@@ -20,24 +23,26 @@ class mbdyn_launchGui(QtWidgets.QDialog,  Ui_dia_launcher):
     def __init__(self):
         super(mbdyn_launchGui, self).__init__()
         self.setupUi()
+        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         self.default_solver = ""
         self.binaries_list = []
         self.use_WSL = False
         self.is_edited = False
         self.editor_binary = ""
-        self.is_editor_defined = False  # indicatse if the file existe
+        self.is_editor_defined = False  # indicate if the file exist
         self.is_edited = False  # Tell the run button to use existing file or write a new one
 
     def setupUi(self):
         super(mbdyn_launchGui, self).setupUi(self)
 
         # define connections for dialog widgets
-        self.fp_outfile.clicked.connect(self.setoutputpath)
+        self.fp_outfile.clicked.connect(self.setOutputPath)
         self.runSim.clicked.connect(self.runSimulation)
         self.stopSim.clicked.connect(self.stopSimulation)
         self.viewStatus.clicked.connect(self.outputMessage)
         self.writeIF.clicked.connect(self.writeInputFile) # function from MBDyn_utilities.MBDyn_funcs
-        self.writeIF.clicked.connect(lambda x=True: self.editIF.setEnabled(x))
+        QtCore.QObject.connect(self.writeIF, QtCore.SIGNAL("clicked(bool)"), self.editIF.setDisabled)
+        #self.writeIF.clicked.connect(lambda x=True: self.editIF.setEnabled(x))
         self.editIF.clicked.connect(self.editInputFile)
         
 
@@ -54,6 +59,9 @@ class mbdyn_launchGui(QtWidgets.QDialog,  Ui_dia_launcher):
         self.use_WSL = App.ParamGet(SOLVERS_USER_SETTINGS).GetBool("USE_WSL", False)
 
     def updateView(self):
+        doc = App.ActiveDocument
+        active_sim = get_active_simulation(doc)
+
         if self.editor_binary:
             self.is_editor_defined = True
         self.editIF.setEnabled(False)
@@ -69,21 +77,24 @@ class mbdyn_launchGui(QtWidgets.QDialog,  Ui_dia_launcher):
         else:
             self.useWSL.setEnabled(False)
 
+        #Load Sim Name / working Path
+        self.out_filename.setText(active_sim.Label) # check if result exist.
+        self.out_location.setText(active_sim.WorkingDirectory)
+
     def getGeneralSettings(self):
         self.editor_binary = App.ParamGet(GENERAL_USER_SETTINGS).GetString("EditorBinaryPath", "")
 
     # Dialog Slots---------------------------------------
-    def setoutputpath(self):
-        outlocation = QtWidgets.QFileDialog.getExistingDirectory()
-        #        outlocation = QDir.toNativeSeparators(outlocation)
-        if os.sep == '\\':
-            outlocation = outlocation.replace('/', '\\')
+    def setOutputPath(self):
+        outlocation = select_directory()
         self.out_location.setText(outlocation)
  
     def writeInputFile(self):
+        doc = App.ActiveDocument
+        active_sim = get_active_simulation(doc)
         full_file_name = self.fullFileName()
         if full_file_name:
-            writeInputFile(full_file_name)
+            writeInputFile(active_sim, full_file_name)
             
     def editInputFile(self):
         import subprocess
@@ -122,7 +133,9 @@ class mbdyn_launchGui(QtWidgets.QDialog,  Ui_dia_launcher):
         full_file_name = self.fullFileName()
         if not self.is_edited:
             if full_file_name:
-                writeInputFile(full_file_name)
+                doc = App.ActiveDocument
+                active_sim = get_active_simulation(doc)
+                writeInputFile(active_sim, full_file_name)
 
         args= [solver_path, full_file_name]
         cwd = "D:\\Garnier\\Documents\\01_programmation\\01_Python\\mbdyn_FreeCAD\\_SOLVERS_\\mbdyn-1.7.2-win32\\"
@@ -154,58 +167,3 @@ class mbdyn_launchGui(QtWidgets.QDialog,  Ui_dia_launcher):
 
     # End of Dialog Slots---------------------------------------
 
-    def GetResources(self):
-        return {'Pixmap': os.path.join(MBDwb_icons_path, 'WrtMBDynIcon.svg'),
-                'MenuText': "MBD write input",
-                'ToolTip': "write MBDyn input dialog"}
-
-    def Activated(self):
-        """Do something here"""
-#        App.Console.PrintMessage( Gui.activeWorkbench().iv.initial_time)
-        active_document = App.activeDocument()
-        if active_document is None:
-            mb = QtWidgets.QMessageBox()
-            mb.setIcon(mb.Icon.Warning)
-            mb.setText("No document open")
-            mb.setWindowTitle("Warning")
-            mb.exec_()
-            return
-        # Check if the document is saved
-        if not active_document.FileName:
-            mb = QtWidgets.QMessageBox()
-            mb.setIcon(mb.Icon.Warning)
-            mb.setText("Please save the model before continue")
-            mb.setWindowTitle("Warning")
-            mb.exec_()
-            return
-        
-
-        self.getWorkbenchSettings()
-        if not self.default_solver:
-            mb = QtWidgets.QMessageBox()
-            mb.setIcon(mb.Icon.Warning)
-            mb.setText("""
-No default solver selected!
-Please update preferences:
-    Edit
-        - Preferences...
-            - MBDyn""")
-            mb.setWindowTitle("Warning")
-            mb.exec_()
-        else:
-            self.updateView()
-            self.show()
-
-Gui.addCommand('mbdyn_launchGui', mbdyn_launchGui())	
-'''
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Form = QtWidgets.QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form)
-    Form.show()
-    
-    sys.exit(app.exec_())
-'''

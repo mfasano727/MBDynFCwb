@@ -1,21 +1,24 @@
+import os
+
+from PySide2 import QtCore, QtGui, QtWidgets
+
 import FreeCAD as App
 import FreeCADGui as Gui
 
-import os
-
 import MBDyn_locator
-
-from MBDynObjectsFactory import createSimulation
 MBDwbPath = os.path.dirname(MBDyn_locator.__file__)
 MBDwb_icons_path = os.path.join(MBDwbPath, 'icons')
 
+from MBDyn_guitools.sim_config import SimConfig
+#from MBDyn_guitools.sim_config_test import SimConfig
 
 class CommandAddSimulation:
     """Command to create a new simlation"""
+
     def GetResources(self):
         return {'Pixmap': os.path.join(MBDwb_icons_path, 'MBDyn_AddSim_cmd.svg'),
                 'MenuText': "New Simulation",
-                'ToolTip': "Add e new simulation to the model"}
+                'ToolTip': "Add a new simulation to the model"}
 
     def IsActive(self):
         if App.ActiveDocument is None:
@@ -27,6 +30,8 @@ class CommandAddSimulation:
 
     def Activated(self):
         #Call the Gui to fill initial values and solver parameters
-        createSimulation()
+        self.ui = SimConfig() #mbdyn_configure2()
+        self.ui.show() #exec_() exec lock the main gui
+
 
 Gui.addCommand('CommandAddSimulation', CommandAddSimulation())

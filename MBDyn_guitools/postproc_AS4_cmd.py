@@ -96,7 +96,7 @@ class postproc_cmd(QtWidgets.QDialog,  Ui_dia_postporc):
 #        timer = QtCore.QTimer()
 #        timer.timeout.connect(self.update)
 
-        timestep = App.ActiveDocument.initial_values.time_step * 2
+        timestep = 0.1 #App.ActiveDocument.initial_values.time_step * 0.01
         timeout_flag = False
 
         

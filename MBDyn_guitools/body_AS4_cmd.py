@@ -38,12 +38,14 @@ class body_sel_cmd(QtWidgets.QDialog,  Ui_dia_body_sel):
         self.body_list.clear()
         for modlink in App.ActiveDocument.Model.getSubObjects():
             bodlink = App.ActiveDocument.Model.getObject(modlink[0:-1])
+            print("I am Right Here 123456789",bodlink.Label)
             if hasattr(bodlink, 'LinkedObject'):
                 modbod = bodlink.LinkedObject
                 for modbod_nm in modbod.getSubObjects():
                     modbod_sub = modbod.getObject(modbod_nm[0:-1])
                     if check_solid(modbod_sub):
                         self.body_list.addItem(bodlink.Label)
+                        break
                 '''
                 for modbod_nm in modbod.getSubObjects():
                     modbod_sub = modbod.getObject(modbod_nm[0:-1])

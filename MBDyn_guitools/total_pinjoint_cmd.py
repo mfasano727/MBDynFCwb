@@ -15,7 +15,7 @@ from PySide2 import QtCore, QtGui, QtWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
 
-from   MBDyn_guitools.dia_total_pinjoint import Ui_dia_Totalpinjoint
+from MBDyn_guitools.dia_total_pinjoint import Ui_dia_Totalpinjoint
 
 class total_pinjoint_cmd(QtWidgets.QDialog, Ui_dia_Totalpinjoint):
     """MBD create toal pin joint command"""

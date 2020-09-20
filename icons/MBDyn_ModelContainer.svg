@@ -11,37 +11,48 @@
    inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
    id="svg8"
    version="1.1"
-   viewBox="0 0 210 297"
-   height="100mm"
-   width="100mm">
+   viewBox="0 0 35.559999 50.292"
+   height="64"
+   width="64">
   <defs
      id="defs2">
     <rect
+       id="rect839"
+       height="39.290625"
+       width="43.219688"
+       y="7.858125"
+       x="-3.436938" />
+    <rect
        id="rect12"
        height="12.851191"
-       width="9.0714284"
+       width="9.0714283"
        y="12.095238"
-       x="9.0714286" />
+       x="9.0714283" />
   </defs>
   <sodipodi:namedview
      inkscape:window-maximized="0"
      inkscape:window-y="0"
-     inkscape:window-x="182"
-     inkscape:window-height="1040"
-     inkscape:window-width="1452"
-     showgrid="false"
+     inkscape:window-x="0"
+     inkscape:window-height="729"
+     inkscape:window-width="1350"
+     showgrid="true"
      inkscape:document-rotation="0"
      inkscape:current-layer="layer1"
-     inkscape:document-units="mm"
-     inkscape:cy="48.348936"
-     inkscape:cx="91.737284"
+     inkscape:document-units="px"
+     inkscape:cy="28.693016"
+     inkscape:cx="-30.157528"
      inkscape:zoom="3.959798"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      borderopacity="1.0"
      bordercolor="#666666"
      pagecolor="#ffffff"
-     id="base" />
+     id="base"
+     units="px">
+    <inkscape:grid
+       type="xygrid"
+       id="grid836" />
+  </sodipodi:namedview>
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -59,10 +70,14 @@
      inkscape:groupmode="layer"
      inkscape:label="Calque 1">
     <text
-       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect12);fill:#000000;fill-opacity:1;stroke:none;"
-       id="text10"
+       transform="matrix(1.270288,0,0,3.7190674,-4.5784969,-65.25715)"
+       y="0"
+       x="16.886784"
+       style="font-style:normal;font-weight:normal;font-size:16.764px;line-height:2.1;font-family:sans-serif;white-space:pre;shape-inside:url(#rect839);fill:#000000;fill-opacity:1;stroke:none;"
+       id="text837"
        xml:space="preserve"><tspan
-         x="9.0722656"
-         y="21.751168"><tspan>2</tspan></tspan></text>
+         x="0.78675006"
+         y="30.276426"><tspan
+           style="font-size:16.764px;text-align:center;text-anchor:middle">TBD</tspan></tspan></text>
   </g>
 </svg>

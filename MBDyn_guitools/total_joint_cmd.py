@@ -18,7 +18,7 @@ import FreeCADGui as Gui
 from   MBDyn_guitools.dia_total_joint import Ui_dia_Totaljoint
 
 class total_joint_cmd(QtWidgets.QDialog, Ui_dia_Totaljoint):
-    """MBD create toal joint command"""
+    """MBD create total joint command"""
     def __init__(self):
         super(total_joint_cmd, self).__init__()
         self.setupUi(self)
