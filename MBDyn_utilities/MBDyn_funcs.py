@@ -1,6 +1,6 @@
 import FreeCAD as App
-import MBDyn_objects.MBDynJoints
-import MBDyn_objects.model_so
+#import MBDyn_objects.MBDynJoints
+#import MBDyn_objects.model_so
 
 def writeVect(vector):
    if vector.x == 0 and vector.y == 0 and vector.z == 0:
@@ -88,50 +88,53 @@ def writeOrientationMatrix(description, Orientationmatrix):
         matrix_line = "{}, {}, {}, {}".format(description, Orientationmatrix[0][0], Orientationmatrix[0][1], Orientationmatrix[0][2] )
     return matrix_line
 
-def writeInputFile(name_of_file):
-    ''' writes MBDyn input file'''
+def writeInputFile(sim_obj, name_of_file):
+    ''' writes MBDyn input file
+    :param sim_obj: Simulation object to write
+    :param name_of_file: Name of the text file
+    '''
+    doc = sim_obj.Document
     with open(name_of_file, "w") as f:
-        if hasattr(App.ActiveDocument, "initial_values"):
+        if True: #hasattr(doc, "initial_values"):
             f.write("begin: data;\n")
-            f.write("        problem: initial value;\n")
+            f.write("        problem: {};\n".format(sim_obj.Problem.type))
             f.write("end: data;\n\n")
 
-            f.write("begin: initial value;\n")
-            f.write(App.ActiveDocument.initial_values.Proxy.writeInitialValue())
-#            if hasattr(App.ActiveDocument, "integration_method"):
-#                f.write(App.ActiveDocument.integration_method.Proxy.writeMethod())
-            f.write("end: initial value;\n\n")
+            f.write(sim_obj.Proxy.write_problem())
 
             f.write("begin: control data;\n")
-            if len(App.ActiveDocument.Nodes.getSubObjects()) != 0:
-                f.write("        structural nodes: {};\n".format(len(App.ActiveDocument.Nodes.getSubObjects())))
-            if len(App.ActiveDocument.Joints.getSubObjects()) != 0:
-                f.write("        joints: {};\n".format(len(App.ActiveDocument.Joints.getSubObjects())))
-            if len(App.ActiveDocument.Bodies.getSubObjects()) != 0:
-                f.write("        rigid bodies: {};\n".format(len(App.ActiveDocument.Bodies.getSubObjects())))
-            if len(App.ActiveDocument.Forces.getSubObjects()) != 0:
-                f.write("        forces: {};\n".format(len(App.ActiveDocument.Forces.getSubObjects())))
-            if hasattr(App.ActiveDocument, "gravity"):
-                f.write("        gravity;\n")
+            f.write(sim_obj.Proxy.write_control_data_param())
+            if len(doc.Nodes.getSubObjects()) != 0:
+                f.write("    structural nodes: {};\n".format(len(doc.Nodes.getSubObjects())))
+            if len(doc.Joints.getSubObjects()) != 0:
+                f.write("    joints: {};\n".format(len(doc.Joints.getSubObjects())))
+            if len(doc.Bodies.getSubObjects()) != 0:
+                f.write("    rigid bodies: {};\n".format(len(doc.Bodies.getSubObjects())))
+            if len(doc.Loads.getSubObjects()) != 0:
+                offset = 0
+                if hasattr(doc, "GravityField"): offset = -1
+                f.write("    forces: {};\n".format(len(doc.Loads.getSubObjects()) + offset))
+            if hasattr(doc, "GravityField"):
+                f.write("    gravity;\n")
             f.write("end: control data;\n\n")
 
             f.write("begin: nodes;\n")
-            for nodeobj in App.ActiveDocument.Nodes.getSubObjects():
-                f.write(App.ActiveDocument.getObject(nodeobj[0:-1]).Proxy.writeNode())      # App.ActiveDocument.getObject(nodeobj[0:-1]).Proxy.writeNode()
+            for nodeobj in doc.Nodes.getSubObjects():
+                f.write(doc.getObject(nodeobj[0:-1]).Proxy.writeNode())      # App.ActiveDocument.getObject(nodeobj[0:-1]).Proxy.writeNode()
             f.write("end: nodes;\n\n")
 
             f.write("begin: elements;\n")
-            for bodyobj in App.ActiveDocument.Bodies.getSubObjects():
-                f.write(App.ActiveDocument.getObject(bodyobj[0:-1]).Proxy.writeBody())
+            for bodyobj in doc.Bodies.getSubObjects():
+                f.write(doc.getObject(bodyobj[0:-1]).Proxy.writeBody())
             f.write("\n")
-            for jointobj in App.ActiveDocument.Joints.getSubObjects():
-                f.write(App.ActiveDocument.getObject(jointobj[0:-1]).Proxy.writeJoint())
+            for jointobj in doc.Joints.getSubObjects():
+                f.write(doc.getObject(jointobj[0:-1]).Proxy.writeJoint())
             f.write("\n")
-            for forceobj in App.ActiveDocument.Forces.getSubObjects():
-                f.write(App.ActiveDocument.getObject(forceobj[0:-1]).Proxy.writeForce())
+            #for forceobj in doc.Forces.getSubObjects():
+            #    f.write(doc.getObject(forceobj[0:-1]).Proxy.writeForce())
             f.write("\n")
-            if hasattr(App.ActiveDocument, "gravity"):
-                f.write(App.ActiveDocument.gravity.Proxy.writeGravity())
+            if hasattr(doc, "GravityField"):
+                f.write(doc.GravityField.Proxy.write())
             f.write("end: elements;\n\n")
         else:
             App.Console.PrintMessage("MBDyn model does not exist")
