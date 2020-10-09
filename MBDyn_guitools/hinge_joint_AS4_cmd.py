@@ -43,7 +43,7 @@ class hinge_joint_cmd(QtWidgets.QDialog, Ui_dia_hinge_joint):
             for nodeobj in App.ActiveDocument.Nodes.Group:
                 self.node_2_Box.addItem(nodeobj.node_name)
 
-        # define conections for dialog widgets
+        # define connections for dialog widgets
         self.link_const_Box.currentIndexChanged.connect(self.set_choose_z)
         self.choose_z_axis_1.toggled.connect(self.set_z_method)
         self.node_1_Box.currentIndexChanged.connect(self.set_nodes)
@@ -67,19 +67,19 @@ class hinge_joint_cmd(QtWidgets.QDialog, Ui_dia_hinge_joint):
 
     def accept(self):
 
-        # parse the string from the link contraint combobox
-        # the form is node1 object # LCS Attaced to node 1 object at pivot ' to ' fixed object maybe 'parent Assembly' # LCS of fixwd oject at pivot
+        # parse the string from the link constraint combobox
+        # the form is node1 object # LCS attached to node 1 object at pivot ' to ' fixed object maybe 'parent Assembly' # LCS of fixed object at pivot
         strlist =  str(self.link_const_Box.currentText()).split(' to ')
         strlist1 = strlist[0].split('#')
         strlist2 = strlist[1].split('#')
         # parse first half of string node1 prart  (first part is link and second is LCS)
-        if strlist1[0] == "Parent Assembly":  #Parrent Assembly is the App::Part object named model.
+        if strlist1[0] == "Parent Assembly":  #Parent Assembly is the App::Part object named model.
             linkobj1st_str = "Model"
         else:
             linkobj1st_str = strlist1[0]
         linkLCS1st_str = strlist1[1]
         # parse second half of string  (first part is link and second is LCS)
-        if strlist2[0] == "Parent Assembly":   #Parrent Assembly is the App::Part object named model.
+        if strlist2[0] == "Parent Assembly":   #Parent Assembly is the App::Part object named model.
             linkobj2nd_str = "Model"
         else:
             linkobj2nd_str = strlist2[0]
@@ -258,7 +258,7 @@ class hinge_joint_cmd(QtWidgets.QDialog, Ui_dia_hinge_joint):
         node2_str = self.node_2_Box.currentText().split("|")[0]
         for linksobj in App.ActiveDocument.getLinksTo():
             linkobj_atch = linksobj.AttachedTo.split("#")[0]
-            if linkobj_atch == "Parent Assembly":  #Parrent Assembly is the App::Part object named model.
+            if linkobj_atch == "Parent Assembly":  #Parent Assembly is the App::Part object named model.
                 linkobj_atch = "Model"
             linkLCS_atch = linksobj.AttachedTo.split("#")[1]
             constname = linksobj.Name + linksobj.AttachedBy + " to " + linksobj.AttachedTo

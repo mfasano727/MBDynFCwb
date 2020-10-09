@@ -40,7 +40,7 @@ class total_joint_cmd(QtWidgets.QDialog, Ui_dia_Totaljoint):
                 self.node1_box.addItem(nodeobj.node_name)
                 self.node2_box.addItem(nodeobj.node_name)
 
-        # define conections for dialog widgets
+        # define connections for dialog widgets
         self.node1_box.currentIndexChanged.connect(self.set_node1)
         self.node2_box.currentIndexChanged.connect(self.set_node2)
         self.set_node1()
@@ -59,7 +59,7 @@ class total_joint_cmd(QtWidgets.QDialog, Ui_dia_Totaljoint):
 
 
     def accept(self):
-        #  get FreeCAD object associated wth nodes chosen.
+        #  get FreeCAD object associated with nodes chosen.
         for nodeobjs in App.ActiveDocument.Nodes.Group:
             if nodeobjs.node_name  == self.node1_box.currentText():
                 nodeobj1 = nodeobjs

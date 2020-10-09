@@ -89,7 +89,7 @@ def writeOrientationMatrix(description, Orientationmatrix):
     return matrix_line
 
 def write_drv(drv_lab):
-    ''' finds the drive caller refered to by drv_lab and executes the write_drive of that drive
+    ''' finds the drive caller referred to by drv_lab and executes the write_drive of that drive
         caller.  it will return the string returned by the write_drive function. '''
     for drvs in App.ActiveDocument.Drives_callers.Group:
         if drvs.drive_label == drv_lab:

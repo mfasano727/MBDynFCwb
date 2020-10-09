@@ -120,7 +120,7 @@ class Ui_dia_launcher(object):
         self.label_3.setText(QtWidgets.QApplication.translate("dia_launcher", "Path", None, -1))
         self.fp_outfile.setText(QtWidgets.QApplication.translate("dia_launcher", "Browse...", None, -1))
         self.editIF.setText(QtWidgets.QApplication.translate("dia_launcher", "Edit Input File", None, -1))
-        self.writeIF.setText(QtWidgets.QApplication.translate("dia_launcher", "Write Intput File", None, -1))
+        self.writeIF.setText(QtWidgets.QApplication.translate("dia_launcher", "Write Input File", None, -1))
         self.runSim.setText(QtWidgets.QApplication.translate("dia_launcher", "Run Simulation", None, -1))
         self.stopSim.setText(QtWidgets.QApplication.translate("dia_launcher", "Stop Simulation", None, -1))
         self.viewStatus.setText(QtWidgets.QApplication.translate("dia_launcher", "View status", None, -1))

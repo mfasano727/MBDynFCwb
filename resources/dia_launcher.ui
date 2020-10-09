@@ -141,7 +141,7 @@
      <item row="0" column="0" colspan="2">
       <widget class="QPushButton" name="writeIF">
        <property name="text">
-        <string>Write Intput File</string>
+        <string>Write Input File</string>
        </property>
       </widget>
      </item>

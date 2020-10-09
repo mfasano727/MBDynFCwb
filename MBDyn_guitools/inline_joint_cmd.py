@@ -42,7 +42,7 @@ class inline_joint_cmd(QtWidgets.QDialog, Ui_dia_inline_joint):
             for nodeobj in App.ActiveDocument.Nodes.Group:
                 self.node_2_Box.addItem(nodeobj.node_name)
 
-        # define conections for dialog widgets
+        # define connections for dialog widgets
         self.node_1_Box.currentIndexChanged.connect(self.fill_node1_LCS_Box)
         self.node_2_Box.currentIndexChanged.connect(self.fill_node2_LCS_Box)
         self.fill_node1_LCS_Box()

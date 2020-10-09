@@ -87,20 +87,20 @@ class revpin_joint_cmd(QtWidgets.QDialog, Ui_dia_revpin_joint):
                 new_joint.node1_label = nodeobj.node_label
 
 
-        # parse the string from the link contraint combobox
-        # the form is node1 object # LCS Attaced to node 1 object at pivot ' to ' fixed object maybe 'parent Assembly' # LCS of fixwd oject at pivot
+        # parse the string from the link constraint combobox
+        # the form is node1 object # LCS attached to node 1 object at pivot ' to ' fixed object maybe 'parent Assembly' # LCS of fixed object at pivot
         strlist =  str(self.link_const_Box.currentText()).split(' to ')
         strlist1 = strlist[0].split('#')
         strlist2 = strlist[1].split('#')
 
         # parse first half of string node1 prart  (first part is link and second is LCS)
-        if strlist1[0] == "Parent Assembly":  #Parrent Assembly is the App::Part object named model.
+        if strlist1[0] == "Parent Assembly":  #Parent Assembly is the App::Part object named model.
             linkobj1_str = "Model"
         else:
             linkobj1_str = strlist1[0]
         linkLCS1_str = strlist1[1]
         # parse second half of string fixed prart  (first part is link and second is LCS)
-        if strlist2[0] == "Parent Assembly":   #Parrent Assembly is the App::Part object named model.
+        if strlist2[0] == "Parent Assembly":   #Parent Assembly is the App::Part object named model.
             linkobjfix_str = "Model"
         else:
             linkobjfix_str = strlist2[0]

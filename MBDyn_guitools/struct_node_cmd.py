@@ -171,7 +171,7 @@ class struct_node_cmd(QtWidgets.QDialog, Ui_struct_node_dialog):
     def set_input_method(self):
         '''Makes only widgets needed for input method type visible'''
         index = self.input_method_Box.currentIndex()
-        if index == 0:  # make visable only widgets for LCS input method
+        if index == 0:  # make visible only widgets for LCS input method
             self.part_Box.setVisible(True); self.part_label.setVisible(True)
             self.LCS_Box.setVisible(True); self.LCS_label.setVisible(True)
             self.pos_x_label.setVisible(False); self.pos_y_label.setVisible(False); self.pos_z_label.setVisible(False)
@@ -189,7 +189,7 @@ class struct_node_cmd(QtWidgets.QDialog, Ui_struct_node_dialog):
             self.ang_vel_x.setVisible(False); self.ang_vel_y.setVisible(False); self.ang_vel_z.setVisible(False)
             self.ang_vel_x_label.setVisible(False); self.ang_vel_y_label.setVisible(False); self.ang_vel_z_label.setVisible(False)
 
-        if index == 1:  # make visable only widgets for manual input method
+        if index == 1:  # make visible only widgets for manual input method
             self.part_Box.setVisible(False); self.part_label.setVisible(False)
             self.LCS_Box.setVisible(False); self.LCS_label.setVisible(False)
             self.pos_x_label.setVisible(True); self.pos_y_label.setVisible(True); self.pos_z_label.setVisible(True)

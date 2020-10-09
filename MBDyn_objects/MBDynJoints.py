@@ -273,10 +273,10 @@ class FC_totaljoint():
         obj.addProperty("App::PropertyString", "pos_orientation_des2", "FC_totaljoint", "orientation matrix 2 type ").pos_orientation_des2
         obj.addProperty("App::PropertyVectorList", "rot_orientation2", "FC_totaljoint", "relative orientation from structural node 2").rot_orientation1
         obj.addProperty("App::PropertyString", "rot_orientation_des2", "FC_totaljoint", "orientation matrix 2 type ").rot_orientation_des2
-        obj.addProperty("App::PropertyBoolList", "pos_constraint", "FC_totaljoint", " position constrants ").pos_constraint
+        obj.addProperty("App::PropertyBoolList", "pos_constraint", "FC_totaljoint", " position constraints ").pos_constraint
         obj.addProperty("App::PropertyBoolList", "rot_constraint", "FC_totaljoint", "rotation contrants").rot_constraint
-        obj.addProperty("App::PropertyBoolList", "vel_constraint", "FC_totaljoint", "velocity constrants").vel_constraint
-        obj.addProperty("App::PropertyBoolList", "angvel_constraint", "FC_totaljoint", "angular velocity contraint").angvel_constraint
+        obj.addProperty("App::PropertyBoolList", "vel_constraint", "FC_totaljoint", "velocity constraints").vel_constraint
+        obj.addProperty("App::PropertyBoolList", "angvel_constraint", "FC_totaljoint", "angular velocity constraint").angvel_constraint
 
         obj.Proxy = self
         self.Object = obj
@@ -357,10 +357,10 @@ class FC_totalpinjoint():
         obj.addProperty("App::PropertyString", "pos_orientation_desf", "FC_totalpinjoint", "position orientation matrix fixed type ").pos_orientation_desf
         obj.addProperty("App::PropertyVectorList", "rot_orientationf", "FC_totalpinjoint", "rotation orientation of fixed").rot_orientationf
         obj.addProperty("App::PropertyString", "rot_orientation_desf", "FC_totalpinjoint", "rotation orientation matrix fixed type ").rot_orientation_desf
-        obj.addProperty("App::PropertyBoolList", "pos_constraint", "FC_totalpinjoint", "r position constrants").pos_constraint
+        obj.addProperty("App::PropertyBoolList", "pos_constraint", "FC_totalpinjoint", "r position constraints").pos_constraint
         obj.addProperty("App::PropertyBoolList", "rot_constraint", "FC_totalpinjoint", "rotation contrants").rot_constraint
-        obj.addProperty("App::PropertyBoolList", "vel_constraint", "FC_totalpinjoint", "velocity constrants").vel_constraint
-        obj.addProperty("App::PropertyBoolList", "angvel_constraint", "FC_totalpinjoint", "angular velocity contraint").angvel_constraint
+        obj.addProperty("App::PropertyBoolList", "vel_constraint", "FC_totalpinjoint", "velocity constraints").vel_constraint
+        obj.addProperty("App::PropertyBoolList", "angvel_constraint", "FC_totalpinjoint", "angular velocity constraint").angvel_constraint
 
         obj.Proxy = self
         self.Object = obj

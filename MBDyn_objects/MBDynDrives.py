@@ -7,7 +7,7 @@ from  MBDyn_utilities.MBDyn_funcs import *
 ''' Drive callers object will be referenced by other MBDyn objects with a unique integer label
     given the property name drive_label '''
 class MBDynconstantDrive:
-    '''MBDyn constant drive caller feature pyhton object class'''
+    '''MBDyn constant drive caller feature python object class'''
     def __init__(self, obj):
         obj.addProperty("App::PropertyFloat","const_coef","MBDynconstantDrive","initial time for ramp drive").const_coef
 
@@ -42,7 +42,7 @@ class MBDynconstantDrive:
 
 
 class MBDynRampDrive:
-    '''MBDyn ramp drive caller feature pyhton object class'''
+    '''MBDyn ramp drive caller feature python object class'''
     def __init__(self, obj):
         obj.addProperty("App::PropertyInteger","drive_label","_MBDynRampDrive","label for ramp drive").drive_label
         obj.addProperty("App::PropertyString","drive_name","_MBDynRampDrive","name for ramp drive").drive_name
@@ -83,11 +83,11 @@ class MBDynRampDrive:
 
 
 class MBDynTemplateDrive:
-    '''MBDyn template drive caller feature pyhton object class'''
+    '''MBDyn template drive caller feature python object class'''
     def __init__(self):
         ''' The template drive caller calls as many other drive callers as the type(tpl_type property) calls for.
             the drive callers are referenced by list ofa unique integer labels for each drive caller (drv_calls property)
-            if the drive_label is 0 there is no drive caller. References frames are also refered to by the integer label for the
+            if the drive_label is 0 there is no drive caller. References frames are also referred to by the integer label for the
             MBDyn reference object.  This object can handle 3 entity types 'Vec3', 'Vec6' and 'Mat3x3' '''
         obj.addProperty("App::PropertyInteger","drive_label","_MBDynTemplateDrive","type of template drive caller").drive_label
         obj.addProperty("App::PropertyString","drive_name","_MBDynTemplateDrive","name of template drive caller").drive_name

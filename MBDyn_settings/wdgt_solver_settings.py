@@ -40,11 +40,11 @@ class wdgt_solver_settings(QtWidgets.QWidget, Ui_solver_settings):
         self.rmvBinaryPathButton.setIcon(btnIcon)
         self.rmvBinaryPathButton.setIconSize(QtCore.QSize(18,18))
 
-        # rmv and add Buttons are disable at the begining
+        # rmv and add Buttons are disable at the beginning
         self.addBinaryPathButton.setEnabled(False)
         self.rmvBinaryPathButton.setEnabled(False)
         
-        # define conections for dialog widgets
+        # define connections for dialog widgets
         self.defaultSolverComboBox.activated.connect(self.setDefaultSolver)
         self.mbdynBinariesPath.cellDoubleClicked.connect(self.editActivePath)
         self.addBinaryPathButton.clicked.connect(self.addBinaryPath)

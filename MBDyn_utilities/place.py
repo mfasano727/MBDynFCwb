@@ -24,7 +24,7 @@ def makeOrientationFromLocalAxes(ZAx, XAx = None):
     YAx.normalize()
     XAx = YAx.cross(ZAx) # force X perpendicular
 
-    #hacky way of constucting rotation to a local coordinate system:
+    #hacky way of constructing rotation to a local coordinate system:
     # make matrix,
     m = App.Matrix()
     m.A = list(XAx)+[0.0]+list(YAx)+[0.0]+list(ZAx)+[0.0]+[0.0]*3+[1.0]

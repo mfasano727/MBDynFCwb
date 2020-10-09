@@ -73,7 +73,7 @@ class ref_cmd(QtWidgets.QDialog, Ui_ref_dialog):
 
         new_ref.ref_label = self.parent_ref_box.count()
         new_ref.ref_name = "reference" + str(self.parent_ref_box.count())
-        # set the reference to be refered to
+        # set the reference to be referred to
         if self.parent_ref_box.currentIndex() == 0:
             new_ref.refered_label = 0
         else:
