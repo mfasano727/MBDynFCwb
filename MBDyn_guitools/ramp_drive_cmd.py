@@ -8,8 +8,7 @@ import sys
 import MBDyn_locator
 MBDwbPath = os.path.dirname(MBDyn_locator.__file__)
 MBDwb_icons_path = os.path.join(MBDwbPath, 'icons')
-import MBDyn_objects.MBDynDrives
-from  MBDyn_utilities.MBDyn_funcs import find_drive_label
+import MBDyn_objects.model_so
 from PySide2 import QtCore, QtGui, QtWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
@@ -30,10 +29,10 @@ class ramp_drive_cmd(QtWidgets.QDialog, Ui_dia_ramp_drive):
                 'ToolTip': "input ramp drive caller parameters"}
     def Activated(self):
         """Do something here"""
-        self.slope.setText(str(1.0))
-        self.initial_time.setText(str(1.0))
-        self.final_time.setText(str(2.0))
-        self.initial_value.setText(str(0.0))
+        self.slope.setText(1.0)
+        self.initial_time.setText(1.0)
+        self.final_time.setText(2.0)
+        self.initial_value.setText(0.0)
 
         self.show()
 
@@ -49,14 +48,11 @@ class ramp_drive_cmd(QtWidgets.QDialog, Ui_dia_ramp_drive):
 
 
     def accept(self):
-        App.Console.PrintMessage(" find drive1: ")
-        num_drives =  find_drive_label()
-        new_ramp =App.ActiveDocument.Drive_callers.newObject("App::FeaturePython","ramp_" + str(num_drives))
-        MBDyn_objects.MBDynDrives.MBDynRampDrive(new_ramp)
+        num_drives = len(App.ActiveDocument.Drive_callers.getSubObjects()) + 1
+        new_ramp =App.ActiveDocument.Drive_callers.newObject("App::FeaturePython","ramp" + str(num_drives))
+        MBDyn_objects.model_so.MBDynRampDrive(new_ramp)
         new_ramp.ViewObject.Proxy = 0
-        App.Console.PrintMessage(" find drive2: ")
-        new_ramp.drive_label = num_drives
-        new_ramp.drive_name = "ramp_" + str(new_ramp.drive_label)
+
         new_ramp.slope = float(self.slope.text())
         new_ramp.initial_time = float(self.initial_time.text())
         new_ramp.final_time = float(self.final_time.text())

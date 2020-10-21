@@ -10,8 +10,6 @@ MBDwbPath = os.path.dirname(MBDyn_locator.__file__)
 MBDwb_icons_path = os.path.join(MBDwbPath, 'icons')
 import MBDyn_objects.model_so
 import MBDyn_objects.MBDynJoints
-import MBDyn_objects.MBDynDrives
-from  MBDyn_utilities.MBDyn_funcs import find_joint_label
 from PySide2 import QtCore, QtGui, QtWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
@@ -46,8 +44,7 @@ class axial_rot_joint_cmd(QtWidgets.QDialog, Ui_dia_axial_rot_joint):
                 self.node_2_Box.addItem(nodeobj.node_name)
 
         self.drive_Box.clear()
-        self.drive_Box.addItem("none")
-        if App.ActiveDocument.getObjectsByLabel('Drive_callers') != None:
+        if App.ActiveDocument.getObjectsByLabel('Drive_callers') != None :
             for driveobj in App.ActiveDocument.Drive_callers.Group:
                 self.drive_Box.addItem(driveobj.drive_name)
 
@@ -97,28 +94,27 @@ class axial_rot_joint_cmd(QtWidgets.QDialog, Ui_dia_axial_rot_joint):
         #  match node with the link constraint chosen.
         for nodeobjs in App.ActiveDocument.Nodes.Group:
             if nodeobjs.node_name  == self.node_1_Box.currentText():
-                if nodeobjs.node_name.split("|")[0] == linkobj1_str:
+                if nodeobjs.node_name == linkobj1_str:
                     nodeobj1 = nodeobjs
-                elif nodeobjs.node_name.split("|")[0] == linkobj2_str:
+                elif nodeobjs.node_name == linkobj2_str:
                     nodeobj2 = nodeobjs
             if nodeobjs.node_name  == self.node_2_Box.currentText():
-                if nodeobjs.node_name.split("|")[0] == linkobj1_str:
+                if nodeobjs.node_name == linkobj1_str:
                     nodeobj1 = nodeobjs
-                elif nodeobjs.node_name.split("|")[0] == linkobj2_str:
+                elif nodeobjs.node_name == linkobj2_str:
                     nodeobj2 = nodeobjs
 
         # check if both nodes are not the same
-        '''
-        if nodeobj1.node_label == nodeobj2.node_label:
+        if nodeobj1.node_name == nodeobj2.node_name:
             mb = QtGui.QMessageBox()
             mb.setText("both nodes can not be the same")
             mb.exec()
             return
-        '''
+
         # create joint object
-        num_joints = find_joint_label()
+        num_joints = len(App.ActiveDocument.Joints.getSubObjects()) + 1
         new_joint = App.ActiveDocument.Joints.newObject("App::FeaturePython","Joint" + str(num_joints))
-        MBDyn_objects.MBDynJoints.MBDynAxialrotion(new_joint)
+        MBDyn_objects.MBDynJoints.MBDynRevoluteHinge(new_joint)
         new_joint.ViewObject.Proxy = 0
         new_joint.joint_label = num_joints
 
@@ -206,14 +202,7 @@ class axial_rot_joint_cmd(QtWidgets.QDialog, Ui_dia_axial_rot_joint):
             new_joint.orientation1 = [App.Vector(float(self.node1_vect1_x.text()), float(self.node1_vect1_y.text()), float(self.node1_vect1_z.text())),
                                App.Vector(float(self.node1_vect2_x.text()), float(self.node1_vect2_y.text()), float(self.node1_vect2_z.text())),
                                joint_z_axis]
-        # find drive caller selected and set the drive_lab property to the drive callers drive_lael
-        if self.drive_Box.currentText() == "none":
-            new_joint.drive_lab = 0
-        else:
-            for driveobj in App.ActiveDocument.Drive_callers.Group:
-                App.Console.PrintMessage(" drive: "+driveobj.drive_name)
-                if self.drive_Box.currentText() == driveobj.drive_name:
-                    new_joint.drive_lab = driveobj.drive_label
+
 
         self.done(1)
 
@@ -246,17 +235,13 @@ class axial_rot_joint_cmd(QtWidgets.QDialog, Ui_dia_axial_rot_joint):
             self.choose_z_axis_lab.setVisible(False)
 
     def set_nodes(self):
-        '''fills costraint combobox given node chosen in node_1_box and node_2_box'''
         self.link_const_Box.clear()
-        node1_str = self.node_1_Box.currentText().split("|")[0]
-        node2_str = self.node_2_Box.currentText().split("|")[0]
+        node1_str = self.node_1_Box.currentText()
+        node2_str = self.node_2_Box.currentText()
         for linksobj in App.ActiveDocument.getLinksTo():
+            constname = linksobj.Name + linksobj.AttachedBy+ " to " + linksobj.AttachedTo
             linkobj_atch = linksobj.AttachedTo.split("#")[0]
-            if linkobj_atch == "Parent Assembly":  #Parrent Assembly is the App::Part object named model.
-                linkobj_atch = "Model"
-            linkLCS_atch = linksobj.AttachedTo.split("#")[1]
-            constname = linksobj.Name + linksobj.AttachedBy + " to " + linksobj.AttachedTo
-            if linksobj.Label == node1_str or linksobj.Label == node2_str:
+            if linksobj.Name == node1_str or linksobj.Name == node2_str:
                 if linkobj_atch == node1_str or linkobj_atch == node2_str:
                     self.link_const_Box.addItem(constname)
 

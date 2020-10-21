@@ -8,14 +8,14 @@ from  MBDyn_utilities.MBDyn_funcs import *
 class MBDynReference:
     def __init__(self, obj):
         obj.addProperty("App::PropertyInteger","ref_label","MBDynReference","label for reference ").ref_label
-        obj.addProperty("App::PropertyString","ref_name","MBDynReference","name of reference").ref_name
-         # refered_label is the label of a reference current reference is referred to.
-        obj.addProperty("App::PropertyInteger","refered_label","MBDynReference","reference label of parent reference").refered_label
-         # position and orientation must be in global reference
+        obj.addProperty("App::PropertyString","ref_name","MBDynReference","nane of reference").ref_name
+         # refered_label is the label of a reference current reference is refered to.
+        obj.addProperty("App::PropertyInteger","refered_label","MBDynReference","reference label of parrent reference").refered_label
+         # position and orientation must be in grobal reference
         obj.addProperty("App::PropertyVector","position","MBDynReference","position of reference ").position
         obj.addProperty("App::PropertyVectorList","orientation","MBDynReference","orientation of reference").orientation
         obj.addProperty("App::PropertyString","orientation_des","MBDynReference","orientation type of reference ").orientation_des
-        obj.addProperty("App::PropertyVector","vel","MBDynReference","velocity of reference").vel
+        obj.addProperty("App::PropertyVector","vel","MBDynReference","vlocity of reference").vel
         obj.addProperty("App::PropertyVector","ang_vel","MBDynReference","angular velocity of reference ").ang_vel
         obj.Proxy = self
         self.Object = obj
@@ -141,6 +141,172 @@ class MBDynIntegrationMethod:
             return "implicit euler"
 
 
+class MBDynconstantDrive:
+    '''MBDyn constant drive caller feature pyhton object class'''
+    def __init__(self, obj):
+        obj.addProperty("App::PropertyFloat","const_coef","MBDynconstantDrive","initial time for ramp drive").const_coef
+
+        obj.Proxy = self
+        self.Object = obj
+
+    def __getstate__(self):
+        '''When saving the document this object gets stored using Python's json module.\
+                Since we have some un-serializable parts here -- the Coin stuff -- we must define this method\
+                to return a tuple of all serializable objects or None.'''
+        return None
+
+    def __setstate__(self,state):
+        '''When restoring the serialized object from document we have the chance to set some internals here.\
+                Since no data were serialized nothing needs to be done here.'''
+        return None
+
+    def onChanged(self, fp, prop):
+        '''Do something when a property has changed'''
+        App.Console.PrintMessage("Change property: " + str(prop) + "\n")
+
+    def execute(self, fp):
+        '''Do something when doing a recomputation, this method is mandatory'''
+        App.Console.PrintMessage("Recompute Python MBDynInitialValue feature\n")
+
+    def onDocumentRestored(self, fp):
+        '''restores feature python object when document is read'''
+        self.Object = fp
+
+    def writeDrive(self):
+        return "const, {}".format(self.Object.const_coef)
+
+
+class MBDynRampDrive:
+    '''MBDyn ramp drive caller feature pyhton object class'''
+    def __init__(self, obj):
+        obj.addProperty("App::PropertyFloat","initial_time","_MBDynRampDrive","initial time for ramp drive").initial_time
+        obj.addProperty("App::PropertyFloat","final_time","_MBDynRampDrive","final time for ramp drive").final_time
+        obj.addProperty("App::PropertyFloat","initial_value","_MBDynRampDrive","initial value for ramp drive").initial_value
+        obj.addProperty("App::PropertyFloat","slope","_MBDynRampDrive","slope for ramp drive").slope
+
+        obj.Proxy = self
+        self.Object = obj
+
+    def __getstate__(self):
+        '''When saving the document this object gets stored using Python's json module.\
+                Since we have some un-serializable parts here -- the Coin stuff -- we must define this method\
+                to return a tuple of all serializable objects or None.'''
+        return None
+
+    def __setstate__(self,state):
+        '''When restoring the serialized object from document we have the chance to set some internals here.\
+                Since no data were serialized nothing needs to be done here.'''
+        return None
+
+    def onChanged(self, fp, prop):
+        '''Do something when a property has changed'''
+        App.Console.PrintMessage("Change property: " + str(prop) + "\n")
+
+    def execute(self, fp):
+        '''Do something when doing a recomputation, this method is mandatory'''
+        App.Console.PrintMessage("Recompute Python MBDynInitialValue feature\n")
+
+    def onDocumentRestored(self, fp):
+        '''restores feature python object when document is read'''
+        self.Object = fp
+
+    def writeDrive(self):
+        drive_line = "ramp, {}, {}, {}, {}".format(self.Object.slope, self.Object.initial_time, self.Object.final_time, self.Object.initial_value)
+        return drive_line
+
+
+class MBDynTemplateDrive:
+
+    def __init__(self, tpl_type, *args):
+        self.tpl_type = tpl_type
+        self.reference = None
+        self.args = list(args)
+
+        if tpl_type == "single":
+            self.single_entity = args[0]
+            self.single_drive_caller = args[1]
+
+        elif tpl_type == "component":
+            self.component_drive_caller = list(args)
+            self.component_type = None
+
+        elif tpl_type == "array":
+            self.num_template_drive_callers = args[0]
+            self.array_drive_caller = list(args[1:])
+
+    def setReference(self, reference):
+        self.reference = reference
+
+    def getReference(self):
+        return self.reference
+
+    def setSingleEntity(self, single_entity):
+        self.single_entity  = single_entity
+
+    def getSingleEntity(self):
+        return self.single_entity
+
+    def setSingleDriveCaller(self, single_drive_caller):
+        self.single_drive_caller = single_drive_caller
+
+    def getSingleDriveCaller(self):
+        return self.single_drive_caller
+
+    def setComponentDriveCaller(self, component_drive_caller):
+        self.component_drive_caller = component_drive_caller
+
+    def getComponentDriveCaller(self):
+        return self.component_drive_caller
+
+    def setComponentType(self, component_type):
+        self.component_type = component_type
+
+    def getComponentType(self):
+        return self.component_type
+
+    def setNumTemplateDriveCallers(self, num_template_drive_callers):
+        self.num_template_drive_callers = num_template_drive_callers
+
+    def getNumTemplateDriveCallers(self):
+        return self.num_template_drive_callers
+
+    def setArrayDriveCaller(self, array_drive_caller):
+        self.array_drive_caller = array_drive_caller
+
+    def getArrayDriveCaller(self):
+        return self.array_drive_caller
+
+    def writeDrive(self):
+        if self.tpl_type == "null":
+            drive_line = "null"
+
+        elif self.tpl_type == "single":
+            drive_line = "single, {}, {}".format(self.single_entity.writeVector(), self.single_drive_caller.writeDrive())
+
+        elif self.tpl_type == "component":
+            if self.component_type == None:
+                drive_line = "component"
+                for k in self.component_drive_caller:
+                    if k == "inactive":
+                        drive_line = drive_line + ", " + "inactive"
+                    else:
+                        drive_line = drive_line + ",\n                  " + k.writeDrive()
+
+            else:
+                drive_line = "component, {}".format(self.component_type)
+                for k in self.component_drive_caller:
+                    drive_line = drive_line + ",\n                   " + k.writeDrive()
+
+        elif self.tpl_type == "array":
+            drive_line = "array, {}".format(self.num_template_drive_callers)
+            for k in self.array_drive_caller:
+                drive_line = drive_line + ", " + k.writeDrive()
+
+        return drive_line
+
+
+
+
 
 class MBDynStructuralNode:
 
@@ -238,18 +404,33 @@ class MBDynRigidBody:
 
 class MBDynGravity:
 
-    def __init__(self, obj):
-
-        obj.addProperty("App::PropertyString","field_type","Base","grvity field type").field_type
-        obj.addProperty("App::PropertyVector","gravity_vector","Unifom gravity","grvity vector").gravity_vector                                          #object of class vec
-        obj.addProperty("App::PropertyFloat","gravity_value","Unifom gravity","grvity acc.").gravity_value
-
-        obj.addProperty("App::PropertyVector","gravity_origin","Central gravity","central grvity origin").gravity_origin
-        obj.addProperty("App::PropertyFloat","cg_field_mass","Central gravity","central grvity mass").cg_field_mass
-        obj.addProperty("App::PropertyFloat","gravity_constant","Central gravity","central grvity const.").gravity_constant
+    def __init__(self, obj, grav_parameters):
 
         obj.Proxy = self
         self.Object = obj
+
+        obj.addProperty("App::PropertyString", "FieldType", "Base", "gravity field type")
+        obj.addProperty("App::PropertyVector", "GravityVector", "Uniform gravity", "gravity vector")  # object of class vec
+        obj.addProperty("App::PropertyFloat", "GravityAcceleration", "Uniform gravity", "gravity acc.")
+
+        obj.addProperty("App::PropertyVector", "GravityOrigin", "Central gravity", "central gravity origin")  # object of class vec
+        obj.addProperty("App::PropertyFloat", "CgFieldMass", "Central gravity", "central gravity mass")
+        obj.addProperty("App::PropertyFloat", "GravityConstant", "Central gravity", "central gravity const.")
+
+        self.setParameters(grav_parameters)
+
+    def setParameters(self, grav_parameters):
+        """
+        Modify the gravity parameters
+        :param grav_parameters: dic of parameters
+        :return:
+        """
+        self.Object.FieldType = grav_parameters["FieldType"]
+        self.Object.GravityAcceleration = grav_parameters["GravityAcceleration"]
+        self.Object.GravityVector = grav_parameters["GravityVector"]
+        self.Object.CgFieldMass = grav_parameters["CgFieldMass"]
+        self.Object.GravityConstant = grav_parameters["GravityConstant"]
+        self.Object.GravityOrigin = grav_parameters["GravityOrigin"]
 
     def __getstate__(self):
         '''When saving the document this object gets stored using Python's json module.\
@@ -274,16 +455,18 @@ class MBDynGravity:
         '''restores feature python object when document is read'''
         self.Object = fp
 
-    def writeGravity(self):
-        if self.Object.field_type == "uniform":
+    def write(self):
+        if self.Object.FieldType.lower() == "uniform":
 
-            gravity_line = "        gravity: uniform, {}, const, {};\n".format(writeVect(self.Object.gravity_vector), self.Object.gravity_value )
+            gravity_line = "        gravity: uniform, {}, const, {};\n".format(writeVect(self.Object.GravityVector),
+                                                                               self.Object.GravityAcceleration )
 
-        elif self.Object.field_type == "central":
-            gravity_line = "        gravity: central, origin, {}, mass, {}, G, {};\n".format(writeVect(self.Object.gravity_origin), self.Object.cg_field_mass, self.Object.gravity_constant)
+        elif self.Object.FieldType.lower() == "central":
+            gravity_line = "        gravity: central, origin, {}, mass, {}, G, {};\n".format(writeVect(self.Object.GravityOrigin),
+                                                                                             self.Object.CgFieldMass,
+                                                                                             self.Object.GravityConstant)
 
         return gravity_line
-
 
 
 class MBDynInitialValue:

@@ -5,7 +5,3 @@ rigidbody_icon.svg   Icon made by smashicons  from https://smashicons.com/ downl
 reference.svg        Icon made by  Sakurambo~commonswiki  downloaded from https://commons.wikimedia.org/wiki/File:3D_coordinate_system.svg
 
 struct_node_icon.svg Icon Created by Seona Kim from the Noun Project
-
-clamp_icon.svg Icon made from http://www.onlinewebfonts.com/icon  Icon Fonts is licensed by CC BY 3.0
-
-humming bird Icon is from the MBDyn project 

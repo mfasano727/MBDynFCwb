@@ -61,18 +61,3 @@ def calc_placement(pos, orient, orient_des):
     pla = App.Placement(m)
     Rot = pla.Rotation
     return App.Placement(pos, Rot)
-
-
-def calc_orientation(place, orient_des):
-    '''calculates MBDyn orientation matrix of a given orientation description from a FreeCAD placement'''
-
-
-
-
-def calc_orient_Z(zdir,odir = None):
-    '''calculate MBDyn orientation matrix in the global frame. with spcified Z direction.  given x and y
-    directions are optional'''
-    if optimizedir != None:
-        ang = zir.getAngle(odir)
-        if ang < 0.0000001:
-            return [odir.normalize(),App.Vector(0,0,0),  zdir.normalize()]

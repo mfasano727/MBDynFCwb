@@ -8,8 +8,6 @@ import sys
 import MBDyn_locator
 MBDwbPath = os.path.dirname(MBDyn_locator.__file__)
 MBDwb_icons_path = os.path.join(MBDwbPath, 'icons')
-from  MBDyn_utilities.MBDyn_funcs import find_node_label
-from  MBDyn_utilities.MBDyn_funcs import find_body_label
 
 from PySide2 import QtCore, QtGui, QtWidgets
 import FreeCADGui as Gui
@@ -40,14 +38,15 @@ class body_sel_cmd(QtWidgets.QDialog,  Ui_dia_body_sel):
         self.body_list.clear()
         for modlink in App.ActiveDocument.Model.getSubObjects():
             bodlink = App.ActiveDocument.Model.getObject(modlink[0:-1])
+            print("I am Right Here 123456789",bodlink.Label)
             if hasattr(bodlink, 'LinkedObject'):
                 modbod = bodlink.LinkedObject
                 for modbod_nm in modbod.getSubObjects():
                     modbod_sub = modbod.getObject(modbod_nm[0:-1])
                     if check_solid(modbod_sub):
                         self.body_list.addItem(bodlink.Label)
-        self.density.setText('0.01')
-        '''
+                        break
+                '''
                 for modbod_nm in modbod.getSubObjects():
                     modbod_sub = modbod.getObject(modbod_nm[0:-1])
                     if check_solid(modbod_sub):
@@ -60,7 +59,7 @@ class body_sel_cmd(QtWidgets.QDialog,  Ui_dia_body_sel):
                                 in_list_flag = True
                         if in_list_flag == False:
                             self.body_list.addItem(bodlink.Label)
-        '''
+                '''
         self.show()
         App.Console.PrintMessage(" Activated: " + "\n")
 
@@ -87,14 +86,13 @@ class body_sel_cmd(QtWidgets.QDialog,  Ui_dia_body_sel):
         new_body = App.ActiveDocument.Bodies.newObject("App::FeaturePython", tempstring)
         MBDyn_objects.model_so.MBDynRigidBody(new_body)
         new_body.ViewObject.Proxy = 0
-        App.Console.PrintMessage(" Accept: " + tempstring + "\n")
+
         #   create strctural node for ridgid body
-        num_nodes = find_node_label()
-#        num_nodes = len(App.ActiveDocument.Nodes.getSubObjects())
+        num_nodes = len(App.ActiveDocument.Nodes.getSubObjects()) + 1
         new_node = App.ActiveDocument.Nodes.newObject("App::FeaturePython", self.body_list.currentText()+ "_node_" + str(num_nodes))
         MBDyn_objects.model_so.MBDynStructuralNode(new_node)
         new_node.ViewObject.Proxy = 0
-#        num_nodes = len(App.ActiveDocument.Nodes.getSubObjects())
+        num_nodes = len(App.ActiveDocument.Nodes.getSubObjects())
         App.Console.PrintMessage(" node1test ")
 
          # set new node properties
@@ -127,16 +125,16 @@ class body_sel_cmd(QtWidgets.QDialog,  Ui_dia_body_sel):
 
         #  set new body properties
         new_body.body_obj_label = self.body_list.currentText()
-        new_body.label = find_body_label()
-        new_body.node_label = new_node.node_label
-        body_density = float(self.density.text())  #  in g/mm**3
+        new_body.label = len(App.ActiveDocument.Bodies.getSubObjects())
+        new_body.node_label = num_nodes
+        body_density = 0.01  #  in g/mm**3
         new_body.mass = chosenbody.Shape.Volume * body_density  # volume usually mm**3
         new_body.com_offset = App.Vector(0, 0, 0)
         # calculate moment of inertia with placemrnt matrix = identity
 #        placement_mat = chosenbody[0].Placement
 #        chosenbody.Placement.Matrix.unity()
         App.Console.PrintMessage(" matrix test ")
-        matr_of_inertia = chosenbody.Shape.MatrixOfInertia  # units of IM in FreeCad is L**5  L usually in mm
+        matr_of_inertia = chosenbody.Shape.MatrixOfInertia  # units of IM in FreeCad is L**5  L usally in mm
 #        chosenbody.Placement = placement_mat
         # matrix is a list of three FreeCad vector
         new_body.inertia_matrix = [App.Vector(matr_of_inertia.A11, matr_of_inertia.A12, matr_of_inertia.A13)*body_density,
@@ -147,8 +145,8 @@ class body_sel_cmd(QtWidgets.QDialog,  Ui_dia_body_sel):
             new_body.matrix_type = "diag"
         else:
             new_body.matrix_type = "sym"
-        #  set node name to new_body.body_obj_label
-        new_node.node_name = new_body.body_obj_label + "|cm"
+        #  set node name to new_body.body_obj_label + num of nodes on body
+        new_node.node_name = new_body.body_obj_label
 
         self.done(1)
 

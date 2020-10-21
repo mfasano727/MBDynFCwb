@@ -20,13 +20,13 @@ class Ui_dia_Totalpinjoint(object):
     def setupUi(self, dia_Totalpinjoint):
         if dia_Totalpinjoint.objectName():
             dia_Totalpinjoint.setObjectName(u"dia_Totalpinjoint")
-        dia_Totalpinjoint.resize(461, 352)
+        dia_Totalpinjoint.resize(461, 331)
         font = QFont()
         font.setPointSize(10)
         dia_Totalpinjoint.setFont(font)
         self.buttonBox = QDialogButtonBox(dia_Totalpinjoint)
         self.buttonBox.setObjectName(u"buttonBox")
-        self.buttonBox.setGeometry(QRect(170, 320, 136, 32))
+        self.buttonBox.setGeometry(QRect(170, 290, 136, 32))
         self.buttonBox.setOrientation(Qt.Horizontal)
         self.buttonBox.setStandardButtons(QDialogButtonBox.Cancel|QDialogButtonBox.Ok)
         self.node1_box = QComboBox(dia_Totalpinjoint)
@@ -118,15 +118,6 @@ class Ui_dia_Totalpinjoint(object):
         self.angvely_checkBox = QCheckBox(dia_Totalpinjoint)
         self.angvely_checkBox.setObjectName(u"angvely_checkBox")
         self.angvely_checkBox.setGeometry(QRect(230, 245, 53, 14))
-        self.drivecall_Box = QComboBox(dia_Totalpinjoint)
-        self.drivecall_Box.setObjectName(u"drivecall_Box")
-        self.drivecall_Box.setGeometry(QRect(175, 290, 126, 22))
-        self.drivecall_lab = QLabel(dia_Totalpinjoint)
-        self.drivecall_lab.setObjectName(u"drivecall_lab")
-        self.drivecall_lab.setGeometry(QRect(179, 270, 116, 16))
-        self.create_drive_Button = QPushButton(dia_Totalpinjoint)
-        self.create_drive_Button.setObjectName(u"create_drive_Button")
-        self.create_drive_Button.setGeometry(QRect(35, 290, 101, 21))
 
         self.retranslateUi(dia_Totalpinjoint)
         self.buttonBox.accepted.connect(dia_Totalpinjoint.accept)
@@ -136,7 +127,7 @@ class Ui_dia_Totalpinjoint(object):
     # setupUi
 
     def retranslateUi(self, dia_Totalpinjoint):
-        dia_Totalpinjoint.setWindowTitle(QCoreApplication.translate("dia_Totalpinjoint", u"Dialog total pin joint", None))
+        dia_Totalpinjoint.setWindowTitle(QCoreApplication.translate("dia_Totalpinjoint", u"Dialog", None))
         self.node1_box_lab.setText(QCoreApplication.translate("dia_Totalpinjoint", u"node 1", None))
         self.node1_LCS_pos_lab.setText(QCoreApplication.translate("dia_Totalpinjoint", u"node 1 LCS pos. offset and orient", None))
         self.fixed_LCS_pos_lab.setText(QCoreApplication.translate("dia_Totalpinjoint", u"fixed LCS pos. ofset and orient", None))
@@ -147,7 +138,7 @@ class Ui_dia_Totalpinjoint(object):
         self.posx_checkBox.setText(QCoreApplication.translate("dia_Totalpinjoint", u"pos. x", None))
         self.posy_checkBox.setText(QCoreApplication.translate("dia_Totalpinjoint", u"pos. y", None))
         self.posz_checkBox.setText(QCoreApplication.translate("dia_Totalpinjoint", u"pos. z", None))
-        self.rot_constr_lab.setText(QCoreApplication.translate("dia_Totalpinjoint", u"rotation constraint", None))
+        self.rot_constr_lab.setText(QCoreApplication.translate("dia_Totalpinjoint", u"position constraint", None))
         self.roty_checkBox.setText(QCoreApplication.translate("dia_Totalpinjoint", u"rot. y", None))
         self.rotz_checkBox.setText(QCoreApplication.translate("dia_Totalpinjoint", u"rot. z", None))
         self.rotx_checkBox.setText(QCoreApplication.translate("dia_Totalpinjoint", u"rot. x", None))
@@ -159,7 +150,5 @@ class Ui_dia_Totalpinjoint(object):
         self.ang_vel_constr_lab.setText(QCoreApplication.translate("dia_Totalpinjoint", u"ang. vel. constraint", None))
         self.angvelz_checkBox.setText(QCoreApplication.translate("dia_Totalpinjoint", u"ang. vel. z", None))
         self.angvely_checkBox.setText(QCoreApplication.translate("dia_Totalpinjoint", u"ang. vel. y", None))
-        self.drivecall_lab.setText(QCoreApplication.translate("dia_Totalpinjoint", u"drive_caller", None))
-        self.create_drive_Button.setText(QCoreApplication.translate("dia_Totalpinjoint", u"create template drive", None))
     # retranslateUi
 

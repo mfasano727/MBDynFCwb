@@ -2,7 +2,6 @@ import numpy as np
 import math
 import FreeCAD as App
 import MBDyn_objects.model_so
-from  MBDyn_utilities.MBDyn_funcs import write_drv
 from  MBDyn_utilities.MBDyn_funcs import writeVect, writeMatrix, writeOrientationMatrix
 
 class MBDynRevoluteHinge:
@@ -435,7 +434,7 @@ class MBDynInline():
         obj.addProperty("App::PropertyVectorList", "orientation1", "MBDynInline", "relative orientation from structural node 1").orientation1
         obj.addProperty("App::PropertyString", "orientation_des1", "MBDynInline", "orientation matrix 1 type ").orientation_des1
         obj.addProperty("App::PropertyInteger", "node2_label", "MBDynInline", "label for structural node 2").node2_label
-        obj.addProperty("App::PropertyVector", "offset2", "MBDynInline", "relative offset node 2").offset2
+        obj.addProperty("App::PropertyVector", "position2", "MBDynInline", "relative offset node 2").offset2
 
         obj.Proxy = self
         self.Object = obj
@@ -468,15 +467,14 @@ class MBDynInline():
 
         line = ("        joint: {}, in line,\n"
                 "                {},\n"
-                "                position, {},\n"
-                "                orientation, {},\n"
                 "                {},\n"
-                "                offset, {};\n").format(self.Object.joint_label, self.Object.node1_label, writeVect(self.Object.position1),
+                "                {},\n"
+                "                {},\n"
+                "                {};\n").format(self.Object.joint_label, self.Object.node1_label, writeVect(self.Object.position1),
                                                                       writeOrientationMatrix(self.Object.orientation_des1, self.Object.orientation1),
                                                                       self.Object.node2_label, writeVect(self.Object.offset2))
 
         return line
-
 
 
 
@@ -524,9 +522,9 @@ class MBDynPrismatic():
 
         line = ("        joint: {}, prismatic,\n"
                 "                {},\n"
-                "                orientation, {},\n"
                 "                {},\n"
-                "                orientation, {};\n").format(self.Object.joint_label, self.Object.node1_label,
+                "                {},\n"
+                "                {};\n").format(self.Object.joint_label, self.Object.node1_label,
                                                                       writeOrientationMatrix(self.Object.orientation_des1, self.Object.orientation1),
                                                                       self.Object.node2_label,
                                                                       writeOrientationMatrix(self.Object.orientation_des2, self.Object.orientation2))
@@ -536,7 +534,7 @@ class MBDynPrismatic():
 
 class MBDynAxialrotion:
     def __init__(self, obj):
-        obj.addProperty("App::PropertyInteger", "joint_label", "MBDynAxialrotation", "label for axial rotation joint").joint_label
+        obj.addProperty("App::PropertyInteger", "joint_label", "MBDynAxialrotation", "label for revolute hinge joint").joint_label
         obj.addProperty("App::PropertyInteger", "node1_label", "MBDynAxialrotation", "label for structural node 1").node1_label
         obj.addProperty("App::PropertyVector", "position1", "MBDynAxialrotation", "relative position from structural node 1").position1
         obj.addProperty("App::PropertyVectorList", "orientation1", "MBDynAxialrotation", "relative orientation from structural node 1").orientation1
@@ -545,7 +543,6 @@ class MBDynAxialrotion:
         obj.addProperty("App::PropertyVector", "position2", "MBDynAxialrotation", "relative position from structural node 2").position2
         obj.addProperty("App::PropertyVectorList", "orientation2", "MBDynAxialrotation", "relative orientation from structural node 2").orientation2
         obj.addProperty("App::PropertyString", "orientation_des2", "MBDynAxialrotation", "orientation matrix 2 type ").orientation_des2
-        obj.addProperty("App::PropertyInteger", "drive_lab", "MBDynAxialrotation", "label for drive caller").drive_lab
 
         obj.Proxy = self
         self.Object = obj
@@ -579,63 +576,11 @@ class MBDynAxialrotion:
         line = ("        joint: {}, axial rotation,\n"
                 "                {},\n"
                 "                {},\n"
-                "                hinge, {},\n"
                 "                {},\n"
                 "                {},\n"
-                "                hinge, {},\n"
+                "                {},\n"
                 "                {};\n").format(self.Object.joint_label, self.Object.node1_label, writeVect(self.Object.position1),
                                                                       writeOrientationMatrix(self.Object.orientation_des1, self.Object.orientation1),
                                                                       self.Object.node2_label, writeVect(self.Object.position2),
-                                                                      writeOrientationMatrix(self.Object.orientation_des2, self.Object.orientation2),
-                                                                      write_drv(self.Object.drive_lab))
-
-        return line
-
-
-class MBDynClamp():
-    """clamp joint class."""
-
-    def __init__(self, obj):
-
-        obj.addProperty("App::PropertyInteger", "joint_label", "MBDynClamp", "label for joint").joint_label
-        obj.addProperty("App::PropertyInteger", "node1_label", "MBDynClamp", "label for structural node 1").node1_label
-        obj.addProperty("App::PropertyVector", "position1", "MBDynClamp", "relative position from structural node 1").position1
-        obj.addProperty("App::PropertyVectorList", "orientation1", "MBDynClamp", "relative orientation from structural node 1").orientation1
-        obj.addProperty("App::PropertyString", "orientation_des1", "MBDynClamp", "orientation matrix 1 type ").orientation_des1
-
-        obj.Proxy = self
-        self.Object = obj
-
-    def __getstate__(self):
-        '''When saving the document this object gets stored using Python's json module.\
-                Since we have some un-serializable parts here -- the Coin stuff -- we must define this method\
-                to return a tuple of all serializable objects or None.'''
-        return None
-
-    def __setstate__(self,state):
-        '''When restoring the serialized object from document we have the chance to set some internals here.\
-                Since no data were serialized nothing needs to be done here.'''
-        return None
-
-    def onChanged(self, fp, prop):
-        '''Do something when a property has changed'''
-        App.Console.PrintMessage("Change property: " + str(prop) + "\n")
-
-    def execute(self, fp):
-        '''Do something when doing a recomputation, this method is mandatory'''
-        App.Console.PrintMessage("Recompute Python MBDynInitialValue feature\n")
-
-    def onDocumentRestored(self, fp):
-        self.Object = fp
-
-    def writeJoint(self):
-#        writeVect(App.Vector(1,0,0))
-#        line = ("        joint: ").format(self.Object.joint_label, self.Object.node1_label)
-
-        line = ("        joint: {}, clamp,\n"
-                "                {},\n"
-                "                {},\n"
-                "                {};\n").format(self.Object.joint_label, self.Object.node1_label, writeVect(self.Object.position1),
-                                                                      writeOrientationMatrix(self.Object.orientation_des1, self.Object.orientation1))
-
+                                                                      writeOrientationMatrix(self.Object.orientation_des2, self.Object.orientation2))
         return line

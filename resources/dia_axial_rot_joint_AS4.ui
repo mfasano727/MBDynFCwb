@@ -22,11 +22,6 @@
      <height>32</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
    </property>
@@ -312,19 +307,6 @@
    </property>
    <property name="text">
     <string>choose drive caller</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="create_drive_Button">
-   <property name="geometry">
-    <rect>
-     <x>100</x>
-     <y>330</y>
-     <width>91</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>create a drive caller</string>
    </property>
   </widget>
  </widget>
