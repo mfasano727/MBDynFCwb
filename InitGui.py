@@ -4,8 +4,11 @@ import FreeCAD as App
 import FreeCADGui as Gui
 
 import MBDyn_locator
+
 MBDwbPath = os.path.dirname(MBDyn_locator.__file__)
 MBDwb_icons_path = os.path.join(MBDwbPath, 'icons')
+
+
 class MbdynGui(Workbench):
 
     def __init__(self):
@@ -46,15 +49,16 @@ class MbdynGui(Workbench):
         return "Gui::PythonWorkbench"
 
     def Initialize(self):
+        def QT_TRANSLATE_NOOP(context, text):
+            return text
+
         import os
         import FreeCAD as App
         import FreeCADGui as Gui
         import MBDyn_locator
         MBDwbPath = os.path.dirname(MBDyn_locator.__file__)
         MBDwb_icons_path = os.path.join(MBDwbPath, 'icons')
-        MBDwb_setting_ui_path = os.path.join(MBDwbPath, 'resources','wb_settings_widgets')
-        import MBDyn_guitools.m_values
-        import MBDyn_guitools.MBDynFreeCAD
+        MBDwb_setting_ui_path = os.path.join(MBDwbPath, 'resources', 'wb_settings_widgets')
         import MBDyn_guitools.body_AS4_cmd
         import MBDyn_guitools.ref_cmd
         import MBDyn_guitools.struct_node_cmd
@@ -63,20 +67,24 @@ class MbdynGui(Workbench):
         import MBDyn_guitools.postproc_AS4_cmd
         import MBDyn_guitools.total_joint_cmd
         import MBDyn_guitools.total_pinjoint_cmd
-        import MBDyn_guitools.inline_joint_cmd
         import MBDyn_guitools.ramp_drive_cmd
         import MBDyn_guitools.axial_rot_joint_AS4_cmd
-        import MBDyn_guitools.clamp_joint_cmd
-        import MBDyn_guitools.prismatic_joint_cmd
+        import MBDyn_guitools.Commands.sim_cmd
+        import MBDyn_guitools.Commands.layout_cmd
+        import MBDyn_guitools.Commands.analyze_cmd
+        import MBDyn_guitools.Commands.gravity_cmd
 
         from MBDyn_settings.wdgt_solver_settings import wdgt_solver_settings
-        self.list = ["mbdyn_configure", "mbdyn_launchGui", "body_sel_cmd",
-                    "ref_cmd", "struct_node_cmd", "revpin_joint_cmd",
-                    "hinge_joint_cmd", "total_joint_cmd", "total_pinjoint_cmd",
-                    "axial_rot_joint_cmd", "inline_joint_cmd","clamp_joint_cmd",
-                    "prismatic_joint_cmd",  "ramp_drive_cmd", "postproc_cmd"]
-        self.appendToolbar("Mbdyn_comands", self.list)
-        self.appendMenu("Mbdyn_menu", self.list)
+
+        self.list = ["CommandTreeLayout", "CommandAddSimulation", "mbdyn_launchGui", "CommandAddGravity",
+                     "body_sel_cmd", "ref_cmd", "struct_node_cmd", "revpin_joint_cmd",
+                     "hinge_joint_cmd", "total_joint_cmd", "total_pinjoint_cmd",
+                     "axial_rot_joint_cmd", "ramp_drive_cmd", "postproc_cmd"]
+
+        self.appendToolbar("Mbdyn comands", self.list)
+        self.appendMenu("&MBDyn", self.list)
+
+        import MBDyn_guitools.Commands.postprocessing_cmd  # Call in last to have the post processing tool bar after the others
         Log("Loading MyModule... done\n")
         # Add preferences page on the main window toolbar: Edit/ preferences.../mbdyn
         general_setting_ui = os.path.join(MBDwb_setting_ui_path, 'ui_general_settings.ui')
@@ -88,10 +96,14 @@ class MbdynGui(Workbench):
         Gui.addIcon("preferences-mbdyn", img_path)
 
     def Activated(self):
-        App.Console.PrintMessage("test")
-
+        App.Console.PrintMessage("MBDyn Workbench Activated")
+        if hasattr(Gui, "mbdynAnimationToolBar"):
+            Gui.mbdynAnimationToolBar.Activated()
 
     def Deactivated(self):
         Msg("MyWorkbench.Deactivated()\n")
+        if hasattr(Gui, "mbdynAnimationToolBar"):
+            Gui.mbdynAnimationToolBar.Deactivated()
+
 
 Gui.addWorkbench(MbdynGui)

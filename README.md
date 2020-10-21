@@ -1,3 +1,7 @@
+## Note: 
+This is a temporary branch to upgrade the tree layout without breaking the actual working workbench.
+In the end it should be merged with the default workbench
+
 ## Multibody Dynamic FreeCAD Workbench
 MBDynFCwb - Multibody Dynamic (MBDyn) FreeCAD Workbench (FCwb) based on code from MBDyn GSoC project.
 
