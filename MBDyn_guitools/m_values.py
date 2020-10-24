@@ -14,7 +14,7 @@ import FreeCADGui as Gui
 
 
 #class mbdyn_launchGui:
-    
+
 #    def Activated(self):
 class Ui_mbdyngui(object):
     def setupUi(self, mbdyngui):
@@ -361,10 +361,10 @@ class Ui_mbdyngui(object):
         self.checkBox_3.clicked['bool'].connect(self.output.setEnabled)
         self.checkBox_4.clicked['bool'].connect(self.method.setEnabled)
         self.checkBox_4.clicked['bool'].connect(self.methods_stack.setEnabled)
-        
+
         self.setInitialValues.clicked.connect(self.setupInitialValues)
         self.setGravity.clicked.connect(self.setupGravity)
-        
+
         QtCore.QMetaObject.connectSlotsByName(mbdyngui)
 
     def retranslateUi(self, mbdyngui):
@@ -418,29 +418,32 @@ class Ui_mbdyngui(object):
         self.setGravity.setText(_translate("mbdyngui", "Set Gravity"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("mbdyngui", "Gravity"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), _translate("mbdyngui", "Force"))
-        
-        
+
+
     def setupInitialValues(self):
-        
+
         App.Console.PrintMessage("hello")
+        MBDynGrp  = App.ActiveDocument.addObject("App::DocumentObjectGroup","MBDyn")
         if len(App.ActiveDocument.getObjectsByLabel("integration_method")) == 0:
-            integ_method = App.ActiveDocument.addObject("App::FeaturePython","integration_method")
+            integ_method = MBDynGrp.newObject("App::FeaturePython","integration_method")
             MBDyn_objects.model_so.MBDynIntegrationMethod(integ_method)
             integ_method.ViewObject.Proxy = 0
         else:
             integ_method = App.ActiveDocument.integration_method
         if len(App.ActiveDocument.getObjectsByLabel("initial_values")) == 0 :
-            iv = App.ActiveDocument.addObject("App::FeaturePython","initial_values")
+            iv = MBDynGrp.newObject("App::FeaturePython","initial_values")
             MBDyn_objects.model_so.MBDynInitialValue(iv)
             iv.ViewObject.Proxy = 0
-            referencesGrp  = App.ActiveDocument.addObject("App::DocumentObjectGroup","References")
-            nodesGrp  = App.ActiveDocument.addObject("App::DocumentObjectGroup","Nodes")
-            elementsGrp  = App.ActiveDocument.addObject("App::DocumentObjectGroup","Elements")
+
+            referencesGrp  = MBDynGrp.newObject("App::DocumentObjectGroup","References")
+            nodesGrp  =MBDynGrp.newObject("App::DocumentObjectGroup","Nodes")
+            driveGrp  = MBDynGrp.newObject("App::DocumentObjectGroup","Drive_callers")
+            elementsGrp  = MBDynGrp.newObject("App::DocumentObjectGroup","Elements")
             bodies_elemSubGrp = elementsGrp.newObject('App::DocumentObjectGroup', 'Bodies')
             joints_elemSubGrp = elementsGrp.newObject('App::DocumentObjectGroup', 'Joints')
             forces_elemSubGrp = elementsGrp.newObject('App::DocumentObjectGroup', 'Forces')
 
-             # create global refernce
+             # create global reference
             global_ref = referencesGrp.newObject("App::FeaturePython","global_reference")
             MBDyn_objects.model_so.MBDynReference(global_ref)
             global_ref.ViewObject.Proxy = 0
@@ -472,7 +475,7 @@ class Ui_mbdyngui(object):
             elif self.method.currentIndex() == 2:
                 integ_method.differential_radius = float(self.ms_differential_radius.text())
                 integ_method.algebraic_radius = float(self.ms_algebraic_radius.text())
-                integ_method.order = 0 
+                integ_method.order = 0
                 integ_method.Imethod = self.method.currentText()
                 App.Console.PrintMessage("testi")
             elif self.method.currentIndex() == 3:
@@ -483,49 +486,49 @@ class Ui_mbdyngui(object):
             elif self.method.currentIndex() == 4:
                 integ_method.differential_radius = float(self.torder_differential_radius.text())
                 integ_method.algebraic_radius = 0
-                integ_method.order = 0  
+                integ_method.order = 0
                 integ_method.Imethod = self.method.currentText()
             elif self.method.currentIndex() == 5:
                 integ_method.differential_radius = 0
                 integ_method.algebraic_radius = 0
-                integ_method.order = float(self.bdf_order.text())   
+                integ_method.order = float(self.bdf_order.text())
                 integration_method.Imethod = self.method.currentText()
             elif self.method.currentIndex() == 6:
                 integ_method.differential_radius = 0
                 integ_method.algebraic_radius = 0
                 integ_method.order = 0
                 integ_method.Imethod = self.method.currentText()
-                    
+
         App.Console.PrintMessage("hello2")
         iv.initial_time = float(self.initial_time.text())
-        
+
         iv.final_time = float(self.final_time.text())
         iv.time_step = float(self.time_step.text())
         iv.max_iterations = int(self.max_iterations.text())
         iv.tolerance = float(self.tolerance.text())
-#        if self.checkBox_2.checkState():
-#            iv.derivatives_tolerance = float(self.derivatives_tolerance.text())
+        if self.checkBox_2.checkState():
+            iv.derivatives_tolerance = float(self.derivatives_tolerance.text())
 #        App.Console.PrintMessage("testi")
         App.Console.PrintMessage(iv.Proxy.writeInitialValue())
         if self.checkBox_2.checkState():
             o = MBDynModel.MBDynOutputData(self.output.text())
- 
-        
- 
+
+
+
 
 #        iv = App.ActiveDocument.addObject("App::FeaturePython","MBDynInitialValue")
 #        model_so.MBDynInitialValue(iv)
 #        iv.ViewObject.Proxy = 0
-#        App.Console.PrintMessage( self.iv.initial_time)        
+#        App.Console.PrintMessage( self.iv.initial_time)
 
 #        self.setInitialValues.setEnabled(False)
 #        App.Console.PrintMessage( Gui.activeWorkbench().iv.initial_time)
 #       App.Console.PrintMessage( Gui.activeWorkbench().elements.gravity)
-        
-        
+
+
     def setupGravity(self):
         if len(App.ActiveDocument.getObjectsByLabel("gravity")) == 0 :
-            gravity = App.ActiveDocument.addObject("App::FeaturePython","gravity")
+            gravity = App.ActiveDocument.MBDyn.newObject("App::FeaturePython","gravity")
             MBDyn_objects.model_so.MBDynGravity(gravity)
             gravity.ViewObject.Proxy = 0
 
@@ -539,11 +542,11 @@ class Ui_mbdyngui(object):
                 g_vect.y = float(self.ug_y.text())
                 g_vect.z = float(self.ug_z.text())
                 App.Console.PrintMessage("testg4" + self.ug_x.text())
-                
+
                 gravity.gravity_vector = g_vect
                 gravity.gravity_value = float(self.gravity_acceleration.text())
 #                g = MBDynModel.MBDynGravity("uniform", MBDynModel.vec(x, y, z), ga)
-                        
+
             else:
                 App.Console.PrintMessage("testg4")
                 gravity.field_type = "central"
@@ -555,7 +558,7 @@ class Ui_mbdyngui(object):
                 gravity.cg_field_mass = float(self.cg_field_mass.text())
                 gravity.gravity_constant = float(self.grav_constant.text())
 #                g = MBDynModel.MBDynGravity("central", MBDynModel.vec(x, y, z), m, gc)
-                        
+
 #            Gui.activeWorkbench().elements.addGravity(g)
 #            self.setGravity.setEnabled(False)
         App.Console.PrintMessage( Gui.activeWorkbench().elements.gravity)
@@ -566,14 +569,14 @@ class mbdyn_configure(QtWidgets.QDialog, Ui_mbdyngui):
     def __init__(self):
         super(mbdyn_configure,self).__init__()
         self.setupUi(self)
-#        self.show()        
+#        self.show()
         import sys
 #        app = QtWidgets.QApplication(sys.argv)
 #        mbdyngui = QtWidgets.QWidget()
 #        ui = Ui_mbdyngui()
 #        ui.setupUi(mbdyngui)
 #        mbdyngui.show()
-       
+
 #        sys.exit(mbdyngui.exec_())
     def GetResources(self):
         return {'Pixmap': os.path.join(MBDwb_icons_path, 'IVP_icon.svg'),
@@ -621,4 +624,3 @@ class mbdyn_configure(QtWidgets.QDialog, Ui_mbdyngui):
 
 
 Gui.addCommand('mbdyn_configure', mbdyn_configure())
-

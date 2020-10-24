@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>dia_body_sel</class>
- <widget class="QDialog" name="dia_body_sel">
+ <class>dia_postporc</class>
+ <widget class="QDialog" name="dia_postporc">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>377</width>
-    <height>238</height>
+    <width>400</width>
+    <height>200</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Body Dialog</string>
+   <string>Dialog</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>170</y>
-     <width>221</width>
+     <x>100</x>
+     <y>100</y>
+     <width>211</width>
      <height>32</height>
     </rect>
    </property>
@@ -29,12 +29,12 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QComboBox" name="body_list">
+  <widget class="QPushButton" name="sel_out_path">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>60</y>
-     <width>181</width>
+     <x>310</x>
+     <y>50</y>
+     <width>80</width>
      <height>21</height>
     </rect>
    </property>
@@ -43,14 +43,30 @@
      <pointsize>10</pointsize>
     </font>
    </property>
+   <property name="text">
+    <string>select output...</string>
+   </property>
   </widget>
-  <widget class="QLabel" name="body_list_label">
+  <widget class="QLineEdit" name="output_path">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>40</y>
-     <width>161</width>
+     <x>10</x>
+     <y>50</y>
+     <width>301</width>
      <height>20</height>
+    </rect>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="sel_output_path">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>30</y>
+     <width>171</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="font">
@@ -59,40 +75,7 @@
     </font>
    </property>
    <property name="text">
-    <string>choose a body from list</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="density">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>120</y>
-     <width>113</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-  </widget>
-  <widget class="QLabel" name="density_label">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>100</y>
-     <width>101</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>density (g/mm^3)</string>
+    <string>select an output file</string>
    </property>
   </widget>
  </widget>
@@ -101,7 +84,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>dia_body_sel</receiver>
+   <receiver>dia_postporc</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -117,7 +100,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>dia_body_sel</receiver>
+   <receiver>dia_postporc</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

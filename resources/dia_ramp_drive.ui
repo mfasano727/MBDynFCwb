@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>dia_body_sel</class>
- <widget class="QDialog" name="dia_body_sel">
+ <class>dia_ramp_drive</class>
+ <widget class="QDialog" name="dia_ramp_drive">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>377</width>
-    <height>238</height>
+    <width>400</width>
+    <height>300</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Body Dialog</string>
+   <string>Dialog</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>170</y>
+     <x>90</x>
+     <y>260</y>
      <width>221</width>
      <height>32</height>
     </rect>
@@ -29,60 +29,12 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QComboBox" name="body_list">
+  <widget class="QLabel" name="slope_lab">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>60</y>
-     <width>181</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-  </widget>
-  <widget class="QLabel" name="body_list_label">
-   <property name="geometry">
-    <rect>
-     <x>100</x>
-     <y>40</y>
-     <width>161</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>choose a body from list</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="density">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>120</y>
-     <width>113</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-  </widget>
-  <widget class="QLabel" name="density_label">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>100</y>
-     <width>101</width>
+     <x>200</x>
+     <y>30</y>
+     <width>35</width>
      <height>16</height>
     </rect>
    </property>
@@ -92,7 +44,101 @@
     </font>
    </property>
    <property name="text">
-    <string>density (g/mm^3)</string>
+    <string>slope</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="slope">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>50</y>
+     <width>113</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="initial_time">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>100</y>
+     <width>113</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="initial_time_lab">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>80</y>
+     <width>71</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>initial time</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="final_time_lab">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>130</y>
+     <width>71</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>final time</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="final_time">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>150</y>
+     <width>113</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="initial_value_lab">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>180</y>
+     <width>71</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>initial value</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="initial_value">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>200</y>
+     <width>113</width>
+     <height>20</height>
+    </rect>
    </property>
   </widget>
  </widget>
@@ -101,7 +147,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>dia_body_sel</receiver>
+   <receiver>dia_ramp_drive</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -117,7 +163,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>dia_body_sel</receiver>
+   <receiver>dia_ramp_drive</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

@@ -6,152 +6,195 @@ from PySide2 import QtCore, QtGui, QtWidgets
 import FreeCADGui as Gui
 import FreeCAD as App
 import MBDyn_locator
+import platform
 MBDwbPath = os.path.dirname(MBDyn_locator.__file__)
 MBDwb_icons_path = os.path.join(MBDwbPath, 'icons')
-from  MBDyn_utilities.MBDyn_funcs import *
-class Ui_Form(object):
-    def setupUi(self, Form):
-        Form.setObjectName("Form")
-        Form.resize(400, 300)
-        self.label = QtWidgets.QLabel(Form)
-        self.label.setGeometry(QtCore.QRect(30, 20, 91, 17))
-        self.label.setObjectName("label")
-        self.label_2 = QtWidgets.QLabel(Form)
-        self.label_2.setGeometry(QtCore.QRect(30, 50, 41, 17))
-        self.label_2.setObjectName("label_2")
-        self.install_path = QtWidgets.QLineEdit(Form)
-        self.install_path.setGeometry(QtCore.QRect(80, 50, 191, 25))
-        self.install_path.setObjectName("install_path")
-        self.fpInstallpath = QtWidgets.QPushButton(Form)
-        self.fpInstallpath.setGeometry(QtCore.QRect(270, 50, 89, 25))
-        self.fpInstallpath.setObjectName("fpInstallpath")
-        self.label_3 = QtWidgets.QLabel(Form)
-        self.label_3.setGeometry(QtCore.QRect(30, 100, 91, 17))
-        self.label_3.setObjectName("label_3")
-        self.label_4 = QtWidgets.QLabel(Form)
-        self.label_4.setGeometry(QtCore.QRect(30, 130, 51, 17))
-        self.label_4.setObjectName("label_4")
-        self.out_filename = QtWidgets.QLineEdit(Form)
-        self.out_filename.setGeometry(QtCore.QRect(80, 130, 191, 25))
-        self.out_filename.setObjectName("out_filename")
-        self.fp_outfile = QtWidgets.QPushButton(Form)
-        self.fp_outfile.setGeometry(QtCore.QRect(270, 160, 89, 25))
-        self.fp_outfile.setObjectName("fp_outfile")
-        self.out_location = QtWidgets.QLineEdit(Form)
-        self.out_location.setGeometry(QtCore.QRect(80, 160, 191, 25))
-        self.out_location.setObjectName("out_location")
-        self.label_5 = QtWidgets.QLabel(Form)
-        self.label_5.setGeometry(QtCore.QRect(30, 160, 41, 17))
-        self.label_5.setObjectName("label_5")
-        self.runSim = QtWidgets.QPushButton(Form)
-        self.runSim.setGeometry(QtCore.QRect(40, 200, 291, 25))
-        self.runSim.setObjectName("write input")
-        self.stopSim = QtWidgets.QPushButton(Form)
-        self.stopSim.setGeometry(QtCore.QRect(40, 230, 291, 25))
-        self.stopSim.setObjectName("stopSim")
-        self.pushButton = QtWidgets.QPushButton(Form)
-        self.pushButton.setGeometry(QtCore.QRect(140, 260, 101, 25))
-        self.pushButton.setObjectName("pushButton")
+from MBDyn_utilities.MBDyn_funcs import *
+from MBDyn_utilities.constants import *
+from MBDyn_utilities.Settings_funcs import string_to_list, list_to_string
 
-        self.retranslateUi(Form)
-        QtCore.QMetaObject.connectSlotsByName(Form)
+from MBDyn_guitools.dia_launcher import Ui_dia_launcher
 
 
-        self.fpInstallpath.clicked.connect(self.setinstallpath)
+class mbdyn_launchGui(QtWidgets.QDialog,  Ui_dia_launcher):
+    def __init__(self):
+        super(mbdyn_launchGui, self).__init__()
+        self.setupUi()
+        self.default_solver = ""
+        self.binaries_list = []
+        self.use_WSL = False
+        self.is_edited = False
+        self.editor_binary = ""
+        self.is_editor_defined = False  # indicatse if the file existe
+        self.is_edited = False  # Tell the run button to use existing file or write a new one
+
+    def setupUi(self):
+        super(mbdyn_launchGui, self).setupUi(self)
+
+        # define connections for dialog widgets
         self.fp_outfile.clicked.connect(self.setoutputpath)
         self.runSim.clicked.connect(self.runSimulation)
         self.stopSim.clicked.connect(self.stopSimulation)
-        self.pushButton.clicked.connect(self.outputMessage)
+        self.viewStatus.clicked.connect(self.outputMessage)
+        self.writeIF.clicked.connect(self.writeInputFile) # function from MBDyn_utilities.MBDyn_funcs
+        self.writeIF.clicked.connect(lambda x=True: self.editIF.setEnabled(x))
+        self.editIF.clicked.connect(self.editInputFile)
         
 
-    def retranslateUi(self, Form):
-        _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Run Simulation"))
-        self.label.setText(_translate("Form", "MBDyn Path:"))
-        self.label_2.setText(_translate("Form", "Path:"))
-        self.fpInstallpath.setText(_translate("Form", "Browse..."))
-        self.label_3.setText(_translate("Form", "Output file:"))
-        self.label_4.setText(_translate("Form", "Name:"))
-        self.fp_outfile.setText(_translate("Form", "Browse..."))
-        self.label_5.setText(_translate("Form", "Path:"))
-        self.runSim.setText(_translate("Form", "Run Simulation"))
-        self.stopSim.setText(_translate("Form", "Stop Simulation"))
-        self.pushButton.setText(_translate("Form", "View status"))
         self.stopSim.setEnabled(False)
-        self.pushButton.setEnabled(False)
-	
-	
+        self.viewStatus.setEnabled(False)
 
-    def setinstallpath(self):
-        mbdyninstallpath = QtWidgets.QFileDialog.getOpenFileName()[0]
-        self.install_path.setText(mbdyninstallpath)
+    def getWorkbenchSettings(self):
+        self.getSolverSettings()
+        self.getGeneralSettings()
 
+    def getSolverSettings(self):
+        self.default_solver = App.ParamGet(SOLVERS_USER_SETTINGS).GetString("DEFAULT_SOLVER", "")
+        self.binaries_list = string_to_list(App.ParamGet(SOLVERS_USER_SETTINGS).GetString("BINARIES_LIST", ""), SEP)
+        self.use_WSL = App.ParamGet(SOLVERS_USER_SETTINGS).GetBool("USE_WSL", False)
+
+    def updateView(self):
+        if self.editor_binary:
+            self.is_editor_defined = True
+        self.editIF.setEnabled(False)
+
+        # Fill combobox Data
+        self.active_solver.clear()
+        self.active_solver.addItems(self.binaries_list)
+        #set default item
+        self.active_solver.setCurrentIndex(self.binaries_list.index(self.default_solver))
+
+        if platform.system() == "Windows":
+            self.useWSL.setChecked(self.use_WSL)
+        else:
+            self.useWSL.setEnabled(False)
+
+    def getGeneralSettings(self):
+        self.editor_binary = App.ParamGet(GENERAL_USER_SETTINGS).GetString("EditorBinaryPath", "")
+
+    # Dialog Slots---------------------------------------
     def setoutputpath(self):
         outlocation = QtWidgets.QFileDialog.getExistingDirectory()
-#        outlocation = QDir.toNativeSeparators(outlocation)
-        if os.sep=='\\':
-            outlocation=outlocation.replace('/', '\\')
+        #        outlocation = QDir.toNativeSeparators(outlocation)
+        if os.sep == '\\':
+            outlocation = outlocation.replace('/', '\\')
         self.out_location.setText(outlocation)
-        self.out_filename.setText("input.txt")
-        App.Console.PrintMessage("filename\n")
+ 
+    def writeInputFile(self):
+        full_file_name = self.fullFileName()
+        if full_file_name:
+            writeInputFile(full_file_name)
+            
+    def editInputFile(self):
+        import subprocess
+        full_file_name = self.fullFileName()
+        if full_file_name:
+            args = [self.editor_binary, full_file_name]
+            proc = subprocess.Popen(args)
+            outs, errs = proc.communicate()
+            self.is_edited = True
+
+    def fullFileName(self):
+        import os
+        working_directory = self.out_location.text()
+        file_name = self.out_filename.text()
+        #  Check the file extension, mandatory but allow to use highlitght syntax in atom
+        if not file_name.endswith(tuple(MBDYN_EXTENSIONS)):
+            file_name += MBDYN_EXTENSIONS[0]
+        if os.path.isdir(working_directory):
+            full_file_name = os.path.join(working_directory, file_name)
+            App.Console.PrintMessage("Filename: " + full_file_name + "\n")
+            return full_file_name
+        else:
+            App.Console.PrintMessage("Filename" + working_directory + " not a dir\n")  
+            return ""
+
     def runSimulation(self):
-        App.Console.PrintMessage("filename2 \n")
+        App.Console.PrintMessage("Simulation Started..... \n")
         import os
         import subprocess
-        
-#        mbdyn = os.path.realpath(self.install_path.text())
-#        outfile = os.path.realpath(self.out_location.text() + "/" + self.out_filename.text())
-        outfile = self.out_location.text()
-#        App.Console.PrintMessage("filename" + outfile + "\n")
-        if os.path.isdir(outfile):
-#            App.Console.PrintMessage("filename" + outfile + "\n")
-            outfile = os.path.join(outfile , self.out_filename.text())
-        
-            App.Console.PrintMessage("filename" + outfile + "\n")
-            writeInputFile(outfile)
-        else: 
-            App.Console.PrintMessage("filename" + outfile + " not a dir\n")
-        '''
-#        Change the file path here
-        infile = os.path.realpath('/home/adityabhagat/Documents/projects/long')
-        self.outlogfile = self.out_location.text() + "/" + "out_msg.log"
-        self.ol = open(self.outlogfile, 'w')
-        args = [mbdyn, '-f', infile, '-o', outfile]
-        self.p = subprocess.Popen(args, \
-                  #env=env_vars, \
-                  stdout = self.ol, \
-                  stderr = subprocess.STDOUT,
-                  universal_newlines=True)
+
+        active_solver = self.active_solver.currentText()
+        solver_path = App.ParamGet(SOLVERS_USER_SETTINGS).GetString(active_solver, "")
+
+        working_directory = self.out_location.text()
+
+        full_file_name = self.fullFileName()
+        if not self.is_edited:
+            if full_file_name:
+                writeInputFile(full_file_name)
+
+        args= [solver_path, full_file_name]
+        m_log_file = os.path.join(working_directory, "_console.log")
+        self.log_file = open(m_log_file, 'w')
+
+        #subprocess.PIPE
+        self.p = subprocess.Popen(args, shell=True, cwd=working_directory, stdout=self.log_file, stderr=subprocess.STDOUT) #
+        App.Console.PrintMessage("Start Now")
+
         self.runSim.setEnabled(False)
         self.stopSim.setEnabled(True)
-        self.pushButton.setEnabled(True)
-        '''
+        self.viewStatus.setEnabled(True)
+
     def stopSimulation(self):
-        self.p.terminate()
+        #self.p.terminate()
+        self.p.kill()
+        print(self.p)
         self.stopSim.setEnabled(False)
-        self.pushButton.setEnabled(True)
-	
+        self.viewStatus.setEnabled(True)
+
     def outputMessage(self):
-        self.ol.close()
-        self.olr = open(self.outlogfile, 'r')
-        outmessage = self.olr.read()
-        popupdlg = QtWidgets.QMessageBox.information(Form, 'output message', outmessage)
-	
-	
-	
-class mbdyn_launchGui(QtWidgets.QDialog,  Ui_Form):	
-    def __init__(self):
-        super(mbdyn_launchGui, self).__init__()
-        self.setupUi(self)
+        import subprocess
+        log_file_name = self.log_file.name
+        self.log_file.close()
+        args = [self.editor_binary, log_file_name]
+        proc = subprocess.Popen(args)
+        outs, errs = proc.communicate()
+
+    # End of Dialog Slots---------------------------------------
+
     def GetResources(self):
         return {'Pixmap': os.path.join(MBDwb_icons_path, 'WrtMBDynIcon.svg'),
                 'MenuText': "MBD write input",
                 'ToolTip': "write MBDyn input dialog"}
+
     def Activated(self):
         """Do something here"""
 #        App.Console.PrintMessage( Gui.activeWorkbench().iv.initial_time)
-        self.show()
+        active_document = App.activeDocument()
+        if active_document is None:
+            mb = QtWidgets.QMessageBox()
+            mb.setIcon(mb.Icon.Warning)
+            mb.setText("No document open")
+            mb.setWindowTitle("Warning")
+            mb.exec_()
+            return
+        # Check if the document is saved
+        if not active_document.FileName:
+            mb = QtWidgets.QMessageBox()
+            mb.setIcon(mb.Icon.Warning)
+            mb.setText("Please save the model before continue")
+            mb.setWindowTitle("Warning")
+            mb.exec_()
+            return
         
+
+        self.getWorkbenchSettings()
+        if not self.default_solver:
+            mb = QtWidgets.QMessageBox()
+            mb.setIcon(mb.Icon.Warning)
+            mb.setText("""
+No default solver selected!
+Please update preferences:
+    Edit
+        - Preferences...
+            - MBDyn""")
+            mb.setWindowTitle("Warning")
+            mb.exec_()
+        else:
+            self.updateView()
+            self.show()
+
 Gui.addCommand('mbdyn_launchGui', mbdyn_launchGui())	
 '''
 
