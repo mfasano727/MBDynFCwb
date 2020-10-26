@@ -1,7 +1,6 @@
 from MBDyn_objects.ObjectProxy.MBDynBaseContainer import BaseContainer
-from MBDyn_objects.FindABetterName.MBDyn_problems.initial_value import MBDynInitialValue
-from MBDyn_objects.FindABetterName.control_data_params import MBDynControlDataParams
-
+from MBDyn_utilities.setup_data.MBDyn_problems.initial_value import MBDynInitialValue
+from MBDyn_utilities.setup_data.control_data_params import MBDynControlDataParams
 
 
 class Simulation(BaseContainer):
