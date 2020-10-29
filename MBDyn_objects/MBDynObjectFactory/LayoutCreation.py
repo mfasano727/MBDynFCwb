@@ -49,7 +49,7 @@ def createTree():
     elements.addObject(loads)
 
     #Drive Caller Container
-    driveCaller = doc.addObject('App::DocumentObjectGroupPython', "Drive Caller")
+    driveCaller = doc.addObject('App::DocumentObjectGroupPython', "Drive_callers")
     BaseContainer(driveCaller, "MBDyn::DriveCallerContainer")
     elements.addObject(driveCaller)
 
