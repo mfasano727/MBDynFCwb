@@ -81,7 +81,7 @@ class MbdynGui(Workbench):
                     "axial_rot_joint_cmd", "inline_joint_cmd","clamp_joint_cmd",
                     "prismatic_joint_cmd",  "ramp_drive_cmd", "postproc_cmd"]
         self.appendToolbar("Mbdyn_comands", self.list)
-        self.appendMenu("Mbdyn_menu", self.list)
+        self.appendMenu("&MBDyn", self.list)
         
         import MBDyn_guitools.Commands.postprocessing_cmd  # Call in last to have the post processing tool bar after the others
         Log("Loading MyModule... done\n")
