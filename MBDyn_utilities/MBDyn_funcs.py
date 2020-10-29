@@ -1,6 +1,4 @@
 import FreeCAD as App
-import MBDyn_objects.MBDynJoints
-import MBDyn_objects.model_so
 
 def writeVect(vector):
    if vector.x == 0 and vector.y == 0 and vector.z == 0:
