@@ -136,7 +136,7 @@ class mbdyn_launchGui(QtWidgets.QDialog,  Ui_dia_launcher):
                 writeInputFile(active_sim, full_file_name)
 
         args= [solver_path, full_file_name]
-        cwd = "D:\\Garnier\\Documents\\01_programmation\\01_Python\\mbdyn_FreeCAD\\_SOLVERS_\\mbdyn-1.7.2-win32\\"
+        cwd = working_directory
         m_log_file = os.path.join(working_directory, "_console.log")
         self.log_file = open(m_log_file, 'w')
 
