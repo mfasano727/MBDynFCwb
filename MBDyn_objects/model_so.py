@@ -238,18 +238,33 @@ class MBDynRigidBody:
 
 class MBDynGravity:
 
-    def __init__(self, obj):
-
-        obj.addProperty("App::PropertyString","field_type","Base","grvity field type").field_type
-        obj.addProperty("App::PropertyVector","gravity_vector","Unifom gravity","grvity vector").gravity_vector                                          #object of class vec
-        obj.addProperty("App::PropertyFloat","gravity_value","Unifom gravity","grvity acc.").gravity_value
-
-        obj.addProperty("App::PropertyVector","gravity_origin","Central gravity","central grvity origin").gravity_origin
-        obj.addProperty("App::PropertyFloat","cg_field_mass","Central gravity","central grvity mass").cg_field_mass
-        obj.addProperty("App::PropertyFloat","gravity_constant","Central gravity","central grvity const.").gravity_constant
+    def __init__(self, obj, grav_parameters):
 
         obj.Proxy = self
         self.Object = obj
+
+        obj.addProperty("App::PropertyString", "FieldType", "Base", "gravity field type")
+        obj.addProperty("App::PropertyVector", "GravityVector", "Uniform gravity", "gravity vector")  # object of class vec
+        obj.addProperty("App::PropertyFloat", "GravityAcceleration", "Uniform gravity", "gravity acc.")
+
+        obj.addProperty("App::PropertyVector", "GravityOrigin", "Central gravity", "central gravity origin")  # object of class vec
+        obj.addProperty("App::PropertyFloat", "CgFieldMass", "Central gravity", "central gravity mass")
+        obj.addProperty("App::PropertyFloat", "GravityConstant", "Central gravity", "central gravity const.")
+
+        self.setParameters(grav_parameters)
+
+    def setParameters(self, grav_parameters):
+        """
+        Modify the gravity parameters
+        :param grav_parameters: dic of parameters
+        :return:
+        """
+        self.Object.FieldType = grav_parameters["FieldType"]
+        self.Object.GravityAcceleration = grav_parameters["GravityAcceleration"]
+        self.Object.GravityVector = grav_parameters["GravityVector"]
+        self.Object.CgFieldMass = grav_parameters["CgFieldMass"]
+        self.Object.GravityConstant = grav_parameters["GravityConstant"]
+        self.Object.GravityOrigin = grav_parameters["GravityOrigin"]
 
     def __getstate__(self):
         '''When saving the document this object gets stored using Python's json module.\
@@ -274,13 +289,16 @@ class MBDynGravity:
         '''restores feature python object when document is read'''
         self.Object = fp
 
-    def writeGravity(self):
-        if self.Object.field_type == "uniform":
+    def write(self):
+        if self.Object.FieldType.lower() == "uniform":
 
-            gravity_line = "        gravity: uniform, {}, const, {};\n".format(writeVect(self.Object.gravity_vector), self.Object.gravity_value )
+            gravity_line = "        gravity: uniform, {}, const, {};\n".format(writeVect(self.Object.GravityVector),
+                                                                               self.Object.GravityAcceleration )
 
-        elif self.Object.field_type == "central":
-            gravity_line = "        gravity: central, origin, {}, mass, {}, G, {};\n".format(writeVect(self.Object.gravity_origin), self.Object.cg_field_mass, self.Object.gravity_constant)
+        elif self.Object.FieldType.lower() == "central":
+            gravity_line = "        gravity: central, origin, {}, mass, {}, G, {};\n".format(writeVect(self.Object.GravityOrigin),
+                                                                                             self.Object.CgFieldMass,
+                                                                                             self.Object.GravityConstant)
 
         return gravity_line
 
