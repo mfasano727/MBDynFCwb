@@ -51,7 +51,7 @@ class GravityField(QtWidgets.QDialog,  Ui_dia_gravity_field):
 
         res["GravityAcceleration"] = 0
         if not "" == self.leGravAcceleration.text():
-            res["GravityAcceleration"] = float(self.leGravAcceleration.text()* 1000.0) # * 1000 to convert from m to mm
+            res["GravityAcceleration"] = float(self.leGravAcceleration.text())* 1000.0 # * 1000 to convert from m to mm
 
         g_vect = App.Vector()
         if not "" == self.leUniformVx.text():
