@@ -12,7 +12,7 @@ MBDwb_icons_path = os.path.join(MBDwbPath, 'icons')
 import MBDyn_objects.model_so
 import MBDyn_objects.MBDynJoints
 from  MBDyn_utilities.MBDyn_funcs import find_joint_label
-from  MBDyn_utilities.place_funcs import calc_placement
+from  MBDyn_utilities.place_funcs import calc_placement, near_point_on_line
 from PySide2 import QtCore, QtGui, QtWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
@@ -73,7 +73,6 @@ class inline_joint_cmd(QtWidgets.QDialog, Ui_dia_inline_joint):
                 nodeobj1 = nodeobjs
             if nodeobjs.node_name  == self.node_2_Box.currentText():
                 nodeobj2 = nodeobjs
-        App.Console.PrintMessage(" node1: "+ nodeobj1.node_name +" node2pos: "+nodeobj2.node_name)
         # check if both nodes are the same
         if nodeobj1.node_label == nodeobj2.node_label:
             mb = QtGui.QMessageBox()
@@ -106,7 +105,6 @@ class inline_joint_cmd(QtWidgets.QDialog, Ui_dia_inline_joint):
 
         # if objects are App::Link use linkednoject otherwise use object itself
         linkobj1 = App.ActiveDocument.getObjectsByLabel(linkobj1_str)[0]
-        App.Console.PrintMessage(" node1: ")
         if hasattr(linkobj1, "LinkedObject" ):
             linkedobj1 = linkobj1.LinkedObject
         else:
@@ -116,30 +114,23 @@ class inline_joint_cmd(QtWidgets.QDialog, Ui_dia_inline_joint):
             linkedobj2 = linkobj2.LinkedObject
         else:
             linkedobj2 = linkobj2
-        App.Console.PrintMessage(" node2: "+ linkedobj1.Label +" node2: "+linkedobj2.Label)
 
         # get the LCS objects of the linked object
         for subLCSs in linkedobj1.getSubObjects():
             if linkedobj1.getObject(subLCSs[0:-1]).Label == nodeLCS1_str:
                 linkedLCS1 = linkedobj1.getObject(subLCSs[0:-1])
         for subLCSs in linkedobj2.getSubObjects():
-            App.Console.PrintMessage(" linkobj: " + linkedobj2.getObject(subLCSs[0:-1]).Label)
             if linkedobj2.getObject(subLCSs[0:-1]).Label == nodeLCS2_str:
                 linkedLCS2 = linkedobj2.getObject(subLCSs[0:-1])
-        App.Console.PrintMessage(" linkobj2: " + linkedLCS2.Label)
-        # set position and offset of inline joint
+
+        # set position 1 of inline joint reative to node 1
         linkedLCS1_pos = linkedLCS1.Placement.Base
-        App.Console.PrintMessage(" linkobj: "+str(linkedLCS1_pos))
         inv_linkobj1_pl = linkobj1.Placement.inverse()
         new_joint.position1 = linkedLCS1_pos - inv_linkobj1_pl.multVec(nodeobj1.position)
-        App.Console.PrintMessage(" lcs1pos: "+str(linkedLCS1_pos)+" node1pos: "+str(inv_linkobj1_pl))
-        linkedLCS2_pos = linkedLCS2.Placement.Base
-        App.Console.PrintMessage(" test")
 
+        # get positions for node 2 LCS
+        linkedLCS2_pos = linkedLCS2.Placement.Base
         inv_linkobj2_pl = linkobj2.Placement.inverse()
-        App.Console.PrintMessage(" test")
-        new_joint.offset2 = linkedLCS2_pos - inv_linkobj2_pl.multVec(nodeobj2.position)
-        App.Console.PrintMessage(" lcs2pos: "+str(linkedLCS2_pos)+" node2pos: "+str(inv_linkobj2_pl))
 
         # get plasements of LCSs needed to calculate  orientation matrix of inline joint
 #        linkedLCS1_pl = linkedLCS1.Placement
@@ -148,12 +139,13 @@ class inline_joint_cmd(QtWidgets.QDialog, Ui_dia_inline_joint):
         linkLCS1_pl = linkobj1_pl.multiply(linkedLCS1.Placement)
         linkobj2_pl = linkobj2.Placement
         linkLCS2_pl = linkobj2_pl.multiply(linkedLCS2.Placement)
-        linkLCS1_mat = linkLCS1_pl.Matrix
-        App.Console.PrintMessage(" linkLCS1_mat: "+str(linkLCS1_mat))
+        linkLCS1_mat = linkLCS1_pl.toMatrix()
+        App.Console.PrintMessage(" linkLCS1 "+str(linkLCS1_pl.Base))
 
         # make FreeCAD placement matrix from node1 position and orientation matrix
         node1_pl = calc_placement(nodeobj1.position, nodeobj1.orientation, nodeobj1.orientation_des)
         App.Console.PrintMessage(" linkLCS: "+str(linkLCS2_pl)+" node1_pl "+str(node1_pl.Matrix))
+        App.Console.PrintMessage(" linklcs1_1 "+str(linkLCS1_pl.Base))
 
         if self.line_def_Box.currentIndex() == 0:   # z-axis is line from node1 LCS to node2 LCS
             #  find the orientation matrix for node 1.  Z axis is in direction from position 1( LCS1) to offset(lCS2)
@@ -165,14 +157,13 @@ class inline_joint_cmd(QtWidgets.QDialog, Ui_dia_inline_joint):
                 x_vec = line_vec.cross(App.Vector(linkLCS1_mat.A11,linkLCS1_mat.A21,linkLCS1_mat.A31))
             elif line_vec.getAngle(App.Vector(linkLCS1_mat.A12,linkLCS1_mat.A22,linkLCS1_mat.A32)) > pi/6 and line_vec.getAngle(App.Vector(linkLCS1_mat.A12,linkLCS1_mat.A22,linkLCS1_mat.A32)) < pi*.7:
                 x_vec = line_vec.cross(App.Vector(linkLCS1_mat.A12,linkLCS1_mat.A22,linkLCS1_mat.A32))
-            App.Console.PrintMessage(" line: x"+str(x_vec))
             x_vec_rel_node1 = node1_pl.inverse().Rotation.multVec(x_vec) # x vector relative node 1
-            App.Console.PrintMessage(" node_inv:"+str( node1_pl.inverse().Matrix))
             line_vec_rel_node1 = node1_pl.inverse().Rotation.multVec(line_vec) # line vector relative node 1
             new_joint.orientation_des1 = "xz"
             new_joint.orientation1 = [x_vec_rel_node1.normalize(), App.Vector(0,0,0), line_vec_rel_node1.normalize()]
-            App.Console.PrintMessage(" line2: x "+str(x_vec)+"  z "+str(line_vec))
-            App.Console.PrintMessage(" line2_rel: x "+str(x_vec_rel_node1)+"  z "+str(line_vec_rel_node1))
+            new_joint.offset2 = linkedLCS2_pos - inv_linkobj2_pl.multVec(nodeobj2.position)
+
+
         else: # z-axis will be chosen axis of node 1 LCS
             new_joint.orientation_des1 = "xz"
             if self.node1_axis_Box.currentText() == "X":
@@ -183,6 +174,7 @@ class inline_joint_cmd(QtWidgets.QDialog, Ui_dia_inline_joint):
                 x_vec = App.Vector(linkLCS1_mat.A11,linkLCS1_mat.A21,linkLCS1_mat.A31).normalize()
                 App.Console.PrintMessage(" line4: x "+str(x_vec)+" line4 z "+str(line_vec))
             if self.node1_axis_Box.currentText() == "Y":
+                App.Console.PrintMessage(" linklcs1 "+str(linkLCS1_pl.Base))
                 linkLCS1_mat_roty = linkLCS1_mat.rotateX(pi/2.0)
                 line_vec = App.Vector(linkLCS1_mat.A13,linkLCS1_mat.A23,linkLCS1_mat.A33).normalize()
                 x_vec = App.Vector(linkLCS1_mat.A11,linkLCS1_mat.A21,linkLCS1_mat.A31).normalize()
@@ -192,7 +184,10 @@ class inline_joint_cmd(QtWidgets.QDialog, Ui_dia_inline_joint):
             x_vec_rel_node1 = node1_pl.inverse().Rotation.multVec(x_vec) # x vector relative node 1
             line_vec_rel_node1 = node1_pl.inverse().Rotation.multVec(line_vec) # line vector relative node 1
             new_joint.orientation1 = [x_vec_rel_node1.normalize(), App.Vector(0,0,0), line_vec_rel_node1.normalize()]
-
+            # use point along the chosen axis for offset2 position
+            point2_on_line = linkLCS1_pl.Base.add(line_vec) # one of 2 points for near_point_on_line() function
+            offset_point = near_point_on_line(linkLCS1_pl.Base, point2_on_line, linkLCS2_pl.Base)
+            new_joint.offset2 = inv_linkobj2_pl.multVec(offset_point) - inv_linkobj2_pl.multVec(nodeobj2.position)
         self.done(1)
 
     def reject(self):
