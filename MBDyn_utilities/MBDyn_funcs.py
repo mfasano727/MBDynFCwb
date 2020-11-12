@@ -1,10 +1,37 @@
 import FreeCAD as App
 
+class Writer():
+    _format_spec = "1.3e"
+    _zero_threshold = 1e-100
+
+    @classmethod
+    def float_to_string(self,value):  #, format_spec='', zero_threshold=1e-15):
+        """
+        function formating the float value according to a specific format.
+        """
+        if abs(value) < self._zero_threshold:
+            return '{:{format_spec}}'.format(0, format_spec=self._format_spec)
+        else:
+            return '{:{format_spec}}'.format(value, format_spec=self._format_spec)
+
+    @classmethod
+    def set_format(cls, format_spec):
+        if format_spec == "":
+            format_spec = "1.3e"
+        cls._format_spec = format_spec
+    
+    @classmethod
+    def set_zero_threshold(cls, zero_threshold):
+        cls._zero_threshold = zero_threshold
+
+
 def writeVect(vector):
    if vector.x == 0 and vector.y == 0 and vector.z == 0:
       return "null"
    else:
-      return "{}, {}, {}".format(vector.x, vector.y, vector.z)
+      return "{}, {}, {}".format(Writer().float_to_string(vector.x),
+                                 Writer().float_to_string(vector.y),
+                                 Writer().float_to_string(vector.z))
 
 # matrix is a list of 3 FreeCAD vectors
 def writeMatrix(matrix_type, matrix):
@@ -20,7 +47,7 @@ def writeMatrix(matrix_type, matrix):
         matrix_line = "{}".format(matrix_type)
         for j in matrix:
             for i in [j.x, j.y, j.z]:
-                line_end = line_end + ", " + "{}".format(i)
+                line_end = line_end + ", " + "{}".format(Writer().float_to_string(i))
         matrix_line = matrix_line + line_end
     elif matrix_type == "sym":
         matrix_line = "{}".format(matrix_type)
@@ -31,7 +58,7 @@ def writeMatrix(matrix_type, matrix):
                 colcount = colcount + 1
                 if colcount >= rowcount:
 
-                    line_end = line_end + ", " + "{}".format(i)
+                    line_end = line_end + ", " + "{}".format(Writer().float_to_string(i))
         matrix_line = matrix_line + line_end
     elif matrix_type == "skew":
         matrix_line = "{}".format(matrix_type)
@@ -41,7 +68,7 @@ def writeMatrix(matrix_type, matrix):
             for i in [j.x, j.y, j.z]:
                 colcount = colcount + 1
                 if colcount >= rowcount:
-                    line_end = line_end + ", " + "{}".format(i)
+                    line_end = line_end + ", " + "{}".format(Writer().float_to_string(i))
         matrix_line = matrix_line + line_end
     elif matrix_type == "diag":
         matrix_line = "{}".format(matrix_type)
@@ -53,7 +80,7 @@ def writeMatrix(matrix_type, matrix):
                 App.Console.PrintMessage("row= {}, col= {}".format(rowcount, colcount))
                 if colcount == rowcount:
                     App.Console.PrintMessage("row= {}, col= {}".format(rowcount, colcount))
-                    line_end = line_end + ", " + "{}".format(i)
+                    line_end = line_end + ", " + "{}".format(Writer().float_to_string(i))
         matrix_line = matrix_line + line_end
     return matrix_line
 
@@ -73,17 +100,35 @@ def writeOrientationMatrix(description, Orientationmatrix):
         matrix_line = "{}".format(description)
         for j in Orientationmatrix:
             for i in [j.x, j.y, j.z]:
-                line_end = line_end + ", " + "{}".format(i)
+                line_end = line_end + ", " + "{}".format(Writer().float_to_string(i))
         matrix_line = matrix_line + line_end
      # description xy, xz, yz are for OM with 2 vectors
     elif description == "xy":
-        matrix_line = "1, {}, {}, {},  2, {}, {}, {}".format(Orientationmatrix[0][0], Orientationmatrix[0][1], Orientationmatrix[0][2], Orientationmatrix[1][0], Orientationmatrix[1][1], Orientationmatrix[1][2])
+        matrix_line = "1, {}, {}, {},  2, {}, {}, {}".format(Writer().float_to_string(Orientationmatrix[0][0]),
+                                                             Writer().float_to_string(Orientationmatrix[0][1]),
+                                                             Writer().float_to_string(Orientationmatrix[0][2]),
+                                                             Writer().float_to_string(Orientationmatrix[1][0]),
+                                                             Writer().float_to_string(Orientationmatrix[1][1]),
+                                                             Writer().float_to_string(Orientationmatrix[1][2]))
     elif description == "xz":
-        matrix_line = "1, {}, {}, {},  3, {}, {}, {}".format(Orientationmatrix[0][0], Orientationmatrix[0][1], Orientationmatrix[0][2], Orientationmatrix[2][0], Orientationmatrix[2][1], Orientationmatrix[2][2])
+        matrix_line = "1, {}, {}, {},  3, {}, {}, {}".format(Writer().float_to_string(Orientationmatrix[0][0]), 
+                                                             Writer().float_to_string(Orientationmatrix[0][1]),
+                                                             Writer().float_to_string(Orientationmatrix[0][2]),
+                                                             Writer().float_to_string(Orientationmatrix[2][0]),
+                                                             Writer().float_to_string(Orientationmatrix[2][1]),
+                                                             Writer().float_to_string(Orientationmatrix[2][2]))
     elif description == "yz":
-        matrix_line = "2, {}, {}, {},  3, {}, {}, {}".format(Orientationmatrix[1][0], Orientationmatrix[1][1], Orientationmatrix[1][2], Orientationmatrix[2][0], Orientationmatrix[2][1], Orientationmatrix[2][2])
+        matrix_line = "2, {}, {}, {},  3, {}, {}, {}".format(Writer().float_to_string(Orientationmatrix[1][0]),
+                                                             Writer().float_to_string(Orientationmatrix[1][1]),
+                                                             Writer().float_to_string(Orientationmatrix[1][2]),
+                                                             Writer().float_to_string(Orientationmatrix[2][0]),
+                                                             Writer().float_to_string(Orientationmatrix[2][1]),
+                                                             Writer().float_to_string(Orientationmatrix[2][2]))
     else:
-        matrix_line = "{}, {}, {}, {}".format(description, Orientationmatrix[0][0], Orientationmatrix[0][1], Orientationmatrix[0][2] )
+        matrix_line = "{}, {}, {}, {}".format(description,
+                                              Writer().float_to_string(Orientationmatrix[0][0]),
+                                              Writer().float_to_string(Orientationmatrix[0][1]),
+                                              Writer().float_to_string(Orientationmatrix[0][2]))
     return matrix_line
 
 def write_drv(drv_lab):

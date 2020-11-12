@@ -75,6 +75,9 @@ class MbdynGui(Workbench):
         import MBDyn_guitools.Commands.gravity_cmd
 
         from MBDyn_settings.wdgt_solver_settings import wdgt_solver_settings
+        
+        from MBDyn_settings.wdgt_input_file_settings import wdgt_input_file_settings
+        
         self.list = ["CommandTreeLayout", "CommandAddSimulation", "mbdyn_launchGui", "CommandAddGravity",
                     "body_sel_cmd", "ref_cmd", "struct_node_cmd", "revpin_joint_cmd",
                     "hinge_joint_cmd", "total_joint_cmd", "total_pinjoint_cmd",
@@ -84,15 +87,17 @@ class MbdynGui(Workbench):
         self.appendMenu("&MBDyn", self.list)
         
         import MBDyn_guitools.Commands.postprocessing_cmd  # Call in last to have the post processing tool bar after the others
-        Log("Loading MyModule... done\n")
+        
         # Add preferences page on the main window toolbar: Edit/ preferences.../mbdyn
         general_setting_ui = os.path.join(MBDwb_setting_ui_path, 'ui_general_settings.ui')
         Gui.addPreferencePage(general_setting_ui, "MBDyn")
         Gui.addPreferencePage(wdgt_solver_settings, "MBDyn")
+        Gui.addPreferencePage(wdgt_input_file_settings, "MBDyn")
         img_path = os.path.join(MBDwb_icons_path, 'preferences-MBDyn.svg')
         # The commande Gui.addIcon gives me the following warning (on freecad 0.19):
         # <string>:86: DeprecationWarning: PY_SSIZE_T_CLEAN will be required for '#' formats
         Gui.addIcon("preferences-mbdyn", img_path)
+        Log("Loading MBDyn Worbkench... done\n")
 
     def Activated(self):
         App.Console.PrintMessage("test")
