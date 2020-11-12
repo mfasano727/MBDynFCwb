@@ -38,7 +38,7 @@ class MBDynconstantDrive:
         self.Object = fp
 
     def writeDrive(self):
-        return "const, {}".format(self.Object.const_coef)
+        return "const, {}".format(Writer.float_to_string(self.Object.const_coef))
 
 
 class MBDynRampDrive:
@@ -79,7 +79,10 @@ class MBDynRampDrive:
 
     def writeDrive(self):
         App.Console.PrintMessage("write drive")
-        drive_line = "ramp, {}, {}, {}, {}".format(self.Object.slope, self.Object.initial_time, self.Object.final_time, self.Object.initial_value)
+        drive_line = "ramp, {}, {}, {}, {}".format(Writer.float_to_string(self.Object.slope),
+                                                   Writer.float_to_string(self.Object.initial_time),
+                                                   Writer.float_to_string(self.Object.final_time),
+                                                   Writer.float_to_string(self.Object.initial_value))
         return drive_line
 
 

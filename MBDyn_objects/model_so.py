@@ -232,7 +232,11 @@ class MBDynRigidBody:
         line = ("        body: {}, {},\n"
                 "                {},\n"
                 "                {},\n"
-                "                {};\n").format(self.Object.label, self.Object.node_label, self.Object.mass, writeVect(self.Object.com_offset), writeMatrix(self.Object.matrix_type, self.Object.inertia_matrix))
+                "                {};\n").format(self.Object.label,
+                                                self.Object.node_label,
+                                                Writer.float_to_string(self.Object.mass),
+                                                writeVect(self.Object.com_offset),
+                                                writeMatrix(self.Object.matrix_type, self.Object.inertia_matrix))
         return line
 
 
@@ -293,12 +297,12 @@ class MBDynGravity:
         if self.Object.FieldType.lower() == "uniform":
 
             gravity_line = "        gravity: uniform, {}, const, {};\n".format(writeVect(self.Object.GravityVector),
-                                                                               self.Object.GravityAcceleration )
+                                                                               Writer.float_to_string(self.Object.GravityAcceleration))
 
         elif self.Object.FieldType.lower() == "central":
             gravity_line = "        gravity: central, origin, {}, mass, {}, G, {};\n".format(writeVect(self.Object.GravityOrigin),
-                                                                                             self.Object.CgFieldMass,
-                                                                                             self.Object.GravityConstant)
+                                                                                             Writer.float_to_string(self.Object.CgFieldMass),
+                                                                                             Writer.float_to_string(self.Object.GravityConstant))
 
         return gravity_line
 
