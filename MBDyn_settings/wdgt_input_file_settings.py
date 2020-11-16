@@ -29,7 +29,7 @@ class wdgt_input_file_settings(QtWidgets.QWidget, Ui_input_file_settings):
 
     def setupUi(self):
         super(wdgt_input_file_settings, self).setupUi(self)
-        self._format_spec = "1.3e"
+        self._format_spec = "1.7e"
         self._zero_threshold = 1e-15
         
         self.input_ex_1.setText("1.23456789")
@@ -75,7 +75,7 @@ class wdgt_input_file_settings(QtWidgets.QWidget, Ui_input_file_settings):
         App.Console.PrintMessage("Loading MBDyn double format settings...")
         
         #get Actual settings
-        self._format_spec = App.ParamGet(INPUTFILE_USER_SETTINGS).GetString("FORMAT_SPEC","1.3e")
+        self._format_spec = App.ParamGet(INPUTFILE_USER_SETTINGS).GetString("FORMAT_SPEC","1.7e")
         self._zero_threshold = float(App.ParamGet(INPUTFILE_USER_SETTINGS).GetString("ZERO_THRESHOLD","1e-15"))
         # update the ui
         self.updateView()
@@ -102,7 +102,7 @@ class wdgt_input_file_settings(QtWidgets.QWidget, Ui_input_file_settings):
             self.format_spec.setText(self._format_spec)
         else:
             print("unable to read the format, default format is used (1.3e)")
-            self.format_spec.setText("1.3e")
+            self.format_spec.setText("1.7e")
         
         
         self.zero_threshold.setText(str(self._zero_threshold))
