@@ -149,7 +149,7 @@ def writeInputFile(sim_obj, name_of_file):
     :param name_of_file: Name of the text file
     '''
     #set the formet_spec and zero_threshold for float
-    format_spec = App.ParamGet(INPUTFILE_USER_SETTINGS).GetString("FORMAT_SPEC","1.3e")
+    format_spec = App.ParamGet(INPUTFILE_USER_SETTINGS).GetString("FORMAT_SPEC","1.7e")
     zero_threshold = float(App.ParamGet(INPUTFILE_USER_SETTINGS).GetString("ZERO_THRESHOLD","1e-15"))
     Writer.set_format(format_spec)
     Writer.set_zero_threshold(zero_threshold)
