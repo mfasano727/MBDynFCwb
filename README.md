@@ -25,7 +25,8 @@ http://www.aero.polimi.it/masarati/Download/mbdyn/mbdyn-1.7.2-win32.zip
 Commands can be found in the `FreeCAD MBDyn workbench with Assembly 4 instructions` page of the [wiki](https://github.com/mfasano727/MBDynFCwb/wiki/FreeCAD-MBDyn-workbench-with-Assembly-4-instructions) 
 
 ### Tutorial
-A tutorial is found in the [Pendulum Tutorial](https://github.com/mfasano727/MBDynFCwb/wiki/Pendulum-Tutorial) page of the wiki    
+A tutorial is found in the [Pendulum Tutorial](https://github.com/mfasano727/MBDynFCwb/wiki/Pendulum-Tutorial) page of the wiki
+A tutorial is found in the [Slide Crank Tutoial](https://github.com/mfasano727/MBDynFCwb/wiki/Slide-Crank-Tutorial) page of the wiki
 
 
 ### Feedback
