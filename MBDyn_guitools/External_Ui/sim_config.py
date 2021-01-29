@@ -182,24 +182,30 @@ class SimConfig(QtWidgets.QDialog,  Ui_dia_sim_config):
             self.leMaxIterations.setText(problem_data.max_iterations)
         if None != problem_data.derivatives_tolerance:
             self.cbDerTol.setChecked(True)
+            #self.cbDerTol.stateChanged.emit(self.cbDerTol.checkState())
+            self.leDerTol.setEnabled(True)
             self.leDerTol.setText(problem_data.derivatives_tolerance)
         if None != problem_data.tolerance:
             self.leTol.setText(problem_data.tolerance)
 
         if None != problem_data.output and 0 < len(problem_data.output):
             self.cbOutput.setChecked(True)
+            #self.cbOutput.stateChanged.emit(self.cbOutput.checkState())
             output_widget = self.cbOutput.findChildren(QtWidgets.QCheckBox)
             for output in output_widget:
                 if output.text() in problem_data.output:
                     output.setChecked(True)
+                    #output.stateChanged.emit(output.checkState())
 
 
         if None != problem_data.custom_parameters:
             self.cbPbCustomParam.setChecked(True)
+            #self.cbPbCustomParam.stateChanged.emit(self.cbPbCustomParam.checkState())
             self.ptePbCustomParam.setPlainText(problem_data.custom_parameters)
 
         if None != control_data.custom_parameters:
             self.cbCtrlCustomParam.setChecked(True)
+            #self.cbCtrlCustomParam.stateChanged.emit(self.cbCtrlCustomParam.checkState())
             self.pteCtrlCustomParam.setPlainText(control_data.custom_parameters)
 
     def SetWorkingDirectory(self):

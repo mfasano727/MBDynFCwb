@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'dia_launcher.ui',
 # licensing of 'dia_launcher.ui' applies.
 #
-# Created: Wed Jul 22 22:54:50 2020
+# Created: Mon Nov 16 16:33:07 2020
 #      by: pyside2-uic  running on PySide2 5.13.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,7 +13,7 @@ from PySide2 import QtCore, QtGui, QtWidgets
 class Ui_dia_launcher(object):
     def setupUi(self, dia_launcher):
         dia_launcher.setObjectName("dia_launcher")
-        dia_launcher.resize(317, 324)
+        dia_launcher.resize(311, 481)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -78,14 +78,6 @@ class Ui_dia_launcher(object):
         self.verticalLayout_3.addWidget(self.groupBox_2)
         self.gridLayout_2 = QtWidgets.QGridLayout()
         self.gridLayout_2.setObjectName("gridLayout_2")
-        spacerItem = QtWidgets.QSpacerItem(45, 20, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
-        self.gridLayout_2.addItem(spacerItem, 3, 0, 1, 1)
-        self.editIF = QtWidgets.QPushButton(dia_launcher)
-        self.editIF.setObjectName("editIF")
-        self.gridLayout_2.addWidget(self.editIF, 0, 2, 1, 2)
-        self.writeIF = QtWidgets.QPushButton(dia_launcher)
-        self.writeIF.setObjectName("writeIF")
-        self.gridLayout_2.addWidget(self.writeIF, 0, 0, 1, 2)
         self.runSim = QtWidgets.QPushButton(dia_launcher)
         self.runSim.setMinimumSize(QtCore.QSize(291, 25))
         self.runSim.setObjectName("runSim")
@@ -94,17 +86,25 @@ class Ui_dia_launcher(object):
         self.stopSim.setMinimumSize(QtCore.QSize(291, 25))
         self.stopSim.setObjectName("stopSim")
         self.gridLayout_2.addWidget(self.stopSim, 2, 0, 1, 4)
-        spacerItem1 = QtWidgets.QSpacerItem(45, 20, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
-        self.gridLayout_2.addItem(spacerItem1, 3, 3, 1, 1)
+        self.editor = QtWidgets.QTextEdit(dia_launcher)
+        self.editor.setMinimumSize(QtCore.QSize(0, 150))
+        self.editor.setLineWrapMode(QtWidgets.QTextEdit.NoWrap)
+        self.editor.setReadOnly(True)
+        self.editor.setObjectName("editor")
+        self.gridLayout_2.addWidget(self.editor, 3, 0, 1, 4)
+        self.writeIF = QtWidgets.QPushButton(dia_launcher)
+        self.writeIF.setObjectName("writeIF")
+        self.gridLayout_2.addWidget(self.writeIF, 0, 0, 1, 2)
+        self.editIF = QtWidgets.QPushButton(dia_launcher)
+        self.editIF.setObjectName("editIF")
+        self.gridLayout_2.addWidget(self.editIF, 0, 2, 1, 2)
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout_2.addItem(spacerItem, 4, 0, 1, 1)
+        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout_2.addItem(spacerItem1, 4, 3, 1, 1)
         self.viewStatus = QtWidgets.QPushButton(dia_launcher)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.viewStatus.sizePolicy().hasHeightForWidth())
-        self.viewStatus.setSizePolicy(sizePolicy)
-        self.viewStatus.setMinimumSize(QtCore.QSize(101, 25))
         self.viewStatus.setObjectName("viewStatus")
-        self.gridLayout_2.addWidget(self.viewStatus, 3, 1, 1, 2)
+        self.gridLayout_2.addWidget(self.viewStatus, 4, 1, 1, 2)
         self.verticalLayout_3.addLayout(self.gridLayout_2)
 
         self.retranslateUi(dia_launcher)
@@ -119,9 +119,9 @@ class Ui_dia_launcher(object):
         self.label_2.setText(QtWidgets.QApplication.translate("dia_launcher", "Name", None, -1))
         self.label_3.setText(QtWidgets.QApplication.translate("dia_launcher", "Path", None, -1))
         self.fp_outfile.setText(QtWidgets.QApplication.translate("dia_launcher", "Browse...", None, -1))
-        self.editIF.setText(QtWidgets.QApplication.translate("dia_launcher", "Edit Input File", None, -1))
-        self.writeIF.setText(QtWidgets.QApplication.translate("dia_launcher", "Write Intput File", None, -1))
         self.runSim.setText(QtWidgets.QApplication.translate("dia_launcher", "Run Simulation", None, -1))
         self.stopSim.setText(QtWidgets.QApplication.translate("dia_launcher", "Stop Simulation", None, -1))
-        self.viewStatus.setText(QtWidgets.QApplication.translate("dia_launcher", "View status", None, -1))
+        self.writeIF.setText(QtWidgets.QApplication.translate("dia_launcher", "Write Intput File", None, -1))
+        self.editIF.setText(QtWidgets.QApplication.translate("dia_launcher", "Edit Input File", None, -1))
+        self.viewStatus.setText(QtWidgets.QApplication.translate("dia_launcher", "View Status", None, -1))
 
