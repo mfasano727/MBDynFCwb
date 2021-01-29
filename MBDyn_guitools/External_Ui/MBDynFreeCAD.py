@@ -297,6 +297,8 @@ class mbdyn_launchGui(QtWidgets.QDialog,  Ui_dia_launcher):
         #self.p.terminate()
         self.process.kill()
         self.stopSim.setEnabled(False)
+        self.runSim.setEnabled(True)
+        self.editIF.setEnabled(True)
         self.viewStatus.setEnabled(True)
 
     def ConsoleMessage(self):
